@@ -1,13 +1,13 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import { Accordion, Block } from "galio-framework";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Button from "./components/Button/Button";
-import Input from "./components/Input/Input";
-import SignIn from "./Views/SignIn/SignIn";
-import SignUp from "./Views/SignUp/SignUp";
-import Home from "./Views/Home/Home";
+import {StatusBar} from 'expo-status-bar';
+import {StyleSheet, Text, View} from 'react-native';
+import {Accordion, Block} from 'galio-framework';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Button from './components/Button/Button';
+import Input from './components/Input/Input';
+import SignIn from './Views/SignIn/SignIn';
+import SignUp from './Views/SignUp/SignUp';
+import Home from './Views/Home/Home';
 
 import {
   useFonts,
@@ -15,7 +15,8 @@ import {
   Inter_500Medium,
   Inter_700Bold,
   Inter_600SemiBold,
-} from "@expo-google-fonts/inter";
+} from '@expo-google-fonts/inter';
+import Websocket from './Views/WebSocket/Websocket';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +33,26 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator initialRouteName="SignIn">
           <Stack.Screen
+            name="Websocket"
+            options={{
+              title: 'astreea',
+              headerStyle: {
+                backgroundColor: '#F2F6F7',
+              },
+
+              headerShadowVisible: false,
+              headerTintColor: '#393B3B',
+            }}
+          >
+            {(props) =>
+              fontsLoaded ? (
+                <Websocket {...props} extraData={'bla'} />
+              ) : (
+                <Text>Loading...</Text>
+              )
+            }
+          </Stack.Screen>
+          <Stack.Screen
             name="SignIn"
             options={{
               headerShown: false,
@@ -39,7 +60,7 @@ export default function App() {
           >
             {(props) =>
               fontsLoaded ? (
-                <SignIn {...props} extraData={"bla"} />
+                <SignIn {...props} extraData={'bla'} />
               ) : (
                 <Text>Loading...</Text>
               )
@@ -48,17 +69,17 @@ export default function App() {
           <Stack.Screen
             name="SignUp"
             options={{
-              title: "",
+              title: '',
               headerStyle: {
-                backgroundColor: "#F2F6F7",
+                backgroundColor: '#F2F6F7',
               },
               headerShadowVisible: false,
-              headerTintColor: "#FF6400",
+              headerTintColor: '#FF6400',
             }}
           >
             {(props) =>
               fontsLoaded ? (
-                <SignUp {...props} extraData={"bla"} />
+                <SignUp {...props} extraData={'bla'} />
               ) : (
                 <Text>Loading...</Text>
               )
@@ -67,18 +88,18 @@ export default function App() {
           <Stack.Screen
             name="Home"
             options={{
-              title: "astreea",
+              title: 'astreea',
               headerStyle: {
-                backgroundColor: "#F2F6F7",
+                backgroundColor: '#F2F6F7',
               },
 
               headerShadowVisible: false,
-              headerTintColor: "#393B3B",
+              headerTintColor: '#393B3B',
             }}
           >
             {(props) =>
               fontsLoaded ? (
-                <Home {...props} extraData={"bla"} />
+                <Home {...props} extraData={'bla'} />
               ) : (
                 <Text>Loading...</Text>
               )
