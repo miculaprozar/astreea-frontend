@@ -7,6 +7,7 @@ import Button from "./components/Button/Button";
 import Input from "./components/Input/Input";
 import SignIn from "./Views/SignIn/SignIn";
 import SignUp from "./Views/SignUp/SignUp";
+import Home from "./Views/Home/Home";
 
 import {
   useFonts,
@@ -29,7 +30,7 @@ export default function App() {
   return (
     <>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
+        <Stack.Navigator initialRouteName="SignIn">
           <Stack.Screen
             name="SignIn"
             options={{
@@ -58,6 +59,26 @@ export default function App() {
             {(props) =>
               fontsLoaded ? (
                 <SignUp {...props} extraData={"bla"} />
+              ) : (
+                <Text>Loading...</Text>
+              )
+            }
+          </Stack.Screen>
+          <Stack.Screen
+            name="Home"
+            options={{
+              title: "astreea",
+              headerStyle: {
+                backgroundColor: "#F2F6F7",
+              },
+
+              headerShadowVisible: false,
+              headerTintColor: "#393B3B",
+            }}
+          >
+            {(props) =>
+              fontsLoaded ? (
+                <Home {...props} extraData={"bla"} />
               ) : (
                 <Text>Loading...</Text>
               )

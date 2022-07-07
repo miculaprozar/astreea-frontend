@@ -4,14 +4,19 @@ import { style } from "./SignInStyle";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 import { useNavigation } from "@react-navigation/native";
+import AvoidingKeyboardWrapper from "../../components/GeneralComponents/AvoidingKeboardWrapper";
 
 const SignIn = () => {
   const navigation = useNavigation();
   const navigateToSignUp = () => {
     navigation.navigate("SignUp");
   };
+  const navigateToHome = () => {
+    navigation.navigate("Home");
+  };
+
   return (
-    <>
+    <AvoidingKeyboardWrapper>
       <View style={style.wrapper}>
         <View style={style.textContainer}>
           <Text style={style.title}>astreea</Text>
@@ -23,7 +28,11 @@ const SignIn = () => {
           <View style={{ flex: 1 }}>
             <Input label={"Email"} marginBottom={15} />
             <Input label={"Password"} marginBottom={60} />
-            <Button text={"Sign In"} marginBottom={10} />
+            <Button
+              text={"Sign In"}
+              marginBottom={10}
+              onPressAction={navigateToHome}
+            />
             <Text style={style.betweenButtonsText}>OR</Text>
             <Button
               isSecondary
@@ -40,7 +49,7 @@ const SignIn = () => {
           </View>
         </View>
       </View>
-    </>
+    </AvoidingKeyboardWrapper>
   );
 };
 
