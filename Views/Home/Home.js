@@ -9,10 +9,14 @@ import Card from "../../components/Card/Card";
 const Home = (props) => {
   const { navigation } = props;
 
+  const navigateToAddDevice = () => {
+    navigation.navigate("ConnectDeviceStep1");
+  };
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Text onPress={() => alert("This is a button!")}>settings </Text>
+        <Text onPress={() => navigation.navigate("Account")}>settings </Text>
       ),
       headerLeft: () => (
         <HeaderBackButton onPress={() => navigation.navigate("SignIn")} />
@@ -48,7 +52,11 @@ const Home = (props) => {
         <View style={{ flex: 1, backgroundColor: "blue" }}></View> */}
       </View>
       <View style={style.lastButtonContainer}>
-        <Button text={"Add new charger"} marginTop={10} />
+        <Button
+          text={"Add new charger"}
+          marginTop={10}
+          onPressAction={navigateToAddDevice}
+        />
       </View>
     </View>
   );
