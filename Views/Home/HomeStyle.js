@@ -5,6 +5,16 @@ export const style = StyleSheet.create({
     backgroundColor: "#F2F6F7",
     flex: 1,
     padding: "10%",
-    paddingTop: 70,
+    paddingTop: 0,
+  },
+  buttonsContainer: {
+    flex: 1,
+  },
+  CardsContainer: {
+    flexDirection: "column",
+    flex: 8,
+  },
+  lastButtonContainer: {
+    flex: 1,
   },
 });
