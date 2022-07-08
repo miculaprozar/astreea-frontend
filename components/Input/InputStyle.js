@@ -58,4 +58,11 @@ export const textStyle = StyleSheet.create({
     fontFamily: "Inter_400Regular",
     marginBottom: 7,
   },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    fontFamily: "Inter_400Regular",
+    marginBottom: 5,
+    marginTop: 5,
+  },
 });

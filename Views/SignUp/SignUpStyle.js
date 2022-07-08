@@ -33,6 +33,7 @@ export const style = StyleSheet.create({
     fontSize: 14,
     fontFamily: "Inter_400Regular",
     marginLeft: "auto",
+    marginBottom: 15,
   },
   termsText: {
     color: "#C1C1C1",

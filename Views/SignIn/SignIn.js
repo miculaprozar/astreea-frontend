@@ -6,15 +6,35 @@ import Button from "../../components/Button/Button";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import AvoidingKeyboardWrapper from "../../components/GeneralComponents/AvoidingKeboardWrapper";
+import { apiFactory } from "../../api/index.js";
+import { useForm } from "react-hook-form";
+import validationSchema from "./validationSchema";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const SignIn = () => {
   const navigation = useNavigation();
 
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
+
+  const onSubmit = async (data) => {
+    try {
+      const login = await apiFactory().data.account().login(data);
+      navigation.navigate("Home");
+    } catch (e) {
+      console.log("the e is ", e.response.data.message);
+    }
+
+    console.log(data);
+  };
+
   const navigateToSignUp = () => {
     navigation.navigate("SignUp");
-  };
-  const navigateToHome = () => {
-    navigation.navigate("Home");
   };
 
   return (
@@ -28,12 +48,28 @@ const SignIn = () => {
         </View>
         <View style={style.inputButtonsContainer}>
           <View style={{ flex: 1 }}>
-            <Input label={"Email"} marginBottom={15} />
-            <Input label={"Password"} marginBottom={60} />
+            <Input
+              label={"Email"}
+              marginBottom={15}
+              validateInput={true}
+              control={control}
+              errors={errors.email?.message}
+              name={"email"}
+              secureTextEntry={false}
+            />
+            <Input
+              label={"Password"}
+              marginBottom={60}
+              validateInput={true}
+              control={control}
+              errors={errors.password?.message}
+              name={"password"}
+              secureTextEntry={true}
+            />
             <Button
               text={"Sign In"}
               marginBottom={10}
-              onPressAction={navigateToHome}
+              onPressAction={handleSubmit(onSubmit)}
             />
             <Text style={style.betweenButtonsText}>OR</Text>
             <Button

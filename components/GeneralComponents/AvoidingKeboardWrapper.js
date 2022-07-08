@@ -7,7 +7,10 @@ import {
 } from "react-native";
 const AvoidingKeyboardWrapper = ({ children }) => {
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: "#F2F6F7" }}>
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: "#F2F6F7" }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           {children}
