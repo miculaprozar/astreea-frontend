@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Text, View } from "react-native";
+import { Text, View, Pressable } from "react-native";
 import { style } from "./SignUpStyle";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
@@ -32,6 +32,11 @@ const SignUp = () => {
     } catch (e) {
       console.log("the e is ", e);
     }
+  };
+
+  const presed = () => {
+    console.log("PRESED");
+    navigation.navigate("ChargerSettings");
   };
 
   return (
@@ -92,14 +97,16 @@ const SignUp = () => {
               text={"Sign Up"}
               marginBottom={10}
               title="Submit"
-              onPressAction={handleSubmit(onSubmit)}
+              onPressAction={presed}
             />
             <Text style={style.forgotText}>Forgot your password</Text>
           </View>
           <View>
-            <Text style={style.termsText}>
-              By Continuing you agree to the Terms and Conditions
-            </Text>
+            <Pressable onPress={presed}>
+              <Text style={style.termsText}>
+                By Continuing you agree to the Terms and Conditions
+              </Text>
+            </Pressable>
           </View>
         </View>
       </View>

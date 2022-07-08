@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 import { style } from "./SetupDeviceStyle";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
+
 import { useNavigation } from "@react-navigation/native";
 import AvoidingKeyboardWrapper from "../../components/GeneralComponents/AvoidingKeboardWrapper";
 import HeaderBackButton from "../../components/GeneralComponents/HeaderBackButton";

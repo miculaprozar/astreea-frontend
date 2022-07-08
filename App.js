@@ -12,6 +12,7 @@ import Account from "./Views/Account/Account";
 import ConnectDeviceStep1 from "./Views/ConnectDeviceStep1/ConnectDeviceStep1";
 import ConnectDeviceStep2 from "./Views/ConnectDeviceStep2/ConnectDeviceStep2";
 import SetupDevice from "./Views/SetupDevice/SetupDevice";
+import ChargerSettings from "./Views/ChargerSettings/ChargerSettings";
 
 import {
   useFonts,
@@ -184,6 +185,26 @@ export default function App() {
             {(props) =>
               fontsLoaded ? (
                 <SetupDevice {...props} extraData={"bla"} />
+              ) : (
+                <Text>Loading...</Text>
+              )
+            }
+          </Stack.Screen>
+          <Stack.Screen
+            name="ChargerSettings"
+            options={{
+              title: "astreea",
+              headerStyle: {
+                backgroundColor: "#F2F6F7",
+              },
+
+              headerShadowVisible: false,
+              headerTintColor: "#393B3B",
+            }}
+          >
+            {(props) =>
+              fontsLoaded ? (
+                <ChargerSettings {...props} extraData={"bla"} />
               ) : (
                 <Text>Loading...</Text>
               )
