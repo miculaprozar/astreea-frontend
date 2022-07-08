@@ -35,6 +35,22 @@ export const inputFocused = StyleSheet.create({
   },
 });
 
+export const inputDisabled = StyleSheet.create({
+  input: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 14,
+    paddingHorizontal: 10,
+    borderRadius: 37,
+    fontFamily: "Inter_400Regular",
+    fontSize: 16,
+    backgroundColor: "#97A6AD",
+    borderWidth: 0,
+    color: "#FFFFFF",
+  },
+});
+
 export const textStyle = StyleSheet.create({
   text: {
     color: "#393B3B",

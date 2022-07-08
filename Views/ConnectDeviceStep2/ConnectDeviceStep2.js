@@ -31,8 +31,13 @@ const ConnectDeviceStep2 = (props) => {
           <Text style={style.title}>Connect to Device</Text>
         </View>
         <View style={{ flex: 10 }}>
-          <Input label={"Email"} marginBottom={15} marginTop={15} />
-          <Input label={"Email"} marginBottom={15} />
+          <Input
+            label={"Hotspot name"}
+            marginBottom={15}
+            marginTop={15}
+            disabled
+          />
+          <Input disabled label={"Password"} marginBottom={15} />
           <Text style={style.description}>
             Connect with your phone to the device hotspot
           </Text>

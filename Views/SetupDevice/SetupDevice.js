@@ -34,7 +34,7 @@ const SetupDevice = (props) => {
           <Input label={"Email"} marginBottom={15} marginTop={15} />
           <Input label={"Email"} marginBottom={15} />
           <Text style={style.description}>Wifi settings</Text>
-          <Input label={""} marginBottom={0} marginTop={15} />
+          <Input label={""} marginBottom={0} marginTop={-10} />
           <Input label={""} marginBottom={15} />
         </View>
         <View style={{ flex: 0.5 }}>

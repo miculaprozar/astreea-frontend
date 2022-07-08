@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Text, View } from "react-native";
 import { style } from "./SignInStyle";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 import AvoidingKeyboardWrapper from "../../components/GeneralComponents/AvoidingKeboardWrapper";
 
 const SignIn = () => {
   const navigation = useNavigation();
+
   const navigateToSignUp = () => {
     navigation.navigate("SignUp");
   };
