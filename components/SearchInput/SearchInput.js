@@ -1,13 +1,9 @@
 import React, { useState } from "react";
 import { TextInput, View } from "react-native";
-import { style } from "./SearchInputStyle";
+import { style } from "./SearchInput.style";
 
-const SearchInput = ({ marginTop, marginBottom }) => {
-  return (
-    <View style={{ marginTop: marginTop, marginBottom: marginBottom }}>
-      <TextInput placeholder={"Search"} style={style.input} />
-    </View>
-  );
+const SearchInput = () => {
+	return <TextInput placeholder={"Search"} style={style.input} />;
 };
 
 export default SearchInput;
