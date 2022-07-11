@@ -1,11 +1,19 @@
-import React from 'react';
+import React from "react";
 
-import { Text, View, TouchableWithoutFeedback } from 'react-native';
-import { charging } from './CardStyle';
+import { Text, View, TouchableWithoutFeedback } from "react-native";
+import { charging } from "./CardStyle";
 
-const Card = ({ device, isCharging, navigation, navigateToDevice }) => {
+const Card = ({
+  device,
+  isCharging,
+  navigation,
+  navigateToDevice,
+  details,
+}) => {
+  console.log("THE DETAILS", details, isCharging);
+
   const navigateToDeviceAction = () => {
-    console.log('LOGG!');
+    console.log("LOGG!");
     navigateToDevice();
   };
 
@@ -13,8 +21,10 @@ const Card = ({ device, isCharging, navigation, navigateToDevice }) => {
     <TouchableWithoutFeedback onPress={navigateToDeviceAction}>
       <View
         style={
-          !isCharging
-            ? { ...charging.wrapper, backgroundColor: '#393B3B' }
+          details
+            ? { ...charging.wrapper, backgroundColor: "#97A6AD" }
+            : !isCharging
+            ? { ...charging.wrapper, backgroundColor: "#393B3B" }
             : { ...charging.wrapper }
         }
       >
@@ -27,7 +37,7 @@ const Card = ({ device, isCharging, navigation, navigateToDevice }) => {
             <Text
               style={
                 !isCharging
-                  ? { ...charging.chargingStatusText, color: 'white' }
+                  ? { ...charging.chargingStatusText, color: "white" }
                   : { ...charging.chargingStatusText }
               }
             >
@@ -37,14 +47,14 @@ const Card = ({ device, isCharging, navigation, navigateToDevice }) => {
           <View
             style={{
               flex: 1,
-              flexDirection: 'row',
+              flexDirection: "row",
             }}
           >
-            <View style={{ flex: 1, marginTop: 'auto' }}>
+            <View style={{ flex: 1, marginTop: "auto" }}>
               <Text
                 style={
                   !isCharging
-                    ? { ...charging.chargingValuesText, color: 'white' }
+                    ? { ...charging.chargingValuesText, color: "white" }
                     : { ...charging.chargingValuesText }
                 }
               >
@@ -52,11 +62,11 @@ const Card = ({ device, isCharging, navigation, navigateToDevice }) => {
               </Text>
               <Text style={charging.smallText}>Energy Delivered</Text>
             </View>
-            <View style={{ flex: 1, marginTop: 'auto' }}>
+            <View style={{ flex: 1, marginTop: "auto" }}>
               <Text
                 style={
                   !isCharging
-                    ? { ...charging.chargingValuesText, color: 'white' }
+                    ? { ...charging.chargingValuesText, color: "white" }
                     : { ...charging.chargingValuesText }
                 }
               >
@@ -64,11 +74,11 @@ const Card = ({ device, isCharging, navigation, navigateToDevice }) => {
               </Text>
               <Text style={charging.smallText}>Charge Duration</Text>
             </View>
-            <View style={{ flex: 1, marginTop: 'auto' }}>
+            <View style={{ flex: 1, marginTop: "auto" }}>
               <Text
                 style={
                   !isCharging
-                    ? { ...charging.chargingValuesText, color: 'white' }
+                    ? { ...charging.chargingValuesText, color: "white" }
                     : { ...charging.chargingValuesText }
                 }
               >

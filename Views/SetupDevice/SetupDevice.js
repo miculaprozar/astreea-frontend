@@ -4,40 +4,42 @@ import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import { style } from "./SetupDevice.style";
 import HeaderBackButton from "../../general_components/HeaderBackButton";
-import { ConnectDevice } from "../../routes";
+import routes from "../../routes";
 
 import Layout from "../../general_components/Layout";
 
 const SetupDevice = (props) => {
-	const { navigation } = props;
+  const { navigation } = props;
 
-	React.useLayoutEffect(() => {
-		navigation.setOptions({
-			headerLeft: () => (
-				<HeaderBackButton
-					onPress={() => navigation.navigate(ConnectDevice.name)}
-				/>
-			),
-		});
-	}, [navigation]);
+  const { ConnectDevice } = routes;
 
-	return (
-		<Layout>
-			<View style={{ flex: 0.5 }}>
-				<Text style={style.title}>Connect to Device</Text>
-			</View>
-			<View style={{ flex: 10 }}>
-				<Input label={"Email"} marginBottom={15} marginTop={15} />
-				<Input label={"Email"} marginBottom={15} />
-				<Text style={style.description}>Wifi settings</Text>
-				<Input label={""} marginBottom={0} marginTop={-10} />
-				<Input label={""} marginBottom={15} />
-			</View>
-			<View style={{ flex: 0.5 }}>
-				<Button text={"Verify set-up"} marginTop={10} marginBottom={35} />
-			</View>
-		</Layout>
-	);
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <HeaderBackButton
+          onPress={() => navigation.navigate(ConnectDevice.name)}
+        />
+      ),
+    });
+  }, [navigation]);
+
+  return (
+    <Layout>
+      <View style={{ flex: 1 }}>
+        <Text style={style.title}>Connect to Device</Text>
+      </View>
+      <View style={{ flex: 10 }}>
+        <Input label={"Email"} marginBottom={15} marginTop={15} />
+        <Input label={"Email"} marginBottom={15} />
+        <Text style={style.description}>Wifi settings</Text>
+        <Input label={""} marginBottom={0} marginTop={-10} />
+        <Input label={""} marginBottom={15} />
+      </View>
+      <View style={{ flex: 2 }}>
+        <Button text={"Verify set-up"} marginTop={10} marginBottom={35} />
+      </View>
+    </Layout>
+  );
 };
 
 export default SetupDevice;

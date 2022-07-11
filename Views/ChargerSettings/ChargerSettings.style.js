@@ -7,9 +7,16 @@ export const style = StyleSheet.create({
     paddingLeft: "10%",
     paddingRight: "10%",
   },
-  textAndPillsContainer: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
+  pillsLabel: {
+    fontSize: 16,
+    color: "#393B3B",
+    fontFamily: "Inter_400Regular",
+    marginBottom: 12,
+  },
+  inputLabel: {
+    fontSize: 17,
+    color: "#393B3B",
+    fontFamily: "Inter_500Medium",
+    marginTop: 20,
   },
 });
