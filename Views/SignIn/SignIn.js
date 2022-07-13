@@ -10,10 +10,10 @@ import Layout from "../../general_components/Layout.js";
 import { style } from "./SignIn.style";
 import validationSchema from "./validationSchema";
 import routes from "../../routes.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignIn = () => {
   const navigation = useNavigation();
-  console.log("SignIn");
 
   const { Home, SignUp } = routes;
 
@@ -29,11 +29,19 @@ const SignIn = () => {
     navigation.navigate(Home.name);
     try {
       const login = await apiFactory().data.account().login(data);
+      storeData(login);
     } catch (e) {
       console.log("the e is ", e.response.data.message);
     }
+  };
 
-    console.log(data);
+  const storeData = async (value) => {
+    try {
+      const a = await AsyncStorage.setItem("token", value);
+      console.log("WE ARE IN THE TRY", a);
+    } catch (e) {
+      console.log("THE TOKEN ERROR", e);
+    }
   };
 
   const navigateToSignUp = () => {

@@ -11,7 +11,6 @@ const Button = ({
 }) => {
   let buttonType = isSecondary ? secondary : primary;
 
-  console.log("THE TEXT IS:", text);
   return (
     <View style={{ marginTop: marginTop, marginBottom: marginBottom }}>
       <Pressable style={buttonType.container} onPress={onPressAction}>

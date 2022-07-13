@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {Text, View} from 'react-native';
 import Button from '../../components/Button/Button';
-import HeaderBackButton from '../../general_components/HeaderBackButton';
+import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavigator';
 
 import Input from '../../components/Input/Input';
 import Layout from '../../general_components/Layout';
@@ -100,10 +100,11 @@ const ConnectDevice = (props) => {
 
   return (
     <Layout>
-      <View style={{flex: 1}}>
+      <Layout.Header>
+        <HeaderNavigator navigation={navigation} hideAccountSettings={true} />
+      </Layout.Header>
+      <Layout.Body>
         <Text style={style.title}>Connect to Device</Text>
-      </View>
-      <View style={{flex: 9}}>
         <Input
           label={'Hotspot name'}
           marginBottom={15}
@@ -122,18 +123,15 @@ const ConnectDevice = (props) => {
         <Text style={style.description}>
           Connect with your phone to the device hotspot
         </Text>
-      </View>
-      <View style={{flex: 2}}>
-        <Text id="logger">{logText.toString()}</Text>
-      </View>
-      <View style={{flex: 2}}>
+      </Layout.Body>
+      <Layout.Footer>
         <Button
           text={'Test connection'}
           marginTop={10}
           marginBottom={35}
           onPressAction={checkAndNavigateToSetup}
         />
-      </View>
+      </Layout.Footer>
     </Layout>
   );
 };

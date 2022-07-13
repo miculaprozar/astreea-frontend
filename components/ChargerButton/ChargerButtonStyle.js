@@ -44,6 +44,28 @@ export const secondary = StyleSheet.create({
   },
 });
 
+export const share = StyleSheet.create({
+  container: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 14,
+    borderRadius: 15,
+    backgroundColor: "#CBDBE7",
+    borderWidth: 0,
+    borderColor: "#CBDBE7",
+    shadowColor: "#CBDBE7",
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+  },
+  text: {
+    color: "#393B3B",
+    fontSize: 18,
+    fontFamily: "Inter_600SemiBold",
+    marginLeft: 10,
+  },
+});
+
 export const danger = StyleSheet.create({
   container: {
     width: "100%",

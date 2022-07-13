@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ScrollView, Text, View } from "react-native";
 import Button from "../../components/Button/Button";
 import Card from "../../components/Card/Card";
@@ -7,38 +7,65 @@ import SearchInput from "../../components/SearchInput/SearchInput";
 import HeaderBackButton from "../../general_components/HeaderBackButton";
 import Layout from "../../general_components/Layout";
 import routes from "../../routes";
+import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Home = (props) => {
   const { navigation } = props;
 
   const { ConnectQR, DeviceDetails, Account, SignIn } = routes;
 
-  console.log("THE DEVICES ARE:", ConnectQR);
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("token");
+      console.log("THE TOKEN IS:", value);
+      if (value !== null) {
+        // value previously stored
+      }
+    } catch (e) {
+      console.log("ERROR IN READING", e);
+      // error reading value
+    }
+  };
+
+  const removeToken = async () => {
+    try {
+      await AsyncStorage.removeItem("token");
+    } catch (exception) {}
+  };
+
+  useEffect(() => {
+    getData();
+    removeToken();
+    getData();
+  }, []);
 
   const navigateToAddDevice = () => {
     navigation.navigate(ConnectQR.name);
   };
   const navigateToDevice = () => {
-    console.log("LOGG!, home");
     navigation.navigate(DeviceDetails.name);
   };
 
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <Text onPress={() => navigation.navigate(Account.name)}>settings </Text>
-      ),
-      headerLeft: () => (
-        <HeaderBackButton onPress={() => navigation.navigate(SignIn.name)} />
-      ),
-    });
-  }, [navigation]);
+  // React.useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerRight: () => (
+  //       <Text onPress={() => navigation.navigate(Account.name)}>settings </Text>
+  //     ),
+  //     headerLeft: () => (
+  //       <HeaderBackButton onPress={() => navigation.navigate(SignIn.name)} />
+  //     ),
+  //   });
+  // }, [navigation]);
 
   return (
     <Layout>
       <Layout.Header>
+        <HeaderNavigator navigation={navigation} />
+      </Layout.Header>
+      <Layout.Body>
         <SearchInput />
-        <View style={{ flexDirection: "row", paddingTop: 10 }}>
+        <View style={{ flexDirection: "row", marginBottom: 20, marginTop: 10 }}>
           <View style={{ flex: 1 }}>
             <PillButton text={"All"} />
           </View>
@@ -47,8 +74,6 @@ const Home = (props) => {
           </View>
           <View style={{ flex: 2 }}></View>
         </View>
-      </Layout.Header>
-      <Layout.Body>
         <ScrollView>
           <Card isCharging={true} navigateToDevice={navigateToDevice} />
           <Card isCharging={false} navigateToDevice={navigateToDevice} />
