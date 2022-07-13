@@ -1,12 +1,13 @@
 import React from "react";
 import { Pressable, Text, View } from "react-native";
-import { secondary, primary, danger } from "./ChargerButtonStyle";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import { secondary, primary, danger, share } from "./ChargerButtonStyle";
+
+import Icon from "./Icon";
 
 const ChargerButton = ({
   isSecondary,
   isDanger,
+  isShare,
   text,
   marginTop,
   marginBottom,
@@ -14,9 +15,14 @@ const ChargerButton = ({
   marginRight,
   onPressAction,
 }) => {
-  let buttonType = isSecondary ? secondary : isDanger ? danger : primary;
+  let buttonType = isSecondary
+    ? secondary
+    : isDanger
+    ? danger
+    : isShare
+    ? share
+    : primary;
 
-  console.log("THE TEXT IS:", text);
   return (
     <View
       style={{
@@ -28,12 +34,11 @@ const ChargerButton = ({
     >
       <Pressable style={buttonType.container} onPress={onPressAction}>
         <View style={{ flexDirection: "row" }}>
-          {/* <FontAwesome5 name="gas-pump" size={21} color="#393B3B" />
-           */}
-
-          {/* <FontAwesome5 name="calendar-day" size={21} color="#393B3B" /> */}
-          <MaterialIcons name="remove-circle" size={21} color="#393B3B" />
-
+          <Icon
+            isSecondary={isSecondary}
+            isDanger={isDanger}
+            isShare={isShare}
+          />
           <Text style={buttonType.text}>{text}</Text>
         </View>
       </Pressable>

@@ -5,13 +5,17 @@ import PillButton from "../../components/PillButton/PillButton";
 import ChargerButton from "../../components/ChargerButton/ChargerButton";
 import Button from "../../components/Button/Button";
 import Card from "../../components/Card/Card";
+import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
 
 import { style } from "./ChargerSettings.style";
 import Layout from "../../general_components/Layout";
 
-const ChargerSettings = () => {
+const ChargerSettings = ({ navigation }) => {
   return (
     <Layout scrollView={true}>
+      <Layout.Header>
+        <HeaderNavigator navigation={navigation} />
+      </Layout.Header>
       <Layout.Body>
         <Input label={"Charger name"} marginBottom={15} marginTop={15} />
 
@@ -34,7 +38,7 @@ const ChargerSettings = () => {
       <Layout.Footer>
         <View style={{ flexDirection: "row" }}>
           <View style={{ flex: 1 }}>
-            <ChargerButton text={"Share"} marginRight={10} isSecondary={true} />
+            <ChargerButton text={"Share"} marginRight={10} isShare={true} />
           </View>
           <View style={{ flex: 1 }}>
             <ChargerButton text={"Stop"} marginLeft={10} isDanger={true} />
@@ -47,15 +51,3 @@ const ChargerSettings = () => {
 };
 
 export default ChargerSettings;
-
-/* <View style={{ flex: 1 }}>
-				<Input label={"Charger name"} marginBottom={15} marginTop={15} />
-				<View style={style.textAndPillsContainer}>
-					<Text>curency</Text>
-					<PillButton text={"All"} />
-				</View>
-				<View style={style.textAndPillsContainer}>
-					<Text>curency</Text>
-					<PillButton text={"All"} />
-				</View>
-			</View> */

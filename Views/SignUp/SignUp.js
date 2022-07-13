@@ -9,6 +9,7 @@ import Input from "../../components/Input/Input";
 import Layout from "../../general_components/Layout";
 import { style } from "./SignUp.style";
 import validationSchema from "./validationSchema";
+import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
 
 const SignUp = () => {
   const navigation = useNavigation();
@@ -35,79 +36,89 @@ const SignUp = () => {
   };
 
   const presed = () => {
-    console.log("PRESED");
     navigation.navigate("Home");
   };
 
   return (
     <Layout scrollView>
-      <View style={style.textContainer}>
-        <Text style={style.greetings}>Welcome to</Text>
-        <Text style={style.title}>astreea</Text>
-      </View>
-      <View style={style.inputButtonsContainer}>
-        <View style={{ flex: 1 }}>
-          <Input
-            label={"Email"}
-            marginBottom={15}
-            validateInput={true}
-            control={control}
-            errors={errors.email?.message}
-            name={"email"}
-            secureTextEntry={false}
-          />
-          <Input
-            label={"First name"}
-            marginBottom={12}
-            validateInput={true}
-            control={control}
-            errors={errors.firstName?.message}
-            name={"firstName"}
-            secureTextEntry={false}
-          />
-          <Input
-            label={"Last name"}
-            marginBottom={12}
-            validateInput={true}
-            control={control}
-            errors={errors.lastName?.message}
-            name={"lastName"}
-            secureTextEntry={false}
-          />
-          <Input
-            label={"Password"}
-            marginBottom={12}
-            validateInput={true}
-            control={control}
-            errors={errors.passwordControlled?.message}
-            name={"passwordControlled"}
-            secureTextEntry={true}
-          />
-          <Input
-            label={"Confirm password"}
-            marginBottom={20}
-            validateInput={true}
-            control={control}
-            errors={errors.seccondPasswordControlled?.message}
-            name={"seccondPasswordControlled"}
-            secureTextEntry={true}
-          />
-          <Button
-            text={"Sign Up"}
-            marginBottom={10}
-            title="Submit"
-            onPressAction={presed}
-          />
-          <Text style={style.forgotText}>Forgot your password</Text>
-        </View>
-        <View>
-          <Pressable onPress={presed}>
-            <Text style={style.termsText}>
-              By Continuing you agree to the Terms and Conditions
-            </Text>
-          </Pressable>
-        </View>
-      </View>
+      <Layout.Header>
+        <HeaderNavigator
+          navigation={navigation}
+          hideLogo={true}
+          hideAccountSettings={true}
+        />
+      </Layout.Header>
+      <Layout.Body>
+        <>
+          <View style={style.textContainer}>
+            <Text style={style.greetings}>Welcome to</Text>
+            <Text style={style.title}>astreea</Text>
+          </View>
+          <View style={style.inputButtonsContainer}>
+            <View style={{ flex: 1 }}>
+              <Input
+                label={"Email"}
+                marginBottom={15}
+                validateInput={true}
+                control={control}
+                errors={errors.email?.message}
+                name={"email"}
+                secureTextEntry={false}
+              />
+              <Input
+                label={"First name"}
+                marginBottom={12}
+                validateInput={true}
+                control={control}
+                errors={errors.firstName?.message}
+                name={"firstName"}
+                secureTextEntry={false}
+              />
+              <Input
+                label={"Last name"}
+                marginBottom={12}
+                validateInput={true}
+                control={control}
+                errors={errors.lastName?.message}
+                name={"lastName"}
+                secureTextEntry={false}
+              />
+              <Input
+                label={"Password"}
+                marginBottom={12}
+                validateInput={true}
+                control={control}
+                errors={errors.passwordControlled?.message}
+                name={"passwordControlled"}
+                secureTextEntry={true}
+              />
+              <Input
+                label={"Confirm password"}
+                marginBottom={20}
+                validateInput={true}
+                control={control}
+                errors={errors.seccondPasswordControlled?.message}
+                name={"seccondPasswordControlled"}
+                secureTextEntry={true}
+              />
+            </View>
+          </View>
+        </>
+      </Layout.Body>
+      <Layout.Footer>
+        <Button
+          text={"Sign Up"}
+          marginBottom={10}
+          title="Submit"
+          onPressAction={presed}
+        />
+        <Text style={style.forgotText}>Forgot your password</Text>
+        <Pressable onPress={presed}>
+          <Text style={style.termsText}>
+            By Continuing you agree to the Terms and Conditions
+          </Text>
+        </Pressable>
+      </Layout.Footer>
     </Layout>
   );
 };

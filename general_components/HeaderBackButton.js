@@ -5,7 +5,7 @@ import { Text, View, Platform } from "react-native";
 
 const HeaderBackButton = ({ onPress }) => {
   return (
-    <Text style={style.text} onPress={onPress}>
+    <Text style={{ ...style.text, backgroundColor: "red" }} onPress={onPress}>
       Back
     </Text>
   );

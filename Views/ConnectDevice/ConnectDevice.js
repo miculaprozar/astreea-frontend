@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View } from "react-native";
 import Button from "../../components/Button/Button";
-import HeaderBackButton from "../../general_components/HeaderBackButton";
+import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
 
 import Input from "../../components/Input/Input";
 import Layout from "../../general_components/Layout";
@@ -13,24 +13,17 @@ const ConnectDevice = (props) => {
 
   const { ConnectQR, SetupDevice } = routes;
 
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => (
-        <HeaderBackButton onPress={() => navigation.navigate(ConnectQR.name)} />
-      ),
-    });
-  }, [navigation]);
-
   const navigateToSetup = () => {
     navigation.navigate(SetupDevice.name);
   };
 
   return (
     <Layout>
-      <View style={{ flex: 1 }}>
+      <Layout.Header>
+        <HeaderNavigator navigation={navigation} hideAccountSettings={true} />
+      </Layout.Header>
+      <Layout.Body>
         <Text style={style.title}>Connect to Device</Text>
-      </View>
-      <View style={{ flex: 10 }}>
         <Input
           label={"Hotspot name"}
           marginBottom={15}
@@ -41,15 +34,15 @@ const ConnectDevice = (props) => {
         <Text style={style.description}>
           Connect with your phone to the device hotspot
         </Text>
-      </View>
-      <View style={{ flex: 2 }}>
+      </Layout.Body>
+      <Layout.Footer>
         <Button
           text={"Test connection"}
           marginTop={10}
           marginBottom={35}
           onPressAction={navigateToSetup}
         />
-      </View>
+      </Layout.Footer>
     </Layout>
   );
 };

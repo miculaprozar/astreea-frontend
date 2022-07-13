@@ -10,10 +10,7 @@ const Card = ({
   navigateToDevice,
   details,
 }) => {
-  console.log("THE DETAILS", details, isCharging);
-
   const navigateToDeviceAction = () => {
-    console.log("LOGG!");
     navigateToDevice();
   };
 

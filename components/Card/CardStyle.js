@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 export const charging = StyleSheet.create({
   wrapper: {
-    height: 140,
+    height: 130,
     backgroundColor: "#4F6363",
     borderRadius: 15,
     padding: 15,

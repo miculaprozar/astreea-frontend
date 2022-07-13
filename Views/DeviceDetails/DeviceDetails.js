@@ -4,6 +4,7 @@ import Button from "../../components/Button/Button";
 import PillButton from "../../components/PillButton/PillButton";
 import ChargerButton from "../../components/ChargerButton/ChargerButton";
 import routes from "../../routes";
+import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
 
 import Card from "../../components/Card/Card";
 
@@ -28,6 +29,9 @@ const DeviceDetails = (props) => {
   return (
     <Layout>
       <Layout.Header>
+        <HeaderNavigator navigation={navigation} />
+      </Layout.Header>
+      <Layout.Body>
         <View style={style.tittleButtonWrapper}>
           <View style={{ flex: 1 }}>
             <Text style={style.title}>Home</Text>
@@ -40,8 +44,6 @@ const DeviceDetails = (props) => {
             />
           </View>
         </View>
-      </Layout.Header>
-      <Layout.Body>
         <View style={style.tittleButtonWrapper}>
           <View style={{ flex: 1 }}>
             <PillButton text={"February"} />
