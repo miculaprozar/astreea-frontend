@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { TextInput, Text, View } from "react-native";
-import { input, inputFocused, textStyle, inputDisabled } from "./InputStyle";
-import { useForm, Controller } from "react-hook-form";
+import React, {useState} from 'react';
+import {TextInput, Text, View} from 'react-native';
+import {input, inputFocused, textStyle, inputDisabled} from './InputStyle';
+import {useForm, Controller} from 'react-hook-form';
 
 const Input = ({
   label,
@@ -12,12 +12,13 @@ const Input = ({
   name,
   control,
   errors,
+  onChange,
   secureTextEntry,
 }) => {
   const [borderColor, setBorderColor] = useState(input);
 
   return (
-    <View style={{ marginTop: marginTop, marginBottom: marginBottom }}>
+    <View style={{marginTop: marginTop, marginBottom: marginBottom}}>
       <Text style={textStyle.text}>{label}</Text>
 
       {disabled ? (
@@ -31,7 +32,7 @@ const Input = ({
         <>
           <Controller
             control={control}
-            render={({ field: { value, onChange } }) => (
+            render={({field: {value, onChange}}) => (
               <TextInput
                 placeholder={`Enter your ${label.toLowerCase()}`}
                 style={borderColor.input}
@@ -52,6 +53,7 @@ const Input = ({
           style={borderColor.input}
           onFocus={() => setBorderColor(inputFocused)}
           onBlur={() => setBorderColor(input)}
+          onChangeText={onChange}
         />
       )}
     </View>
