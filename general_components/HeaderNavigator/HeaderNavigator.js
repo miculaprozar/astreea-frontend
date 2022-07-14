@@ -5,11 +5,16 @@ import { style } from "./HeaderNavigator.style";
 import GoBack from "./GoBack";
 import AccountSettings from "./AccountSettings";
 
-const HeaderNavigator = ({ navigation, hideLogo, hideAccountSettings }) => {
+const HeaderNavigator = ({
+  navigation,
+  hideLogo,
+  hideAccountSettings,
+  hideBack,
+}) => {
   return (
     <View style={style.headerContainer}>
-      <View style={{ flex: 1 }}>
-        <GoBack navigation={navigation} />
+      <View style={{ flex: 1.5 }}>
+        {!hideBack && <GoBack navigation={navigation} />}
       </View>
       <View style={{ flex: 4 }}>{!hideLogo && <AstreeaSvg />}</View>
 

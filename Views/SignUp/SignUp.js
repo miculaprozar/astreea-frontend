@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Pressable, Text, View } from "react-native";
 import { apiFactory } from "../../api/index.js";
@@ -10,8 +10,12 @@ import Layout from "../../general_components/Layout";
 import { style } from "./SignUp.style";
 import validationSchema from "./validationSchema";
 import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import SnackBar from "../../general_components/SnackBar";
 
 const SignUp = () => {
+  const [error, setError] = useState(false);
+
   const navigation = useNavigation();
   const {
     control,
@@ -23,15 +27,32 @@ const SignUp = () => {
 
   const onSubmit = async (data) => {
     try {
-      const login = await apiFactory()
+      const register = await apiFactory()
         .data.account()
         .register({
           ...data,
           password: data.passwordControlled,
         });
+
+      storeData(register);
       navigation.navigate("Home");
     } catch (e) {
-      console.log("the e is ", e);
+      console.log("the e is ", e.response.data.message);
+      setError(e.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setError(false);
+    }, 5000);
+  }, [error]);
+
+  const storeData = async (value) => {
+    try {
+      await AsyncStorage.setItem("token", value);
+    } catch (e) {
+      console.log("THE TOKEN ERROR", e);
     }
   };
 
@@ -110,7 +131,7 @@ const SignUp = () => {
           text={"Sign Up"}
           marginBottom={10}
           title="Submit"
-          onPressAction={presed}
+          onPressAction={handleSubmit(onSubmit)}
         />
         <Text style={style.forgotText}>Forgot your password</Text>
         <Pressable onPress={presed}>
@@ -118,6 +139,7 @@ const SignUp = () => {
             By Continuing you agree to the Terms and Conditions
           </Text>
         </Pressable>
+        {error && <SnackBar text={error} />}
       </Layout.Footer>
     </Layout>
   );
