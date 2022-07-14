@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, Button } from "react-native";
+import { Text, View, StyleSheet, Button, Pressable } from "react-native";
 import Button2 from "../../components/Button/Button";
 import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
 import Layout from "../../general_components/Layout";
@@ -16,24 +16,20 @@ const ConnectQR = (props) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(true);
 
+  const requestPermisionCamera = async () => {
+    const permision = await BarCodeScanner.requestPermissionsAsync();
+
+    setHasPermission(permision.status === "granted");
+  };
+
   useEffect(() => {
-    (async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === "granted");
-    })();
+    requestPermisionCamera();
   }, []);
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
-
-  if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
 
   return (
     <Layout>
@@ -56,7 +52,11 @@ const ConnectQR = (props) => {
         {hasPermission === null ? (
           <Text>Requesting for camera permission</Text>
         ) : hasPermission === false ? (
-          <Text>No access to camera</Text>
+          <Pressable onPress={() => requestPermisionCamera()}>
+            <Text style={{ ...style.description, color: "red" }}>
+              No access to camera. Click for request the acces
+            </Text>
+          </Pressable>
         ) : null}
       </Layout.Body>
       <Layout.Footer>
