@@ -20,6 +20,7 @@ export const style = StyleSheet.create({
     marginLeft: "auto",
     marginRight: "auto",
     marginBottom: 30,
+    marginTop: 30,
   },
   description: {
     color: "#393B3B",

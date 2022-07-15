@@ -1,10 +1,6 @@
 import * as yup from "yup";
 
 const validationSchema = yup.object().shape({
-  email: yup
-    .string()
-    .required("Email-ul este obligatoriu")
-    .email("Email incomplet"),
   firstName: yup.string().required("Numele este obligatoriu!"),
 
   lastName: yup.string().required("Prenumele este obligatoriu!"),

@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Text, View } from "react-native";
 import Button from "../../components/Button/Button";
@@ -9,8 +9,13 @@ import { style } from "./Account.style";
 import validationSchema from "./validationSchema";
 import routes from "../../routes";
 import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { apiFactory } from "../../api/index.js";
 
 const Account = (props) => {
+  const [token, setToken] = useState(null);
+  const [error, setError] = useState(false);
+
   const { navigation } = props;
 
   const { SignIn } = routes;
@@ -23,11 +28,48 @@ const Account = (props) => {
     resolver: yupResolver(validationSchema),
   });
 
+  const getToken = async () => {
+    try {
+      const tokenValue = await AsyncStorage.getItem("token");
+      setToken(tokenValue);
+      if (tokenValue !== null) {
+        // value previously stored
+      }
+    } catch (e) {
+      console.log("ERROR IN READING", e);
+      // error reading value
+    }
+  };
+
+  useEffect(() => {
+    getToken();
+  }, []);
+
+  const removeToken = async () => {
+    try {
+      await AsyncStorage.removeItem("token");
+    } catch (exception) {}
+  };
   const navigateToSignIn = () => {
+    removeToken();
+
     navigation.navigate(SignIn.name);
   };
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      await apiFactory().data.account().updateUser(token, {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        password: data.passwordControlled,
+      });
+
+      navigation.navigate("Home");
+    } catch (e) {
+      console.log("the e is ", e.response.data.message);
+      setError(e.response.data.message);
+    }
+  };
 
   return (
     <Layout scrollView={true}>
@@ -39,15 +81,6 @@ const Account = (props) => {
           <Text style={style.title}>My account</Text>
         </View>
         <View style={{ flex: 10 }}>
-          <Input
-            label={"Email"}
-            marginBottom={15}
-            validateInput={true}
-            control={control}
-            errors={errors.email?.message}
-            name={"email"}
-            secureTextEntry={false}
-          />
           <Input
             label={"First name"}
             marginBottom={12}

@@ -1,25 +1,27 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import Button from "../../components/Button/Button";
 import Card from "../../components/Card/Card";
 import PillButton from "../../components/PillButton/PillButton";
 import SearchInput from "../../components/SearchInput/SearchInput";
-import HeaderBackButton from "../../general_components/HeaderBackButton";
 import Layout from "../../general_components/Layout";
 import routes from "../../routes";
 import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { apiFactory } from "../../api/index.js";
 
 const Home = (props) => {
+  const [token, setToken] = useState(null);
+
   const { navigation } = props;
 
   const { ConnectQR, DeviceDetails, Account, SignIn } = routes;
 
   const getData = async () => {
     try {
-      const value = await AsyncStorage.getItem("token");
-      console.log("THE TOKEN IS:", value);
-      if (value !== null) {
+      const tokenValue = await AsyncStorage.getItem("token");
+      setToken(tokenValue);
+      if (tokenValue !== null) {
         // value previously stored
       }
     } catch (e) {
@@ -28,17 +30,24 @@ const Home = (props) => {
     }
   };
 
-  const removeToken = async () => {
+  const getUserChargers = async (token) => {
     try {
-      await AsyncStorage.removeItem("token");
-    } catch (exception) {}
+      const userChargers = await apiFactory()
+        .data.account()
+        .getUserCharger(token);
+      console.log("THE USER CHARGERS ARE:", userChargers);
+    } catch (e) {
+      console.log("the eeeee is ", e.response.data.message);
+    }
   };
 
   useEffect(() => {
     getData();
-    removeToken();
-    getData();
   }, []);
+
+  useEffect(() => {
+    token && getUserChargers(token);
+  }, [token]);
 
   const navigateToAddDevice = () => {
     navigation.navigate(ConnectQR.name);
@@ -47,21 +56,10 @@ const Home = (props) => {
     navigation.navigate(DeviceDetails.name);
   };
 
-  // React.useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     headerRight: () => (
-  //       <Text onPress={() => navigation.navigate(Account.name)}>settings </Text>
-  //     ),
-  //     headerLeft: () => (
-  //       <HeaderBackButton onPress={() => navigation.navigate(SignIn.name)} />
-  //     ),
-  //   });
-  // }, [navigation]);
-
   return (
     <Layout>
       <Layout.Header>
-        <HeaderNavigator navigation={navigation} />
+        <HeaderNavigator navigation={navigation} hideBack={true} />
       </Layout.Header>
       <Layout.Body>
         <SearchInput />
