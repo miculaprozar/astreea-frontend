@@ -6,4 +6,9 @@ export default () => ({
     const {data} = await sendGetRequest(device_url + 'phoneCheck');
     return data;
   },
+
+  availableWifiNetowrks: async () => {
+    const {data} = await sendGetRequest(device_url + 'availableWifiNetowrks');
+    return data;
+  },
 });

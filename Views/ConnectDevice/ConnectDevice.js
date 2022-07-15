@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Text, View} from 'react-native';
 import Button from '../../components/Button/Button';
 import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavigator';
@@ -10,13 +10,16 @@ import routes from '../../routes';
 import {apiFactory} from '../../api';
 import {PermissionsAndroid} from 'react-native';
 import WifiManager from 'react-native-wifi-reborn';
+import HeaderBackButton from '../../general_components/HeaderBackButton';
 
 const ConnectDevice = (props) => {
   const {navigation} = props;
   const {ConnectQR, SetupDevice} = routes;
 
-  const [deviceHotspotName, setDeviceHotspotName] = useState('');
-  const [deviceHotspotPass, setDeviceHotspotPass] = useState('');
+  const [deviceHotspotName, setDeviceHotspotName] = useState(
+    'Astreea-Charger-1',
+  );
+  const [deviceHotspotPass, setDeviceHotspotPass] = useState('astreeacharger1');
 
   const [logText, setLogText] = useState('');
 
@@ -39,7 +42,7 @@ const ConnectDevice = (props) => {
       ' '
     );
   };
-  console.log(WifiManager);
+
   const connectToWifi = async () => {
     console.log(WifiManager);
     WifiManager.connectToProtectedSSID(
@@ -47,8 +50,28 @@ const ConnectDevice = (props) => {
       deviceHotspotPass,
       false,
     ).then(
-      () => {
+      async () => {
         console.log('Connected successfully!');
+        try {
+          const connectionStatus = await apiFactory()
+            .data.device()
+            .checkConnection();
+          setLogText(logTime() + connectionStatus);
+          if (connectionStatus === 'Connection OK.') {
+            const wifiNetworks = await apiFactory()
+              .data.device()
+              .availableWifiNetowrks();
+
+            if (wifiNetworks.wifiNames.length > 0) {
+              navigation.navigate(SetupDevice.name, {wifiNetworks});
+            } else {
+              // TODO: Notifcation for error and why
+            }
+          }
+        } catch (e) {
+          setLogText(logTime() + e);
+          // TODO: Notifcation for error and why
+        }
       },
       () => {
         console.log('Connection failed!');
@@ -74,28 +97,14 @@ const ConnectDevice = (props) => {
         },
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        // You can now use react-native-wifi-reborn
         connectToWifi();
       } else {
         // Permission denied
+        // TODO: Notifcation for error and why
       }
     } else {
       connectToWifi();
     }
-
-    // try {
-    //   const connectionStatus = await apiFactory()
-    //     .data.device()
-    //     .checkConnection();
-    //   setLogText(logTime() + connectionStatus);
-    //   if (connectionStatus === 'Connection OK.') {
-    //     navigation.navigate(SetupDevice.name);
-    //     // TODO: Notifcation for Ok
-    //   }
-    // } catch (e) {
-    //   setLogText(logTime() + e);
-    //   // TODO: Notifcation for error and why
-    // }
   };
 
   return (

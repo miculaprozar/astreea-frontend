@@ -1,18 +1,31 @@
-import React from "react";
-import { Text, View } from "react-native";
-import Button from "../../components/Button/Button";
-import Input from "../../components/Input/Input";
-import { style } from "./SetupDevice.style";
-import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
-
-import routes from "../../routes";
-
-import Layout from "../../general_components/Layout";
+import React, {useEffect, useState} from 'react';
+import {Text, View} from 'react-native';
+import Button from '../../components/Button/Button';
+import Input from '../../components/Input/Input';
+import {style} from './SetupDevice.style';
+import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavigator';
+import routes from '../../routes';
+import Layout from '../../general_components/Layout';
+import {Picker} from '@react-native-picker/picker';
 
 const SetupDevice = (props) => {
-  const { navigation } = props;
+  const {navigation} = props;
 
-  const { ConnectDevice } = routes;
+  const {ConnectDevice} = routes;
+
+  const [selectedWifi, setSelectedWifi] = useState(
+    props.route.params.wifiNetworks.wifiNames[0],
+  );
+  const [selectedWifiPassword, setSelectedWifiPassword] = useState();
+
+  const sendDataToESP = async () => {
+    console.log(selectedWifi, selectedWifiPassword);
+
+    // const {data} = await apiFactory()
+    //   .data.device()
+    //   .setupDevice(wifiName, wifiPassword);
+    // console.log(data);
+  };
 
   return (
     <Layout scrollView={true}>
@@ -21,14 +34,37 @@ const SetupDevice = (props) => {
       </Layout.Header>
       <Layout.Body>
         <Text style={style.title}>Set up your device</Text>
-        <Input label={"Email"} marginBottom={15} marginTop={15} />
-        <Input label={"Email"} marginBottom={15} />
         <Text style={style.description}>Wifi settings</Text>
-        <Input label={""} marginBottom={0} marginTop={-10} />
-        <Input label={""} marginBottom={15} />
+
+        <View style={style.dropdown}>
+          <Picker
+            label={'Select wifi'}
+            selectedValue={selectedWifi}
+            onValueChange={(itemValue, itemIndex) => setSelectedWifi(itemValue)}
+          >
+            {props.route.params.wifiNetworks.wifiNames.map((wifi, key) => {
+              return (
+                <Picker.Item id={'pwi-' + key} label={wifi} value={wifi} />
+              );
+            })}
+          </Picker>
+        </View>
+
+        <Input
+          label={'Password'}
+          marginBottom={15}
+          onChange={(text) => {
+            setSelectedWifiPassword(text);
+          }}
+        />
       </Layout.Body>
       <Layout.Footer>
-        <Button text={"Verify set-up"} marginTop={10} marginBottom={35} />
+        <Button
+          text={'Verify set-up'}
+          marginTop={10}
+          marginBottom={35}
+          onPressAction={() => sendDataToESP()}
+        />
       </Layout.Footer>
     </Layout>
   );

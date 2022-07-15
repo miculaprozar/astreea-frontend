@@ -35,7 +35,7 @@ export default function App() {
   return (
     <>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="SignIn">
+        <Stack.Navigator initialRouteName="ConnectDevice">
           <Stack.Screen
             name={routes.SignIn.name}
             options={routes.SignIn.navigationOptions}
