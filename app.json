@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "astreea-front",
-    "slug": "astreea-front",
+    "name": "Astreea",
+    "slug": "astreea",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/astreealogo.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -14,19 +14,19 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/astreealogo.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "digitalgarden.astreea.app"
+      "package": "digitalgarden.astreea.app",
+      "versionCode": 1
     },
+    "sdkVersion": "45.0.0",
     "web": {
       "favicon": "./assets/favicon.png"
     }
