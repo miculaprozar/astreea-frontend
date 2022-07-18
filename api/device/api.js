@@ -11,4 +11,12 @@ export default () => ({
     const {data} = await sendGetRequest(device_url + 'availableWifiNetowrks');
     return data;
   },
+
+  setupDevice: async (wifiName, wifiPassword) => {
+    const {data} = await sendPostRequest(device_url + 'configure', {
+      ssid: wifiName,
+      password: wifiPassword,
+    });
+    return data;
+  },
 });

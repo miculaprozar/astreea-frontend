@@ -7,6 +7,7 @@ import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavi
 import routes from '../../routes';
 import Layout from '../../general_components/Layout';
 import {Picker} from '@react-native-picker/picker';
+import {apiFactory} from '../../api';
 
 const SetupDevice = (props) => {
   const {navigation} = props;
@@ -19,12 +20,10 @@ const SetupDevice = (props) => {
   const [selectedWifiPassword, setSelectedWifiPassword] = useState();
 
   const sendDataToESP = async () => {
-    console.log(selectedWifi, selectedWifiPassword);
-
-    // const {data} = await apiFactory()
-    //   .data.device()
-    //   .setupDevice(wifiName, wifiPassword);
-    // console.log(data);
+    const {data} = await apiFactory()
+      .data.device()
+      .setupDevice(selectedWifi, selectedWifiPassword);
+    console.log(data);
   };
 
   return (
