@@ -2,20 +2,42 @@ import React from "react";
 
 import { Text, View, TouchableWithoutFeedback } from "react-native";
 import { charging } from "./CardStyle";
+import differenceInMinutes from "date-fns/differenceInMinutes";
+import { useNavigation } from "@react-navigation/native";
+import routes from "../../routes";
 
 const Card = ({
   device,
   isCharging,
-  navigation,
   navigateToDevice,
   details,
+  name,
+  price,
+  id,
+  kwh,
+  lastCharge,
+  hourMinutes,
+  startStopData,
 }) => {
+  const navigation = useNavigation();
+  const { DeviceDetails } = routes;
+
   const navigateToDeviceAction = () => {
-    navigateToDevice();
+    navigation.navigate(DeviceDetails.name, {
+      chargerId: id,
+      isCharging,
+      name,
+      hourMinutes,
+      startStopData,
+    });
   };
 
+  // const startDate = new Date(lastCharge.startDate);
+  // const endDate = new Date(lastCharge.endDate);
+  // const minutes = differenceInMinutes(startDate, endDate);
+
   return (
-    <TouchableWithoutFeedback onPress={navigateToDeviceAction}>
+    <TouchableWithoutFeedback onPress={() => navigateToDeviceAction()}>
       <View
         style={
           details
@@ -28,8 +50,8 @@ const Card = ({
         <View style={{ flex: 1 }}>
           <View style={charging.upperTextContainer}>
             <View>
-              <Text style={charging.locationText}>Office</Text>
-              <Text style={charging.smallText}>Now</Text>
+              <Text style={charging.locationText}>{name}</Text>
+              {/* <Text style={charging.smallText}>Now</Text> */}
             </View>
             <Text
               style={
@@ -38,7 +60,8 @@ const Card = ({
                   : { ...charging.chargingStatusText }
               }
             >
-              Charging
+              {!details && isCharging && "Charging"}
+              {lastCharge?.length === 0 && "Not used"}
             </Text>
           </View>
           <View
@@ -55,7 +78,7 @@ const Card = ({
                     : { ...charging.chargingValuesText }
                 }
               >
-                21.2 kWh
+                {kwh}
               </Text>
               <Text style={charging.smallText}>Energy Delivered</Text>
             </View>
@@ -67,7 +90,7 @@ const Card = ({
                     : { ...charging.chargingValuesText }
                 }
               >
-                3h 34m
+                {hourMinutes}
               </Text>
               <Text style={charging.smallText}>Charge Duration</Text>
             </View>
@@ -79,7 +102,7 @@ const Card = ({
                     : { ...charging.chargingValuesText }
                 }
               >
-                21.12
+                {price}
               </Text>
               <Text style={charging.smallText}>Amount Paid</Text>
             </View>

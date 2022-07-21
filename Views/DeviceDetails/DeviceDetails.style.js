@@ -22,4 +22,12 @@ export const style = StyleSheet.create({
     flexDirection: "row",
     marginTop: 15,
   },
+  chargingTitle: {
+    fontSize: 36,
+    color: "#393B3B",
+    fontFamily: "Inter_500Medium",
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: 30,
+  },
 });

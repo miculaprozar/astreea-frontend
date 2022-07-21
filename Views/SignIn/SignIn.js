@@ -48,7 +48,6 @@ const SignIn = () => {
   const storeData = async (value) => {
     try {
       const a = await AsyncStorage.setItem("token", value);
-      console.log("WE ARE IN THE TRY", a);
     } catch (e) {
       console.log("THE TOKEN ERROR", e);
     }
