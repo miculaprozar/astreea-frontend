@@ -13,6 +13,7 @@ const SetupDevice = (props) => {
   const {navigation} = props;
 
   const {ConnectDevice} = routes;
+  const [waitingForData, setWaitingForData] = useState(false);
 
   const [selectedWifi, setSelectedWifi] = useState(
     props.route.params.wifiNetworks.wifiNames[0],
@@ -20,7 +21,7 @@ const SetupDevice = (props) => {
   const [selectedWifiPassword, setSelectedWifiPassword] = useState();
 
   const sendDataToESP = async () => {
-    const {data} = await apiFactory()
+    const data = await apiFactory()
       .data.device()
       .setupDevice(selectedWifi, selectedWifiPassword);
     console.log(data);
@@ -43,7 +44,7 @@ const SetupDevice = (props) => {
           >
             {props.route.params.wifiNetworks.wifiNames.map((wifi, key) => {
               return (
-                <Picker.Item id={'pwi-' + key} label={wifi} value={wifi} />
+                <Picker.Item key={'pwi-' + key} label={wifi} value={wifi} />
               );
             })}
           </Picker>

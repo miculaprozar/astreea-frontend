@@ -8,20 +8,24 @@ import Layout from '../../general_components/Layout';
 import {style} from './ConnectDevice.style';
 import routes from '../../routes';
 import {apiFactory} from '../../api';
-import {PermissionsAndroid} from 'react-native';
+import {PermissionsAndroid, ActivityIndicator, StyleSheet} from 'react-native';
 import WifiManager from 'react-native-wifi-reborn';
 import HeaderBackButton from '../../general_components/HeaderBackButton';
 
 const ConnectDevice = (props) => {
   const {navigation} = props;
   const {ConnectQR, SetupDevice} = routes;
-
   const [deviceHotspotName, setDeviceHotspotName] = useState(
-    'Astreea-Charger-1',
+    props.route.params
+      ? props.route.params.qrData.wifiName
+      : 'Astreea-Charger-1',
   );
-  const [deviceHotspotPass, setDeviceHotspotPass] = useState('astreeacharger1');
+  const [deviceHotspotPass, setDeviceHotspotPass] = useState(
+    props.route.params ? props.route.params.qrData.wifiPass : 'astreeacharger1',
+  );
 
   const [logText, setLogText] = useState('');
+  const [waitingForData, setWaitingForData] = useState(false);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -44,15 +48,24 @@ const ConnectDevice = (props) => {
   };
 
   const connectToWifi = async () => {
-    console.log(WifiManager);
     WifiManager.connectToProtectedSSID(
       deviceHotspotName,
       deviceHotspotPass,
       false,
     ).then(
       async () => {
+        WifiManager.getCurrentWifiSSID().then(
+          (ssid) => {
+            console.log('Your current connected wifi SSID is ' + ssid);
+          },
+          () => {
+            console.log('Cannot get current SSID!');
+          },
+        );
+
         console.log('Connected successfully!');
         try {
+          setWaitingForData(true);
           const connectionStatus = await apiFactory()
             .data.device()
             .checkConnection();
@@ -61,7 +74,7 @@ const ConnectDevice = (props) => {
             const wifiNetworks = await apiFactory()
               .data.device()
               .availableWifiNetowrks();
-
+            setWaitingForData(false);
             if (wifiNetworks.wifiNames.length > 0) {
               navigation.navigate(SetupDevice.name, {wifiNetworks});
             } else {
@@ -69,11 +82,13 @@ const ConnectDevice = (props) => {
             }
           }
         } catch (e) {
+          setWaitingForData(false);
           setLogText(logTime() + e);
           // TODO: Notifcation for error and why
         }
       },
       () => {
+        setWaitingForData(false);
         console.log('Connection failed!');
       },
     );
@@ -118,6 +133,7 @@ const ConnectDevice = (props) => {
           label={'Hotspot name'}
           marginBottom={15}
           marginTop={15}
+          value={deviceHotspotName}
           onChange={(inputValue) => {
             setDeviceHotspotName(inputValue);
           }}
@@ -125,6 +141,7 @@ const ConnectDevice = (props) => {
         <Input
           label={'Password'}
           marginBottom={15}
+          value={deviceHotspotPass}
           onChange={(inputValue) => {
             setDeviceHotspotPass(inputValue);
           }}
@@ -135,10 +152,24 @@ const ConnectDevice = (props) => {
       </Layout.Body>
       <Layout.Footer>
         <Button
-          text={'Test connection'}
           marginTop={10}
           marginBottom={35}
-          onPressAction={checkAndNavigateToSetup}
+          onPressAction={() => {
+            checkAndNavigateToSetup();
+          }}
+          disabled={waitingForData}
+          children={
+            <>
+              {waitingForData ? (
+                <ActivityIndicator
+                  size={'large'}
+                  color={'#ff6400'}
+                ></ActivityIndicator>
+              ) : (
+                <Text>Test Connection</Text>
+              )}
+            </>
+          }
         />
       </Layout.Footer>
     </Layout>

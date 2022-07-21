@@ -1,6 +1,6 @@
-import React from "react";
-import { Pressable, Text, View } from "react-native";
-import { secondary, primary } from "./ButtonStyle";
+import React from 'react';
+import {Pressable, Text, View} from 'react-native';
+import {secondary, primary} from './ButtonStyle';
 
 const Button = ({
   isSecondary,
@@ -8,13 +8,23 @@ const Button = ({
   marginTop,
   marginBottom,
   onPressAction,
+  children,
+  disabled,
 }) => {
   let buttonType = isSecondary ? secondary : primary;
 
   return (
-    <View style={{ marginTop: marginTop, marginBottom: marginBottom }}>
-      <Pressable style={buttonType.container} onPress={onPressAction}>
-        <Text style={buttonType.text}>{text}</Text>
+    <View style={{marginTop: marginTop, marginBottom: marginBottom}}>
+      <Pressable
+        disabled={disabled}
+        style={buttonType.container}
+        onPress={onPressAction}
+      >
+        {text ? (
+          <Text style={buttonType.text}>{text}</Text>
+        ) : (
+          children && <>{children}</>
+        )}
       </Pressable>
     </View>
   );

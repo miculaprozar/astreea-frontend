@@ -14,6 +14,7 @@ const Input = ({
   errors,
   onChange,
   secureTextEntry,
+  value,
 }) => {
   const [borderColor, setBorderColor] = useState(input);
 
@@ -54,6 +55,7 @@ const Input = ({
           onFocus={() => setBorderColor(inputFocused)}
           onBlur={() => setBorderColor(input)}
           onChangeText={onChange}
+          value={value}
         />
       )}
     </View>
