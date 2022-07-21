@@ -5,6 +5,7 @@ import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavi
 import Layout from '../../general_components/Layout';
 import {BarCodeScanner} from 'expo-barcode-scanner';
 import {style} from './ConnectQR.style';
+import SnackBar from '../../general_components/SnackBar';
 
 const ConnectQR = (props) => {
   const {navigation} = props;
@@ -14,16 +15,17 @@ const ConnectQR = (props) => {
       navigation.navigate('ConnectDevice', {qrData});
     } else {
       setScanned(false);
+      setError("QR Code not found or doesn't contain the right data!");
     }
   };
 
+  const [error, setError] = useState(null);
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [qrData, setQrData] = useState(null);
 
   const requestPermisionCamera = async () => {
     const permision = await BarCodeScanner.requestPermissionsAsync();
-
     setHasPermission(permision.status === 'granted');
   };
 
@@ -33,7 +35,7 @@ const ConnectQR = (props) => {
 
   const handleBarCodeScanned = ({type, data}) => {
     setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
     data = JSON.parse(data);
     if (
       data.wifiName &&
@@ -86,6 +88,14 @@ const ConnectQR = (props) => {
           marginTop={20}
           onPressAction={navigateToStep2}
         />
+        {error && (
+          <SnackBar
+            text={error}
+            logSnackbar={error}
+            setLogSnackbar={setError}
+            logType="error"
+          />
+        )}
       </Layout.Footer>
     </Layout>
   );

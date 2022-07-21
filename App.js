@@ -1,18 +1,18 @@
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Text } from "react-native";
-import Account from "./Views/Account/Account";
-import ConnectQR from "./Views/ConnectQR/ConnectQR";
-import ChargerSettings from "./Views/ChargerSettings/ChargerSettings";
-import ConnectDevice from "./Views/ConnectDevice/ConnectDevice";
-import DeviceDetails from "./Views/DeviceDetails/DeviceDetails";
-import SetupDevice from "./Views/SetupDevice/SetupDevice";
-import Home from "./Views/Home/Home";
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {Text} from 'react-native';
+import Account from './Views/Account/Account';
+import ConnectQR from './Views/ConnectQR/ConnectQR';
+import ChargerSettings from './Views/ChargerSettings/ChargerSettings';
+import ConnectDevice from './Views/ConnectDevice/ConnectDevice';
+import DeviceDetails from './Views/DeviceDetails/DeviceDetails';
+import SetupDevice from './Views/SetupDevice/SetupDevice';
+import Home from './Views/Home/Home';
 
-import SignIn from "./Views/SignIn/SignIn";
-import SignUp from "./Views/SignUp/SignUp";
+import SignIn from './Views/SignIn/SignIn';
+import SignUp from './Views/SignUp/SignUp';
 
-import routes from "./routes";
+import routes from './routes';
 
 import {
   Inter_400Regular,
@@ -20,10 +20,10 @@ import {
   Inter_600SemiBold,
   Inter_700Bold,
   useFonts,
-} from "@expo-google-fonts/inter";
-import Websocket from "./Views/WebSocket/Websocket";
+} from '@expo-google-fonts/inter';
+import Websocket from './Views/WebSocket/Websocket';
 
-import { Provider } from "./provider/Provider";
+import {Provider} from './provider/Provider';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,14 +37,14 @@ export default function App() {
   return (
     <Provider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="SignIn">
+        <Stack.Navigator initialRouteName="ConnectQR">
           <Stack.Screen
             name={routes.SignIn.name}
             options={routes.SignIn.navigationOptions}
           >
             {(props) =>
               fontsLoaded ? (
-                <SignIn {...props} extraData={"bla"} />
+                <SignIn {...props} extraData={'bla'} />
               ) : (
                 <Text>Loading...</Text>
               )
@@ -56,7 +56,7 @@ export default function App() {
           >
             {(props) =>
               fontsLoaded ? (
-                <SignUp {...props} extraData={"bla"} />
+                <SignUp {...props} extraData={'bla'} />
               ) : (
                 <Text>Loading...</Text>
               )
@@ -68,7 +68,7 @@ export default function App() {
           >
             {(props) =>
               fontsLoaded ? (
-                <Home {...props} extraData={"bla"} />
+                <Home {...props} extraData={'bla'} />
               ) : (
                 <Text>Loading...</Text>
               )
@@ -80,7 +80,7 @@ export default function App() {
           >
             {(props) =>
               fontsLoaded ? (
-                <Account {...props} extraData={"bla"} />
+                <Account {...props} extraData={'bla'} />
               ) : (
                 <Text>Loading...</Text>
               )
@@ -92,7 +92,7 @@ export default function App() {
           >
             {(props) =>
               fontsLoaded ? (
-                <ConnectQR {...props} extraData={"bla"} />
+                <ConnectQR {...props} extraData={'bla'} />
               ) : (
                 <Text>Loading...</Text>
               )
@@ -104,7 +104,7 @@ export default function App() {
           >
             {(props) =>
               fontsLoaded ? (
-                <ConnectDevice {...props} extraData={"bla"} />
+                <ConnectDevice {...props} extraData={'bla'} />
               ) : (
                 <Text>Loading...</Text>
               )
@@ -116,7 +116,7 @@ export default function App() {
           >
             {(props) =>
               fontsLoaded ? (
-                <SetupDevice {...props} extraData={"bla"} />
+                <SetupDevice {...props} extraData={'bla'} />
               ) : (
                 <Text>Loading...</Text>
               )
@@ -128,7 +128,7 @@ export default function App() {
           >
             {(props) =>
               fontsLoaded ? (
-                <DeviceDetails {...props} extraData={"bla"} />
+                <DeviceDetails {...props} extraData={'bla'} />
               ) : (
                 <Text>Loading...</Text>
               )
@@ -140,7 +140,7 @@ export default function App() {
           >
             {(props) =>
               fontsLoaded ? (
-                <ChargerSettings {...props} extraData={"bla"} />
+                <ChargerSettings {...props} extraData={'bla'} />
               ) : (
                 <Text>Loading...</Text>
               )

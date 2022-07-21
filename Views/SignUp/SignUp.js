@@ -1,17 +1,17 @@
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { Pressable, Text, View } from "react-native";
-import { apiFactory } from "../../api/index.js";
-import Button from "../../components/Button/Button";
-import Input from "../../components/Input/Input";
-import Layout from "../../general_components/Layout";
-import { style } from "./SignUp.style";
-import validationSchema from "./validationSchema";
-import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import SnackBar from "../../general_components/SnackBar";
+import {yupResolver} from '@hookform/resolvers/yup';
+import {useNavigation} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {useForm} from 'react-hook-form';
+import {Pressable, Text, View} from 'react-native';
+import {apiFactory} from '../../api/index.js';
+import Button from '../../components/Button/Button';
+import Input from '../../components/Input/Input';
+import Layout from '../../general_components/Layout';
+import {style} from './SignUp.style';
+import validationSchema from './validationSchema';
+import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavigator';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import SnackBar from '../../general_components/SnackBar';
 
 const SignUp = () => {
   const [error, setError] = useState(false);
@@ -20,7 +20,7 @@ const SignUp = () => {
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: {errors},
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
@@ -35,29 +35,23 @@ const SignUp = () => {
         });
 
       storeData(register);
-      navigation.navigate("Home");
+      navigation.navigate('Home');
     } catch (e) {
-      console.log("the e is ", e.response.data.message);
+      console.log('the e is ', e.response.data.message);
       setError(e.response.data.message);
     }
   };
 
-  useEffect(() => {
-    setTimeout(() => {
-      setError(false);
-    }, 5000);
-  }, [error]);
-
   const storeData = async (value) => {
     try {
-      await AsyncStorage.setItem("token", value);
+      await AsyncStorage.setItem('token', value);
     } catch (e) {
-      console.log("THE TOKEN ERROR", e);
+      console.log('THE TOKEN ERROR', e);
     }
   };
 
   const presed = () => {
-    navigation.navigate("Home");
+    navigation.navigate('Home');
   };
 
   return (
@@ -76,50 +70,50 @@ const SignUp = () => {
             <Text style={style.title}>astreea</Text>
           </View>
           <View style={style.inputButtonsContainer}>
-            <View style={{ flex: 1 }}>
+            <View style={{flex: 1}}>
               <Input
-                label={"Email"}
+                label={'Email'}
                 marginBottom={15}
                 validateInput={true}
                 control={control}
                 errors={errors.email?.message}
-                name={"email"}
+                name={'email'}
                 secureTextEntry={false}
               />
               <Input
-                label={"First name"}
+                label={'First name'}
                 marginBottom={12}
                 validateInput={true}
                 control={control}
                 errors={errors.firstName?.message}
-                name={"firstName"}
+                name={'firstName'}
                 secureTextEntry={false}
               />
               <Input
-                label={"Last name"}
+                label={'Last name'}
                 marginBottom={12}
                 validateInput={true}
                 control={control}
                 errors={errors.lastName?.message}
-                name={"lastName"}
+                name={'lastName'}
                 secureTextEntry={false}
               />
               <Input
-                label={"Password"}
+                label={'Password'}
                 marginBottom={12}
                 validateInput={true}
                 control={control}
                 errors={errors.passwordControlled?.message}
-                name={"passwordControlled"}
+                name={'passwordControlled'}
                 secureTextEntry={true}
               />
               <Input
-                label={"Confirm password"}
+                label={'Confirm password'}
                 marginBottom={20}
                 validateInput={true}
                 control={control}
                 errors={errors.seccondPasswordControlled?.message}
-                name={"seccondPasswordControlled"}
+                name={'seccondPasswordControlled'}
                 secureTextEntry={true}
               />
             </View>
@@ -128,7 +122,7 @@ const SignUp = () => {
       </Layout.Body>
       <Layout.Footer>
         <Button
-          text={"Sign Up"}
+          text={'Sign Up'}
           marginBottom={10}
           title="Submit"
           onPressAction={handleSubmit(onSubmit)}
@@ -139,7 +133,14 @@ const SignUp = () => {
             By Continuing you agree to the Terms and Conditions
           </Text>
         </Pressable>
-        {error && <SnackBar text={error} />}
+        {error && (
+          <SnackBar
+            text={error}
+            logSnackbar={error}
+            setLogSnackbar={setError}
+            logType="error"
+          />
+        )}
       </Layout.Footer>
     </Layout>
   );
