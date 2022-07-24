@@ -13,14 +13,13 @@ import { apiFactory } from "../../api/index.js";
 import { Context } from "../../provider/Provider";
 
 const Home = (props) => {
-  const { boolean } = useContext(Context);
+  const { boolean, setChargers2 } = useContext(Context);
 
-  useEffect(() => {
-    console.log("THE CONTEXT IS:", boolean);
-  }, [boolean]);
+  // useEffect(() => {
+  //   console.log("THE CONTEXT IS:", boolean);
+  // }, [boolean]);
 
   const [token, setToken] = useState(null);
-
   const [chargers, setChargers] = useState(null);
 
   const [myChargers, setMychargers] = useState(null);
@@ -148,7 +147,9 @@ const Home = (props) => {
                     item.price,
                     item.currency
                   )}
-                  key={item.id}
+                  key={
+                    item.lastCharge.length > 0 ? item.lastCharge[0].id : item.id
+                  }
                   name={item.name}
                   currency={item.currency}
                   id={item.id}
@@ -162,7 +163,9 @@ const Home = (props) => {
                   isCharging={isCharging(item.lastCharge)}
                   lastCharge={item.lastCharge}
                   kwh={kwhRenderer(item.lastCharge)}
-                  key={item.id}
+                  key={
+                    item.lastCharge.length > 0 ? item.lastCharge[0].id : item.id
+                  }
                   name={item.name}
                   currency={item.currency}
                   price={priceRenderer(

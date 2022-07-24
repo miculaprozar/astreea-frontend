@@ -15,20 +15,28 @@ export default () => ({
   },
   startStopCharging: async (chargerData, token) => {
     const { data } = await sendPostRequest(
-      api_url + "/ast/api/v1/charging/",
+      api_url + "ast/api/v1/charging/",
       chargerData,
+      token
+    );
+    return data;
+  },
+  chargerHistory: async (chargerId, page, perPage, token) => {
+    const { data } = await sendGetRequest(
+      api_url +
+        `ast/api/v1/charging/${chargerId}?page=${page}&perPage=${perPage}`,
       token
     );
     return data;
   },
 
   availableWifiNetowrks: async () => {
-    const {data} = await sendGetRequest(device_url + 'availableWifiNetowrks');
+    const { data } = await sendGetRequest(device_url + "availableWifiNetowrks");
     return data;
   },
 
   setupDevice: async (wifiName, wifiPassword) => {
-    const {data} = await sendPostRequest(device_url + 'configure', {
+    const { data } = await sendPostRequest(device_url + "configure", {
       ssid: wifiName,
       password: wifiPassword,
     });
