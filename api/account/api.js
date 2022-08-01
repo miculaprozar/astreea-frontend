@@ -7,9 +7,10 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default () => ({
-  checkedIfLogged: async (email) => {
-    const { data } = await sendGetRequest(
-      api_url + "ast/api/v1/user/signUp" + email
+  forgotPassword: async (email) => {
+    const { data } = await sendPostRequest(
+      api_url + "ast/api/v1/user/forgotPassword",
+      email
     );
     return data;
   },
@@ -29,8 +30,25 @@ export default () => ({
   },
   updateUser: async (token, userInfo) => {
     const { data } = await sendPutRequest(
+      api_url + "ast/api/v1/user/changePassword",
+      userInfo,
+      token
+    );
+
+    return data;
+  },
+  changePassword: async (token, userInfo) => {
+    const { data } = await sendPutRequest(
       api_url + "ast/api/v1/user",
       userInfo,
+      token
+    );
+
+    return data;
+  },
+  getSpecificUser: async (token) => {
+    const { data } = await sendGetRequest(
+      api_url + "ast/api/v1/user/specificUser",
       token
     );
 

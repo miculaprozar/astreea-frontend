@@ -60,6 +60,8 @@ const Home = (props) => {
       const userChargers = await apiFactory()
         .data.account()
         .getUserCharger(token);
+
+      // console.log("THE CHARGERS ARE:", userChargers);
       setChargers(userChargers);
     } catch (e) {
       console.log("the eeeee is ", e.response.data.message);
@@ -81,10 +83,12 @@ const Home = (props) => {
   //   navigation.navigate(DeviceDetails.name);
   // };
 
-  const kwhRenderer = (lastCharge) =>
-    lastCharge.length === 0 || lastCharge[0].endKwh === null
+  const kwhRenderer = (lastCharge) => {
+    // console.log("THE LAST CHARGE DATA IS:", lastCharge);
+    return lastCharge.length === 0 || lastCharge[0].endKwh === null
       ? "-- kWh"
       : lastCharge[0].endKwh - lastCharge[0].startKwh + " kWh";
+  };
 
   const priceRenderer = (lastCharge, price, curency) =>
     lastCharge.length === 0 || lastCharge[0].endKwh === null

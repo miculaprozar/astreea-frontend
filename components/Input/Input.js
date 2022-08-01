@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
-import {TextInput, Text, View} from 'react-native';
-import {input, inputFocused, textStyle, inputDisabled} from './InputStyle';
-import {useForm, Controller} from 'react-hook-form';
+import React, { useState } from "react";
+import { TextInput, Text, View } from "react-native";
+import { input, inputFocused, textStyle, inputDisabled } from "./InputStyle";
+import { useForm, Controller } from "react-hook-form";
 
 const Input = ({
   label,
@@ -15,11 +15,12 @@ const Input = ({
   onChange,
   secureTextEntry,
   value,
+  controledChange,
 }) => {
   const [borderColor, setBorderColor] = useState(input);
 
   return (
-    <View style={{marginTop: marginTop, marginBottom: marginBottom}}>
+    <View style={{ marginTop: marginTop, marginBottom: marginBottom }}>
       <Text style={textStyle.text}>{label}</Text>
 
       {disabled ? (
@@ -33,30 +34,36 @@ const Input = ({
         <>
           <Controller
             control={control}
-            render={({field: {value, onChange}}) => (
-              <TextInput
-                placeholder={`Enter your ${label.toLowerCase()}`}
-                style={borderColor.input}
-                onChangeText={onChange}
-                onFocus={() => setBorderColor(inputFocused)}
-                onBlur={() => setBorderColor(input)}
-                value={value}
-                secureTextEntry={secureTextEntry}
-              />
-            )}
+            render={({ field: { value, onChange } }) => {
+              controledChange && controledChange(value);
+              return (
+                <TextInput
+                  placeholder={`Enter your ${label.toLowerCase()}`}
+                  style={borderColor.input}
+                  onChangeText={onChange}
+                  onFocus={() => setBorderColor(inputFocused)}
+                  onBlur={() => setBorderColor(input)}
+                  value={value}
+                  secureTextEntry={secureTextEntry}
+                />
+              );
+            }}
             name={name}
           />
           {errors && <Text style={textStyle.errorText}>{errors}</Text>}
         </>
       ) : (
-        <TextInput
-          placeholder={`Enter your ${label.toLowerCase()}`}
-          style={borderColor.input}
-          onFocus={() => setBorderColor(inputFocused)}
-          onBlur={() => setBorderColor(input)}
-          onChangeText={onChange}
-          value={value}
-        />
+        <>
+          <TextInput
+            placeholder={`Enter your ${label.toLowerCase()}`}
+            style={borderColor.input}
+            onFocus={() => setBorderColor(inputFocused)}
+            onBlur={() => setBorderColor(input)}
+            onChangeText={onChange}
+            value={value}
+          />
+          {errors && <Text style={textStyle.errorText}>{errors}</Text>}
+        </>
       )}
     </View>
   );

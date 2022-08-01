@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Text, View } from "react-native";
+import { Text, View, Pressable } from "react-native";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import Layout from "../../general_components/Layout";
@@ -58,13 +58,9 @@ const Account = (props) => {
 
   const onSubmit = async (data) => {
     try {
-      await apiFactory().data.account().updateUser(token, {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        password: data.passwordControlled,
-      });
+      await apiFactory().data.account().updateUser(token, data);
 
-      navigation.navigate("Home");
+      // navigation.navigate("Home");
     } catch (e) {
       console.log("the e is ", e.response.data.message);
       setError(e.response.data.message);
@@ -99,24 +95,9 @@ const Account = (props) => {
             name={"lastName"}
             secureTextEntry={false}
           />
-          <Input
-            label={"Password"}
-            marginBottom={12}
-            validateInput={true}
-            control={control}
-            errors={errors.passwordControlled?.message}
-            name={"passwordControlled"}
-            secureTextEntry={true}
-          />
-          <Input
-            label={"Confirm password"}
-            marginBottom={20}
-            validateInput={true}
-            control={control}
-            errors={errors.seccondPasswordControlled?.message}
-            name={"seccondPasswordControlled"}
-            secureTextEntry={true}
-          />
+          <Pressable onPress={() => navigation.navigate("RessetPassword")}>
+            <Text style={style.buttonsText}>Change Password</Text>
+          </Pressable>
         </View>
         <View style={{ flex: 3 }}>
           <Button
@@ -132,6 +113,12 @@ const Account = (props) => {
             marginBottom={35}
             onPressAction={handleSubmit(onSubmit)}
           />
+          {/* <Button
+            text={"Change password"}
+            marginTop={10}
+            marginBottom={35}
+            onPressAction={handleSubmit(onSubmit)}
+          /> */}
         </View>
       </Layout.Body>
     </Layout>

@@ -1,14 +1,14 @@
-import React, {useEffect} from 'react';
-import {Pressable, Text, View} from 'react-native';
-import {style} from './SnackBar.style';
+import React, { useEffect } from "react";
+import { Pressable, Text, View } from "react-native";
+import { style } from "./SnackBar.style";
 
-const SnackBar = ({text, logSnackbar, setLogSnackbar, logType}) => {
+const SnackBar = ({ text, logSnackbar, setLogSnackbar, logType }) => {
   const bkColor =
-    logType === 'error'
-      ? '#ff6400'
-      : logType === 'info'
-      ? '#97a6ad'
-      : '#393b3b';
+    logType === "error"
+      ? "#ff6400"
+      : logType === "info"
+      ? "#97a6ad"
+      : "#393b3b";
 
   useEffect(() => {
     setTimeout(() => {
@@ -17,7 +17,7 @@ const SnackBar = ({text, logSnackbar, setLogSnackbar, logType}) => {
   }, [logSnackbar]);
 
   return (
-    <View style={{...style.wrapper, backgroundColor: bkColor}}>
+    <View style={{ ...style.wrapper, backgroundColor: bkColor }}>
       <Text style={style.text}>{text}</Text>
     </View>
   );
