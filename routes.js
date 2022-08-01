@@ -38,6 +38,18 @@ export default routes = {
       headerShown: false,
     },
   },
+  ForgotPassword: {
+    name: "ForgotPassword",
+    navigationOptions: {
+      ...defaultNavigationOptions,
+    },
+  },
+  RessetPassword: {
+    name: "RessetPassword",
+    navigationOptions: {
+      ...defaultNavigationOptions,
+    },
+  },
   SignUp: {
     name: "SignUp",
     navigationOptions: {

@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useContext } from "react";
-import { Text, View, FlatList, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Text, View, FlatList } from "react-native";
 import Button from "../../components/Button/Button";
 import PillButton from "../../components/PillButton/PillButton";
 import ChargerButton from "../../components/ChargerButton/ChargerButton";
@@ -12,6 +12,8 @@ import { Context } from "../../provider/Provider";
 import Card from "../../components/Card/Card";
 import moment from "moment";
 import DateRangePicker from "react-native-daterange-picker";
+import { format } from "date-fns";
+import Table from "../../components/Table/Table";
 
 import { style } from "./DeviceDetails.style";
 
@@ -20,19 +22,29 @@ const DeviceDetails = (props) => {
   const { navigation } = props;
   const {
     route: {
-      params: { chargerId, isCharging, name, hourMinutes, startStopData },
+      params: {
+        chargerId,
+        isCharging,
+        name,
+        hourMinutes,
+        startStopData,
+        price,
+      },
     },
   } = props;
-  const { chargers2, setBoolean } = useContext(Context);
+
+  console.log("THE PRICE IS:", price);
 
   const { ChargerSettings } = routes;
   const [token, setToken] = useState(null);
   const [totalCharge, setTotalCharge] = useState(null);
-  const [page, setPage] = useState(1);
-  const [chargerHistory, setChargerHistory] = useState([]);
 
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+
+  const [tableStartDate, setTableStartDate] = useState(null);
+  const [tableEndDate, setTableEndDate] = useState(null);
+
   const [displayedDate, setDisplayedDate] = useState(moment());
   const [isCalendarOpen, SetIsCalendarOpen] = useState(false);
 
@@ -61,73 +73,51 @@ const DeviceDetails = (props) => {
         },
         token
       );
-      console.log("THE TOTAL CHARGE IS:", totalCharge);
     } catch (e) {
       console.log("ERROR IN START STOP CHARGING", e.response.data);
     }
   };
 
-  const getChargerTotalData = async (token) => {
+  const getChargerTotalData = async (token, dates) => {
     try {
       const totalCharge = await apiFactory()
         .data.device()
-        .getTotalChargingData(chargerId, token);
+        .getTotalChargingData(chargerId, token, dates);
       setTotalCharge(totalCharge);
     } catch (e) {
       console.log("the eeeee is ", e.response.data.message);
     }
   };
 
-  const getChargerHistory = async (token) => {
-    try {
-      const { data: theChargerHistory } = await apiFactory()
-        .data.device()
-        .chargerHistory(chargerId, page, 4, token);
-
-      setChargerHistory([...chargerHistory, ...theChargerHistory]);
-    } catch (e) {
-      console.log("the eeeee is ", e);
-    }
-  };
-
-  // useEffect(() => {
-  //   console.log("the carger history is:", chargerHistory);
-  // }, [chargerHistory]);
-
   useEffect(() => {
     getData();
   }, []);
 
   useEffect(() => {
-    console.log("THE PAGE IS:", page, chargerHistory);
-  }, [page, chargerHistory]);
-
-  useEffect(() => {
     token && getChargerTotalData(token);
   }, [token]);
-
-  useEffect(() => {
-    token && getChargerHistory(token);
-  }, [token, page]);
 
   const navigateToChargerSettings = () => {
     navigation.navigate(ChargerSettings.name);
   };
-  //   const navigateToSignUp = () => {
-  //     navigation.navigate("SignUp");
-  //   };
-  //   const navigateToHome = () => {
-  //     navigation.navigate("Home");
-  //   };
 
   const setDates = (dates) => {
-    dates.startDate && setStartDate(dates.startDate);
-    dates.endDate && setEndDate(dates.endDate);
+    if (dates.startDate) {
+      setStartDate(dates.startDate);
+      setTableStartDate(dates.startDate);
+    }
+    if (dates.endDate) {
+      setEndDate(dates.endDate);
+      setTableEndDate(dates.endDate);
+    }
   };
 
   useEffect(() => {
-    console.log("THE DATES ARE:", startDate, endDate);
     if (startDate && endDate) {
+      const requestStartDate = moment(startDate).format("YYYY-MM-DD");
+      const requestEndDate = moment(endDate).format("YYYY-MM-DD");
+      getChargerTotalData(token, { requestStartDate, requestEndDate });
+
       setTimeout(() => {
         SetIsCalendarOpen(false);
         setStartDate(null);
@@ -182,53 +172,15 @@ const DeviceDetails = (props) => {
                 <View style={{ flex: 1 }}></View>
                 <View style={{ flex: 1 }}></View>
               </View>
-              <View style={style.tableWrapper}>
-                <View style={{ flex: 1 }}>
-                  <Text>Date</Text>
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Text>Time</Text>
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Text>Grid</Text>
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Text>Cost</Text>
-                </View>
-              </View>
-              <FlatList
-                data={chargerHistory}
-                renderItem={({ item }) => {
-                  return (
-                    // <View style={style.tableWrapper}>
-                    //   <View style={{ flex: 1 }}>
-                    //     <Text>{item?.id}</Text>
-                    //   </View>
-                    //   <View style={{ flex: 1 }}>
-                    //     <Text>Time</Text>
-                    //   </View>
-                    //   <View style={{ flex: 1 }}>
-                    //     <Text>Grid</Text>
-                    //   </View>
-                    //   <View style={{ flex: 1 }}>
-                    //     <Text>Cost</Text>
-                    //   </View>
-                    // </View>
-                    <View
-                      style={{
-                        marginBottom: 10,
-                        backgroundColor: "red",
-                        marginBottom: 45,
-                      }}
-                    >
-                      <Text>{item.id}</Text>
-                    </View>
-                  );
-                }}
-                onEndReached={() => setPage(page + 1)}
-                keyExtractor={(item) => item.id}
-                onEndReachedThreshold={0.5}
-                // extraData={page}
+
+              <Table
+                token={token}
+                chargerId={chargerId}
+                tableStartDate={tableStartDate}
+                tableEndDate={tableEndDate}
+                setTableEndDate={setTableEndDate}
+                setTableStartDate={setTableStartDate}
+                price={price}
               />
             </>
           ) : (

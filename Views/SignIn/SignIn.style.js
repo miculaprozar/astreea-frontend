@@ -41,4 +41,10 @@ export const style = StyleSheet.create({
     marginLeft: "auto",
     marginRight: "auto",
   },
+  forgotPasswordText: {
+    color: "#97A6AD",
+    fontSize: 16,
+    fontFamily: "Inter_600SemiBold",
+    marginBottom: 15,
+  },
 });

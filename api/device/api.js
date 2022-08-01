@@ -6,9 +6,17 @@ export default () => ({
     const { data } = await sendGetRequest(device_url + "phoneCheck");
     return data;
   },
-  getTotalChargingData: async (deviceId, token) => {
+  getTotalChargingData: async (deviceId, token, dates) => {
+    let datesFilterQueryParams = "/";
+    if (dates) {
+      datesFilterQueryParams = `?startDate=${dates.requestStartDate}&endDate=${dates.requestEndDate}`;
+    }
+
     const { data } = await sendGetRequest(
-      api_url + "ast/api/v1/charging/total/" + deviceId,
+      api_url +
+        "ast/api/v1/charging/total/" +
+        deviceId +
+        datesFilterQueryParams,
       token
     );
     return data;
@@ -21,12 +29,19 @@ export default () => ({
     );
     return data;
   },
-  chargerHistory: async (chargerId, page, perPage, token) => {
+  chargerHistory: async (chargerId, page, perPage, token, dates) => {
+    console.log("THE DATES ARE:", dates);
+    let datesFilterQueryParams = "";
+    if (dates) {
+      datesFilterQueryParams = `&startDate=${dates.requestStartDate}&endDate=${dates.requestEndDate}`;
+    }
     const { data } = await sendGetRequest(
       api_url +
-        `ast/api/v1/charging/${chargerId}?page=${page}&perPage=${perPage}`,
+        `ast/api/v1/charging/${chargerId}?page=${page}&perPage=${perPage}${datesFilterQueryParams}`,
       token
     );
+
+    console.log("THE DATA FROM THE REQUEST IS:22", data, perPage);
     return data;
   },
 

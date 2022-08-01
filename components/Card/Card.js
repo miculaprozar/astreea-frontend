@@ -21,7 +21,7 @@ const Card = ({
 }) => {
   const navigation = useNavigation();
   const { DeviceDetails } = routes;
-
+  console.log("THE PRICE @$ IS:", price);
   const navigateToDeviceAction = () => {
     navigation.navigate(DeviceDetails.name, {
       chargerId: id,
@@ -29,6 +29,7 @@ const Card = ({
       name,
       hourMinutes,
       startStopData,
+      price,
     });
   };
 

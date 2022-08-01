@@ -7,13 +7,8 @@ export const style = StyleSheet.create({
     padding: "10%",
   },
   title: {
-    fontSize: 36,
+    fontSize: 28,
     color: "#393B3B",
     fontFamily: "Inter_700Bold",
-  },
-  buttonsText: {
-    color: "#97A6AD",
-    fontSize: 16,
-    fontFamily: "Inter_600SemiBold",
   },
 });
