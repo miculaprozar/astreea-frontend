@@ -28,7 +28,9 @@ const SetupDevice = (props) => {
       const data = await apiFactory()
         .data.device()
         .setupDevice(selectedWifi, selectedWifiPassword, token);
-      console.log(data);
+      if(data === "Device Connected to WiFi"){
+        
+      }
     }
   };
 
