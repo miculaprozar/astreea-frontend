@@ -15,6 +15,8 @@ const TableComponent = ({
 }) => {
   const [chargerHistory, setChargerHistory] = useState([]);
   const [tableData, setTableData] = useState([]);
+  const [tableDimension, setTableDimension] = React.useState(null);
+  const [tableItems, setTableItems] = useState(1);
 
   const [page, setPage] = useState(1);
 
@@ -28,7 +30,7 @@ const TableComponent = ({
         .chargerHistory(
           chargerId,
           page,
-          3,
+          tableItems,
           token,
           dates.splitStartDate ? dates : null
         );
@@ -64,6 +66,14 @@ const TableComponent = ({
   }, [chargerHistory]);
 
   useEffect(() => {
+    console.log("THE TABLE DIMENSIONS are:", tableDimension);
+    if (tableDimension) {
+      const itemsInTable = Math.floor(tableDimension / 46);
+      setTableItems(itemsInTable);
+    }
+  }, [tableDimension]);
+
+  useEffect(() => {
     console.log("Page in UseEffect", page);
     if (token) {
       console.log("Send request for dates");
@@ -71,7 +81,7 @@ const TableComponent = ({
       const splitEndDate = tableEndDate?.toISOString().split("T")[0];
       getChargerDatesHistory(token, { splitStartDate, splitEndDate });
     }
-  }, [token, page, tableStartDate, tableEndDate]);
+  }, [token, page, tableStartDate, tableEndDate, tableItems]);
 
   const kwRenderer = (startKwh, endKwh) =>
     startKwh && endKwh ? endKwh - startKwh : "-- ";
@@ -92,18 +102,26 @@ const TableComponent = ({
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ flex: 1 }}>
       <View style={style.container}>
-        <Table borderStyle={{ borderWidth: 2, borderColor: "#c8e1ff" }}>
-          <Row data={tableHead} style={style.head} textStyle={style.text} />
-          <Rows
-            data={tableData ? tableData : tableData2}
-            textStyle={style.text}
-          />
-        </Table>
+        <View
+          style={{ backgroundColor: "green", flex: 1 }}
+          onLayout={(event) => {
+            const { height } = event.nativeEvent.layout;
+            setTableDimension(height);
+          }}
+        >
+          <Table>
+            <Row data={tableHead} style={style.head} textStyle={style.text} />
+            <Rows
+              data={tableData ? tableData : tableData2}
+              textStyle={style.text}
+            />
+          </Table>
+        </View>
         <View
           style={{
-            flex: 1,
             flexDirection: "row",
             marginTop: 15,
+            backgroundColor: "red",
           }}
         >
           <View style={{ flex: 1, marginRight: 10 }}>
