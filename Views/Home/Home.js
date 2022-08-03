@@ -1,16 +1,16 @@
-import React, { useEffect, useState, useContext } from "react";
-import { ScrollView, Text, View, Pressable } from "react-native";
-import Button from "../../components/Button/Button";
-import Card from "../../components/Card/Card";
-import PillButton from "../../components/PillButton/PillButton";
-import SearchInput from "../../components/SearchInput/SearchInput";
-import Layout from "../../general_components/Layout";
-import routes from "../../routes";
-import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { apiFactory } from "../../api/index.js";
-import useWebSocket, { ReadyState } from "react-native-use-websocket";
-import moment from "moment";
+import React, {useEffect, useState, useContext} from 'react';
+import {ScrollView, Text, View, Pressable} from 'react-native';
+import Button from '../../components/Button/Button';
+import Card from '../../components/Card/Card';
+import PillButton from '../../components/PillButton/PillButton';
+import SearchInput from '../../components/SearchInput/SearchInput';
+import Layout from '../../general_components/Layout';
+import routes from '../../routes';
+import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavigator';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {apiFactory} from '../../api/index.js';
+import useWebSocket, {ReadyState} from 'react-native-use-websocket';
+import moment from 'moment';
 
 const Home = (props) => {
   const [canMessage, setCanMessage] = useState(true);
@@ -23,9 +23,9 @@ const Home = (props) => {
   const [chargers, setChargers] = useState(null);
 
   // WEBSOCKET CONNECTION
-  const [socketUrl] = React.useState("ws://164.92.234.83:6003");
+  const [socketUrl] = React.useState('ws://164.92.234.83:6003');
   const socketMessageHistory = React.useRef([]);
-  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
+  const {sendMessage, lastMessage, readyState} = useWebSocket(socketUrl, {
     retryOnError: true,
     shouldReconnect: () => {
       return true;
@@ -33,23 +33,23 @@ const Home = (props) => {
     reconnectInterval: 10000,
     reconnectAttempts: Infinity,
     onClose: () => {
-      console.log("Socket closed");
+      console.log('Socket closed');
     },
     onError: (error) => {
-      if (!error?.message?.includes("Failed to connect"))
-        console.log("Socket error", error);
+      if (!error?.message?.includes('Failed to connect'))
+        console.log('Socket error', error);
     },
     onOpen: () => {
-      console.log("Socket opened");
+      console.log('Socket opened');
     },
   });
   socketMessageHistory.current = React.useMemo(
     () => socketMessageHistory.current.concat(lastMessage),
-    [lastMessage]
+    [lastMessage],
   );
 
   useEffect(() => {
-    // console.log(lastMessage);
+    console.log('Last Message changed:', lastMessage);
     if (lastMessage?.data) {
       // console.log(JSON.parse(lastMessage.data.toString()));
       setChargers(JSON.parse(lastMessage.data.toString()));
@@ -58,11 +58,11 @@ const Home = (props) => {
 
   // // Use in case you need to show connectionStatus in the UI
   const connectionStatus = {
-    [ReadyState.CONNECTING]: "Connecting",
-    [ReadyState.OPEN]: "Open",
-    [ReadyState.CLOSING]: "Closing",
-    [ReadyState.CLOSED]: "Closed",
-    [ReadyState.UNINSTANTIATED]: "Uninstantiated",
+    [ReadyState.CONNECTING]: 'Connecting',
+    [ReadyState.OPEN]: 'Open',
+    [ReadyState.CLOSING]: 'Closing',
+    [ReadyState.CLOSED]: 'Closed',
+    [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
   }[readyState];
   // /////////////////////////////////////////////////////////////////////////
   const [getDevices, setGetDevices] = useState(null);
@@ -72,26 +72,25 @@ const Home = (props) => {
       setGetDevices(
         setInterval(() => {
           if (readyState === ReadyState.OPEN && token) {
-            console.log("Sending message for getting devices");
             sendMessage(
               JSON.stringify({
-                method: "GetKnownDevices",
+                method: 'GetKnownDevices',
                 token: token,
-                user: "Marko",
-              })
+                user: 'Marko',
+              }),
             );
           } else {
             clearInterval(getDevices);
           }
-        }, 5000)
+        }, 5000),
       );
     } else if (readyState === ReadyState.CONNECTING && token && canMessage) {
-      console.log("Connecting Socket...");
+      console.log('Connecting Socket...');
     } else if (readyState === ReadyState.CLOSING && token && canMessage) {
-      console.log("Closing Socket...");
+      console.log('Closing Socket...');
       clearInterval(getDevices);
     } else if (readyState === ReadyState.CLOSED && token && canMessage) {
-      console.log("Closed Socket...");
+      console.log('Closed Socket...');
       clearInterval(getDevices);
     } else clearInterval(getDevices);
   };
@@ -103,21 +102,21 @@ const Home = (props) => {
 
   const [myChargers, setMychargers] = useState(null);
 
-  const [searchfield, setSearchfield] = useState("");
+  const [searchfield, setSearchfield] = useState('');
 
-  const { navigation } = props;
+  const {navigation} = props;
 
-  const { ConnectQR, DeviceDetails, Account, SignIn } = routes;
+  const {ConnectQR, DeviceDetails, Account, SignIn} = routes;
 
   const getData = async () => {
     try {
-      const tokenValue = await AsyncStorage.getItem("token");
+      const tokenValue = await AsyncStorage.getItem('token');
       setToken(tokenValue);
       if (tokenValue !== null) {
         // value previously stored
       }
     } catch (e) {
-      console.log("ERROR IN READING", e);
+      console.log('ERROR IN READING', e);
       // error reading value
     }
   };
@@ -140,10 +139,10 @@ const Home = (props) => {
       const userChargers = await apiFactory()
         .data.account()
         .getUserCharger(token);
-      console.log("Chargers From Normal", userChargers);
+      console.log('Chargers From Normal', userChargers);
       setChargers(userChargers);
     } catch (e) {
-      console.log("the eeeee is ", e.response.data.message);
+      console.log('the eeeee is ', e.response.data.message);
     }
   };
 
@@ -154,20 +153,20 @@ const Home = (props) => {
   const navigateToAddDevice = () => {
     clearInterval(getDevices);
     setCanMessage(false);
-    navigation.navigate(ConnectQR.name, { onBack: changeCanMessageCallback });
+    navigation.navigate(ConnectQR.name, {onBack: changeCanMessageCallback});
   };
 
   const kwhRenderer = (lastCharge) => {
     // console.log("THE LAST CHARGE DATA IS:", lastCharge);
     return lastCharge.length === 0 || lastCharge[0].endKwh === null
-      ? "-- kWh"
-      : lastCharge[0].endKwh - lastCharge[0].startKwh + " kWh";
+      ? '-- kWh'
+      : lastCharge[0].endKwh - lastCharge[0].startKwh + ' kWh';
   };
 
   const priceRenderer = (lastCharge, price, curency) =>
     lastCharge.length === 0 || lastCharge[0].endKwh === null
-      ? "-- "
-      : price * (lastCharge[0].endKwh - lastCharge[0].startKwh) + " " + curency;
+      ? '-- '
+      : price * (lastCharge[0].endKwh - lastCharge[0].startKwh) + ' ' + curency;
 
   const differenceDates = (startDate, endDate) => {
     var diffMs = endDate - startDate; // milliseconds between now & Christmas
@@ -179,10 +178,10 @@ const Home = (props) => {
 
   const hourMinutesRenderer = (lastCharge) =>
     lastCharge.length === 0 || lastCharge[0].endKwh === null
-      ? "-- hh:mm "
+      ? '-- hh:mm '
       : differenceDates(
           new Date(lastCharge[0].startDate),
-          new Date(lastCharge[0].endDate)
+          new Date(lastCharge[0].endDate),
         );
 
   const isCharging = (lastCharge) => {
@@ -209,23 +208,23 @@ const Home = (props) => {
       </Layout.Header>
       <Layout.Body>
         <SearchInput setSearchfield={setSearchfield} />
-        <View style={{ flexDirection: "row", marginBottom: 20, marginTop: 10 }}>
-          <View style={{ flex: 1 }}>
+        <View style={{flexDirection: 'row', marginBottom: 20, marginTop: 10}}>
+          <View style={{flex: 1}}>
             <PillButton
               isSecondary={myChargers && true}
-              text={"All"}
+              text={'All'}
               onPressAction={() => setMychargers(null)}
             />
           </View>
-          <View style={{ flex: 2 }}>
+          <View style={{flex: 2}}>
             <PillButton
               isSecondary={!myChargers && true}
-              text={"My chargers"}
+              text={'My chargers'}
               marginLeft={15}
               onPressAction={() => setMychargers(1)}
             />
           </View>
-          <View style={{ flex: 2 }}></View>
+          <View style={{flex: 2}}></View>
         </View>
         <ScrollView>
           {chargers &&
@@ -240,7 +239,7 @@ const Home = (props) => {
                   price={priceRenderer(
                     item.lastCharge,
                     item.price,
-                    item.currency
+                    item.currency,
                   )}
                   key={
                     item.lastCharge.length > 0 ? item.lastCharge[0].id : item.id
@@ -267,7 +266,7 @@ const Home = (props) => {
                   price={priceRenderer(
                     item.lastCharge,
                     item.price,
-                    item.currency
+                    item.currency,
                   )}
                   id={item.id}
                   hourMinutes={hourMinutesRenderer(item.lastCharge)}
@@ -278,7 +277,7 @@ const Home = (props) => {
       </Layout.Body>
       <Layout.Footer>
         <Button
-          text={"Add new charger"}
+          text={'Add new charger'}
           marginTop={10}
           onPressAction={navigateToAddDevice}
         />
