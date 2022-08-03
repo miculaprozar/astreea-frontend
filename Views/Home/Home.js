@@ -49,7 +49,7 @@ const Home = (props) => {
   );
 
   useEffect(() => {
-    // console.log(lastMessage);
+    console.log('Last Message changed:', lastMessage);
     if (lastMessage?.data) {
       // console.log(JSON.parse(lastMessage.data.toString()));
       setChargers(JSON.parse(lastMessage.data.toString()));
@@ -72,7 +72,6 @@ const Home = (props) => {
       setGetDevices(
         setInterval(() => {
           if (readyState === ReadyState.OPEN && token) {
-            console.log('Sending message for getting devices');
             sendMessage(
               JSON.stringify({
                 method: 'GetKnownDevices',
