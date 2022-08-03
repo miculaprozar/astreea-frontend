@@ -74,7 +74,11 @@ const Home = (props) => {
           if (readyState === ReadyState.OPEN && token) {
             console.log('Sending message for getting devices');
             sendMessage(
-              JSON.stringify({method: 'GetKnownDevices', token: token}),
+              JSON.stringify({
+                method: 'GetKnownDevices',
+                token: token,
+                user: 'Frank',
+              }),
             );
           } else {
             clearInterval(getDevices);
@@ -147,18 +151,11 @@ const Home = (props) => {
     getData();
   }, []);
 
-  // useEffect(() => {
-  //   token && getUserChargers(token);
-  // }, [token]);
-
   const navigateToAddDevice = () => {
     clearInterval(getDevices);
     setCanMessage(false);
     navigation.navigate(ConnectQR.name, {onBack: changeCanMessageCallback});
   };
-  // const navigateToDevice = (id) => {
-  //   navigation.navigate(DeviceDetails.name);
-  // };
 
   const kwhRenderer = (lastCharge) => {
     // console.log("THE LAST CHARGE DATA IS:", lastCharge);
@@ -189,7 +186,6 @@ const Home = (props) => {
         );
 
   const isCharging = (lastCharge) => {
-    console.log(lastCharge);
     return lastCharge.length > 0 && lastCharge[0].endKwh === null
       ? true
       : false;
