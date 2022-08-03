@@ -89,11 +89,6 @@ const ConnectQR = (props) => {
           marginTop={40}
           onPressAction={() => setScanned(false)}
         />
-        <Button2
-          text={'Scan QR (no registered device)'}
-          marginTop={20}
-          onPressAction={navigateToStep2}
-        />
         {error && (
           <SnackBar
             text={error}

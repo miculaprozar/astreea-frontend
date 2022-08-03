@@ -76,7 +76,7 @@ const Home = (props) => {
               JSON.stringify({
                 method: 'GetKnownDevices',
                 token: token,
-                user: 'Marko',
+                user: 'Frank',
               }),
             );
           } else {
