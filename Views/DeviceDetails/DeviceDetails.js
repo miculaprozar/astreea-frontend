@@ -126,6 +126,8 @@ const DeviceDetails = (props) => {
     }
   }, [startDate, endDate]);
 
+  const actualDate = moment(new Date()).format("YYYY-MM-DD");
+
   return (
     <>
       <DateRangePicker
@@ -165,7 +167,7 @@ const DeviceDetails = (props) => {
                   }}
                 >
                   <PillButton
-                    text={"February"}
+                    text={actualDate}
                     onPressAction={() => SetIsCalendarOpen(true)}
                   />
                 </View>
