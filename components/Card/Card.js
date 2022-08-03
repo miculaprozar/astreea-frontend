@@ -22,6 +22,7 @@ const Card = ({
   const navigation = useNavigation();
   const {DeviceDetails} = routes;
   const navigateToDeviceAction = () => {
+    console.log('Before Sending Navigate: ', isCharging);
     navigation.navigate(DeviceDetails.name, {
       chargerId: id,
       isCharging,

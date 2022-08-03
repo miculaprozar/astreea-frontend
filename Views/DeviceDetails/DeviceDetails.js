@@ -24,7 +24,7 @@ const DeviceDetails = (props) => {
     route: {
       params: {
         chargerId,
-        isChargingProp,
+        isCharging: isChargingProp,
         name,
         hourMinutes,
         startStopData,
