@@ -10,6 +10,7 @@ import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavi
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {apiFactory} from '../../api/index.js';
 import useWebSocket, {ReadyState} from 'react-native-use-websocket';
+import moment from 'moment';
 
 const Home = (props) => {
   const [canMessage, setCanMessage] = useState(true);
@@ -22,80 +23,79 @@ const Home = (props) => {
   const [chargers, setChargers] = useState(null);
 
   // WEBSOCKET CONNECTION
-  const [socketUrl] = React.useState('ws://164.92.234.83:6003');
-  const socketMessageHistory = React.useRef([]);
-  const {sendMessage, lastMessage, readyState} = useWebSocket(socketUrl, {
-    retryOnError: true,
-    shouldReconnect: () => {
-      return true;
-    },
-    reconnectInterval: 10000,
-    reconnectAttempts: Infinity,
-    onClose: () => {
-      console.log('Socket closed');
-    },
-    onError: (error) => {
-      if (!error?.message?.includes('Failed to connect'))
-        console.log('Socket error', error);
-    },
-    onOpen: () => {
-      console.log('Socket opened');
-    },
-  });
-  socketMessageHistory.current = React.useMemo(
-    () => socketMessageHistory.current.concat(lastMessage),
-    [lastMessage],
-  );
+  // const [socketUrl] = React.useState('ws://164.92.234.83:6003');
+  // const socketMessageHistory = React.useRef([]);
+  // const {sendMessage, lastMessage, readyState} = useWebSocket(socketUrl, {
+  //   retryOnError: true,
+  //   shouldReconnect: () => {
+  //     return true;
+  //   },
+  //   reconnectInterval: 10000,
+  //   reconnectAttempts: Infinity,
+  //   onClose: () => {
+  //     console.log('Socket closed');
+  //   },
+  //   onError: (error) => {
+  //     if (!error?.message?.includes('Failed to connect'))
+  //       console.log('Socket error', error);
+  //   },
+  //   onOpen: () => {
+  //     console.log('Socket opened');
+  //   },
+  // });
+  // socketMessageHistory.current = React.useMemo(
+  //   () => socketMessageHistory.current.concat(lastMessage),
+  //   [lastMessage],
+  // );
 
-  useEffect(() => {
-    console.log(lastMessage?.data?.toString());
-    if (lastMessage?.data) {
-      console.log(JSON.parse(lastMessage.data.toString()));
-      // setChargers(JSON.parse(lastMessage.data.toString()));
-    }
-  }, [lastMessage]);
+  // useEffect(() => {
+  //   console.log(lastMessage?.data?.toString());
+  //   if (lastMessage?.data) {
+  //     console.log(JSON.parse(lastMessage.data.toString()));
+  //     // setChargers(JSON.parse(lastMessage.data.toString()));
+  //   }
+  // }, [lastMessage]);
 
-  // Use in case you need to show connectionStatus in the UI
-  const connectionStatus = {
-    [ReadyState.CONNECTING]: 'Connecting',
-    [ReadyState.OPEN]: 'Open',
-    [ReadyState.CLOSING]: 'Closing',
-    [ReadyState.CLOSED]: 'Closed',
-    [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
-  }[readyState];
-  /////////////////////////////////////////////////////////////////////////
-  const [getDevices, setGetDevices] = useState(null);
+  // // Use in case you need to show connectionStatus in the UI
+  // const connectionStatus = {
+  //   [ReadyState.CONNECTING]: 'Connecting',
+  //   [ReadyState.OPEN]: 'Open',
+  //   [ReadyState.CLOSING]: 'Closing',
+  //   [ReadyState.CLOSED]: 'Closed',
+  //   [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
+  // }[readyState];
+  // /////////////////////////////////////////////////////////////////////////
+  // const [getDevices, setGetDevices] = useState(null);
 
-  const getDevicesHandler = () => {
-    if (readyState === ReadyState.OPEN && token && canMessage) {
-      setGetDevices(
-        setInterval(() => {
-          if (readyState === ReadyState.OPEN && token) {
-            console.log('Sending message for getting devices');
-            sendMessage(
-              JSON.stringify({method: 'GetKnownDevices', token: token}),
-            );
-          } else {
-            clearInterval(getDevices);
-          }
-        }, 2000),
-      );
-    } else if (readyState === ReadyState.CONNECTING && token && canMessage) {
-      console.log('Connecting Socket...');
-    } else if (readyState === ReadyState.CLOSING && token && canMessage) {
-      console.log('Closing Socket...');
-      clearInterval(getDevices);
-    } else if (readyState === ReadyState.CLOSED && token && canMessage) {
-      console.log('Closed Socket...');
-      clearInterval(getDevices);
-    } else clearInterval(getDevices);
-  };
+  // const getDevicesHandler = () => {
+  //   if (readyState === ReadyState.OPEN && token && canMessage) {
+  //     setGetDevices(
+  //       setInterval(() => {
+  //         if (readyState === ReadyState.OPEN && token) {
+  //           console.log('Sending message for getting devices');
+  //           sendMessage(
+  //             JSON.stringify({method: 'GetKnownDevices', token: token}),
+  //           );
+  //         } else {
+  //           clearInterval(getDevices);
+  //         }
+  //       }, 2000),
+  //     );
+  //   } else if (readyState === ReadyState.CONNECTING && token && canMessage) {
+  //     console.log('Connecting Socket...');
+  //   } else if (readyState === ReadyState.CLOSING && token && canMessage) {
+  //     console.log('Closing Socket...');
+  //     clearInterval(getDevices);
+  //   } else if (readyState === ReadyState.CLOSED && token && canMessage) {
+  //     console.log('Closed Socket...');
+  //     clearInterval(getDevices);
+  //   } else clearInterval(getDevices);
+  // };
 
-  useEffect(() => {
-    console.log('Home.js useEffect');
-    getDevicesHandler();
-    clearInterval(getDevices);
-  }, [readyState, canMessage]);
+  // useEffect(() => {
+  //   getDevicesHandler();
+  //   clearInterval(getDevices);
+  // }, [readyState, canMessage]);
 
   const [myChargers, setMychargers] = useState(null);
 
@@ -151,8 +151,8 @@ const Home = (props) => {
   }, [token]);
 
   const navigateToAddDevice = () => {
-    clearInterval(getDevices);
-    setCanMessage(false);
+    // clearInterval(getDevices);
+    // setCanMessage(false);
     navigation.navigate(ConnectQR.name, {onBack: changeCanMessageCallback});
   };
   // const navigateToDevice = (id) => {
@@ -171,10 +171,21 @@ const Home = (props) => {
       ? '-- '
       : price * (lastCharge[0].endKwh - lastCharge[0].startKwh) + ' ' + curency;
 
+  const differenceDates = (startDate, endDate) => {
+    var diffMs = endDate - startDate; // milliseconds between now & Christmas
+    var diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
+    var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
+
+    return `${diffHrs} H, ${diffMins} M`;
+  };
+
   const hourMinutesRenderer = (lastCharge) =>
     lastCharge.length === 0 || lastCharge[0].endKwh === null
       ? '-- hh:mm '
-      : '3h 34m';
+      : differenceDates(
+          new Date(lastCharge[0].startDate),
+          new Date(lastCharge[0].endDate),
+        );
 
   const isCharging = (lastCharge) =>
     lastCharge.length > 0 && lastCharge[0].endKwh === null ? true : false;

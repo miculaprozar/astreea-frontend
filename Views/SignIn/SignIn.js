@@ -30,13 +30,14 @@ const SignIn = () => {
 
   const onSubmit = async (data) => {
     try {
+      console.log(data);
       const token = await apiFactory().data.account().login(data);
-
+      console.log(token);
       storeData(token);
       navigation.navigate(Home.name);
       setError(false);
     } catch (e) {
-      console.log('WE ARE IN CATCH', e);
+      console.log('WE ARE IN CATCHjjjjjj', e);
       setError(e.response.data.message);
     }
   };
