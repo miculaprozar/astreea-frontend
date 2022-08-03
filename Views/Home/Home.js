@@ -1,5 +1,5 @@
-import React, {useEffect, useState, useContext} from 'react';
-import {ScrollView, Text, View, Pressable} from 'react-native';
+import React, { useEffect, useState, useContext } from 'react';
+import { ScrollView, Text, View, Pressable } from 'react-native';
 import Button from '../../components/Button/Button';
 import Card from '../../components/Card/Card';
 import PillButton from '../../components/PillButton/PillButton';
@@ -8,8 +8,9 @@ import Layout from '../../general_components/Layout';
 import routes from '../../routes';
 import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {apiFactory} from '../../api/index.js';
-import useWebSocket, {ReadyState} from 'react-native-use-websocket';
+import { apiFactory } from '../../api/index.js';
+import useWebSocket, { ReadyState } from 'react-native-use-websocket';
+import produce from 'immer';
 
 const Home = (props) => {
   const [canMessage, setCanMessage] = useState(true);
@@ -24,7 +25,7 @@ const Home = (props) => {
   // WEBSOCKET CONNECTION
   const [socketUrl] = React.useState('ws://164.92.234.83:6003');
   const socketMessageHistory = React.useRef([]);
-  const {sendMessage, lastMessage, readyState} = useWebSocket(socketUrl, {
+  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
     retryOnError: true,
     shouldReconnect: () => {
       return true;
@@ -44,7 +45,7 @@ const Home = (props) => {
   });
   socketMessageHistory.current = React.useMemo(
     () => socketMessageHistory.current.concat(lastMessage),
-    [lastMessage],
+    [lastMessage]
   );
 
   useEffect(() => {
@@ -73,12 +74,12 @@ const Home = (props) => {
           if (readyState === ReadyState.OPEN && token) {
             console.log('Sending message for getting devices');
             sendMessage(
-              JSON.stringify({method: 'GetKnownDevices', token: token}),
+              JSON.stringify({ method: 'GetKnownDevices', token: token })
             );
           } else {
             clearInterval(getDevices);
           }
-        }, 2000),
+        }, 2000)
       );
     } else if (readyState === ReadyState.CONNECTING && token && canMessage) {
       console.log('Connecting Socket...');
@@ -101,9 +102,9 @@ const Home = (props) => {
 
   const [searchfield, setSearchfield] = useState('');
 
-  const {navigation} = props;
+  const { navigation } = props;
 
-  const {ConnectQR, DeviceDetails, Account, SignIn} = routes;
+  const { ConnectQR, DeviceDetails, Account, SignIn } = routes;
 
   const getData = async () => {
     try {
@@ -136,6 +137,11 @@ const Home = (props) => {
         .data.account()
         .getUserCharger(token);
       console.log('Chargers From Normal', userChargers);
+      setChargers(
+        produce((draft) => {
+          return [...draft, ...userChargers];
+        })
+      );
       setChargers(userChargers);
     } catch (e) {
       console.log('the eeeee is ', e.response.data.message);
@@ -153,7 +159,7 @@ const Home = (props) => {
   const navigateToAddDevice = () => {
     clearInterval(getDevices);
     setCanMessage(false);
-    navigation.navigate(ConnectQR.name, {onBack: changeCanMessageCallback});
+    navigation.navigate(ConnectQR.name, { onBack: changeCanMessageCallback });
   };
   // const navigateToDevice = (id) => {
   //   navigation.navigate(DeviceDetails.name);
@@ -197,15 +203,15 @@ const Home = (props) => {
       </Layout.Header>
       <Layout.Body>
         <SearchInput setSearchfield={setSearchfield} />
-        <View style={{flexDirection: 'row', marginBottom: 20, marginTop: 10}}>
-          <View style={{flex: 1}}>
+        <View style={{ flexDirection: 'row', marginBottom: 20, marginTop: 10 }}>
+          <View style={{ flex: 1 }}>
             <PillButton
               isSecondary={myChargers && true}
               text={'All'}
               onPressAction={() => setMychargers(null)}
             />
           </View>
-          <View style={{flex: 2}}>
+          <View style={{ flex: 2 }}>
             <PillButton
               isSecondary={!myChargers && true}
               text={'My chargers'}
@@ -213,7 +219,7 @@ const Home = (props) => {
               onPressAction={() => setMychargers(1)}
             />
           </View>
-          <View style={{flex: 2}}></View>
+          <View style={{ flex: 2 }}></View>
         </View>
         <ScrollView>
           {chargers &&
@@ -228,7 +234,7 @@ const Home = (props) => {
                   price={priceRenderer(
                     item.lastCharge,
                     item.price,
-                    item.currency,
+                    item.currency
                   )}
                   key={
                     item.lastCharge.length > 0 ? item.lastCharge[0].id : item.id
@@ -255,7 +261,7 @@ const Home = (props) => {
                   price={priceRenderer(
                     item.lastCharge,
                     item.price,
-                    item.currency,
+                    item.currency
                   )}
                   id={item.id}
                   hourMinutes={hourMinutesRenderer(item.lastCharge)}
