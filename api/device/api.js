@@ -33,7 +33,7 @@ export default () => ({
     console.log("THE DATES ARE:", dates);
     let datesFilterQueryParams = "";
     if (dates) {
-      datesFilterQueryParams = `&startDate=${dates.requestStartDate}&endDate=${dates.requestEndDate}`;
+      datesFilterQueryParams = `&startDate=${dates.splitStartDate}&endDate=${dates.splitEndDate}`;
     }
     const { data } = await sendGetRequest(
       api_url +
@@ -41,7 +41,10 @@ export default () => ({
       token
     );
 
-    console.log("THE DATA FROM THE REQUEST IS:22", data, perPage);
+    console.log(
+      "THE DATA FROM THE REQUEST IS:22",
+      `ast/api/v1/charging/${chargerId}?page=${page}&perPage=${perPage}${datesFilterQueryParams}`
+    );
     return data;
   },
 

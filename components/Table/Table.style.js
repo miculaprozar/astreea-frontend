@@ -5,4 +5,7 @@ export const style = StyleSheet.create({
     flexDirection: "row",
     marginTop: 15,
   },
+  container: { flex: 1, marginTop: 15 },
+  head: { height: 40, backgroundColor: "#f1f8ff" },
+  text: { margin: 6 },
 });

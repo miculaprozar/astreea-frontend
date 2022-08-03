@@ -158,7 +158,7 @@ const DeviceDetails = (props) => {
           </View>
           {!isCharging ? (
             <>
-              <View style={style.tittleButtonWrapper}>
+              <View style={{ ...style.tittleButtonWrapper, marginBottom: 10 }}>
                 <View
                   style={{
                     flex: 1,
