@@ -6,6 +6,7 @@ import Layout from '../../general_components/Layout';
 import {BarCodeScanner} from 'expo-barcode-scanner';
 import {style} from './ConnectQR.style';
 import SnackBar from '../../general_components/SnackBar';
+import {apiFactory} from '../../api';
 
 const ConnectQR = (props) => {
   const {navigation} = props;
@@ -27,6 +28,18 @@ const ConnectQR = (props) => {
   const requestPermisionCamera = async () => {
     const permision = await BarCodeScanner.requestPermissionsAsync();
     setHasPermission(permision.status === 'granted');
+  };
+
+  const getToken = async () => {
+    try {
+      const tokenValue = await AsyncStorage.getItem('token');
+      if (tokenValue !== null) {
+        return tokenValue;
+      }
+    } catch (e) {
+      console.log('ERROR IN READING', e);
+      // error reading value
+    }
   };
 
   useEffect(() => {
@@ -87,7 +100,10 @@ const ConnectQR = (props) => {
         <Button2
           text={'Scan QR'}
           marginTop={40}
-          onPressAction={() => setScanned(false)}
+          onPressAction={() => {
+            setScanned(false);
+            apiFactory().data.account().addExistingChargerToUser(getToken());
+          }}
         />
         {error && (
           <SnackBar

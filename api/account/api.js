@@ -59,7 +59,11 @@ export default () => ({
     return data;
   },
   addExistingChargerToUser: async (token) => {
-    const {data} = await sendPostRequest(api_url + 'ast/api/v1/charger', token);
+    const {data} = await sendPostRequest(
+      api_url + 'ast/api/v1/charger',
+      '{"serialNumber": "AstreeaCharger1","name": "Frank\'s Charger","firmwareVersion": "buna","hwRevision": "mnah","mechanicalRevision": "este","latitude": 3.11123, "longitude": 2.22,"address": "strada mea","price": 4.2,"currency": "euro","stateId":1}',
+      token,
+    );
     return data;
   },
 });
