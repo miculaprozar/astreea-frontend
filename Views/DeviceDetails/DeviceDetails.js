@@ -33,8 +33,6 @@ const DeviceDetails = (props) => {
     },
   } = props;
 
-  console.log('THE PRICE IS:', price);
-
   const {ChargerSettings} = routes;
   const [token, setToken] = useState(null);
   const [totalCharge, setTotalCharge] = useState(null);
@@ -64,6 +62,12 @@ const DeviceDetails = (props) => {
       // error reading value
     }
   };
+
+  useEffect(() => {
+    console.log('Charging Props:', isChargingProp);
+
+    setIsCharging(isChargingProp);
+  }, [isChargingProp]);
 
   const StartStopCharging = async () => {
     try {
@@ -147,6 +151,8 @@ const DeviceDetails = (props) => {
     }
   }, [startDate, endDate]);
 
+  const actualDate = moment(new Date()).format('YYYY-MM-DD');
+
   return (
     <>
       {!triggerRefresh ? (
@@ -173,9 +179,8 @@ const DeviceDetails = (props) => {
                 </View>
                 <View style={{flex: 1}}>
                   <PillButton
-                    text={'Settings'}
-                    isSecondary
-                    onPressAction={navigateToChargerSettings}
+                    text={actualDate}
+                    onPressAction={() => SetIsCalendarOpen(true)}
                   />
                 </View>
               </View>
@@ -190,7 +195,7 @@ const DeviceDetails = (props) => {
                       }}
                     >
                       <PillButton
-                        text={'February'}
+                        text={'August'}
                         onPressAction={() => SetIsCalendarOpen(true)}
                       />
                     </View>
