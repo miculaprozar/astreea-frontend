@@ -54,6 +54,14 @@ const TableComponent = ({
     }
   };
 
+  const differenceDates = (startDate, endDate) => {
+    var diffMs = endDate - startDate; // milliseconds between now & Christmas
+    var diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
+    var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
+
+    return `${diffHrs} H, ${diffMins} M`;
+  };
+
   useEffect(() => {
     console.log('THE CARGER HISTORY IS:', chargerHistory);
     chargerHistory.length === 0 || chargerHistory.length < tableItems
@@ -63,9 +71,9 @@ const TableComponent = ({
     if (chargerHistory.length !== 0) {
       const tableData = chargerHistory.map((item) => [
         item.startDate.split('T')[0],
-        item.endDate.split('T')[0],
-        Math.round(item.startKwh * 1).toFixed(2),
-        Math.round(item.startKwh * 4.2).toFixed(2),
+        differenceDates(new Date(item.startDate), new Date(item.endDate)),
+        Math.round(item.endKwh - item.startKwh).toFixed(2),
+        Math.round((item.endKwh - item.startKwh) * 4.2).toFixed(2),
       ]);
       setTableData(tableData);
     } else setTableData([]);
@@ -94,22 +102,19 @@ const TableComponent = ({
   const tableHead = ['Date', 'Time', 'Kw', 'Cost'];
 
   return (
-    <View
-      style={style.container}
-      onLayout={(event) => {
-        const {height} = event.nativeEvent.layout;
-        console.log('Entire View', height);
-      }}
-    >
+    <View style={style.container}>
       {tableData.length === 0 ? (
-        <Text>No data</Text>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Text style={{fontSize: 30, textAlign: 'center'}}>
+            No data recorded for this charger.
+          </Text>
+        </View>
       ) : (
         <View style={{flex: 1}}>
           <View
-            style={{backgroundColor: 'green', flex: 1}}
+            style={{flex: 1}}
             onLayout={(event) => {
               const {height} = event.nativeEvent.layout;
-              console.log('View Height', height);
               setTableDimension(height);
             }}
           >
@@ -121,7 +126,6 @@ const TableComponent = ({
                 textStyle={style.rowText}
                 onLayout={(event) => {
                   const {height} = event.nativeEvent.layout;
-                  console.log("Row's Height", height);
                   setRowsHeight(height);
                 }}
               />
@@ -131,7 +135,6 @@ const TableComponent = ({
           <View
             style={{
               flexDirection: 'row',
-              backgroundColor: 'red',
             }}
           >
             <View style={{flex: 1, marginRight: 10}}>
@@ -144,7 +147,7 @@ const TableComponent = ({
               />
             </View>
             <View style={{flex: 1}}>
-              <PillButton text={`page: ${page}`} />
+              <PillButton text={`Page: ${page}`} />
             </View>
             <View style={{flex: 1, marginLeft: 10}}>
               <PillButton

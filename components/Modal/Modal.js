@@ -1,7 +1,13 @@
-import React, { useState } from "react";
-import { Alert, Modal, StyleSheet, Text, Pressable, View } from "react-native";
+import React, {useState} from 'react';
+import {Alert, Modal, StyleSheet, Text, Pressable, View} from 'react-native';
 
-const ModalComponent = ({ modalVisible, setModalVisible }) => {
+const ModalComponent = ({
+  modalVisible,
+  setModalVisible,
+  modalText,
+  actionText,
+  actionCallback,
+}) => {
   return (
     <View style={styles.centeredView}>
       <Modal
@@ -9,19 +15,33 @@ const ModalComponent = ({ modalVisible, setModalVisible }) => {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
+          Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
         }}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
+            <Text style={styles.modalText}>{modalText}</Text>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
             >
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </Pressable>
+              <Pressable
+                style={[styles.button, styles.buttonOpen]}
+                onPress={() => actionCallback()}
+              >
+                <Text style={[styles.textStyle]}>{actionText}</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.textStyle}>Close</Text>
+              </Pressable>
+            </View>
           </View>
         </View>
       </Modal>
@@ -34,11 +54,11 @@ export default ModalComponent;
 const styles = StyleSheet.create({
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 20,
     padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -48,23 +68,33 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   button: {
-    borderRadius: 20,
-    padding: 10,
+    borderRadius: 15,
+    padding: 15,
     elevation: 2,
+    marginLeft: 30,
+    marginRight: 30,
   },
   buttonOpen: {
-    backgroundColor: "#F194FF",
+    backgroundColor: '#97a6ad',
   },
   buttonClose: {
-    backgroundColor: "#2196F3",
+    backgroundColor: '#FF6400',
   },
   textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 16,
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center",
+    textAlign: 'center',
+    fontSize: 20,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
   },
 });

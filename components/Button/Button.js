@@ -10,11 +10,18 @@ const Button = ({
   onPressAction,
   children,
   disabled,
+  buttonStyle,
 }) => {
   let buttonType = isSecondary ? secondary : primary;
 
   return (
-    <View style={{marginTop: marginTop, marginBottom: marginBottom}}>
+    <View
+      style={
+        buttonStyle
+          ? buttonStyle
+          : {marginTop: marginTop, marginBottom: marginBottom}
+      }
+    >
       <Pressable
         disabled={disabled}
         style={buttonType.container}

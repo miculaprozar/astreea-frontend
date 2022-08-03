@@ -49,10 +49,11 @@ const Home = (props) => {
   );
 
   useEffect(() => {
-    console.log('Last Message changed:', lastMessage);
     if (lastMessage?.data) {
       // console.log(JSON.parse(lastMessage.data.toString()));
-      setChargers(JSON.parse(lastMessage.data.toString()));
+      const messageData = JSON.parse(lastMessage.data.toString());
+      console.log(Array.isArray(messageData));
+      if (Array.isArray(messageData)) setChargers(messageData);
     }
   }, [lastMessage]);
 
@@ -82,7 +83,7 @@ const Home = (props) => {
           } else {
             clearInterval(getDevices);
           }
-        }, 5000),
+        }, 1000),
       );
     } else if (readyState === ReadyState.CONNECTING && token && canMessage) {
       console.log('Connecting Socket...');
@@ -166,7 +167,9 @@ const Home = (props) => {
   const priceRenderer = (lastCharge, price, curency) =>
     lastCharge.length === 0 || lastCharge[0].endKwh === null
       ? '-- '
-      : price * (lastCharge[0].endKwh - lastCharge[0].startKwh) + ' ' + curency;
+      : (price * (lastCharge[0].endKwh - lastCharge[0].startKwh)).toFixed(2) +
+        ' ' +
+        curency;
 
   const differenceDates = (startDate, endDate) => {
     var diffMs = endDate - startDate; // milliseconds between now & Christmas
@@ -246,6 +249,7 @@ const Home = (props) => {
                   }
                   name={item.name}
                   currency={item.currency}
+                  stateId={item.stateId}
                   id={item.id}
                   hourMinutes={hourMinutesRenderer(item.lastCharge)}
                   startStopData={startStopData(item.lastCharge)}
@@ -269,6 +273,7 @@ const Home = (props) => {
                     item.currency,
                   )}
                   id={item.id}
+                  stateId={item.stateId}
                   hourMinutes={hourMinutesRenderer(item.lastCharge)}
                   startStopData={startStopData(item.lastCharge)}
                 />

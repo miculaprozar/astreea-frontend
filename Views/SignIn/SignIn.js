@@ -34,6 +34,12 @@ const SignIn = () => {
       const token = await apiFactory().data.account().login(data);
       console.log(token);
       storeData(token);
+      const userData = await apiFactory().data.account().getSpecificUser(token);
+      console.log(userData.firstName, userData.lastName);
+      if (userData?.firstName && userData?.lastName) {
+        await AsyncStorage.setItem('firstName', userData.firstName);
+        await AsyncStorage.setItem('lastName', userData.lastName);
+      }
       navigation.navigate(Home.name);
       setError(false);
     } catch (e) {

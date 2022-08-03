@@ -41,10 +41,6 @@ export default () => ({
       token,
     );
 
-    console.log(
-      'THE DATA FROM THE REQUEST IS:22',
-      `ast/api/v1/charging/${chargerId}?page=${page}&perPage=${perPage}${datesFilterQueryParams}`,
-    );
     return data;
   },
 

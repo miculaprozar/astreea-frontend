@@ -7,6 +7,7 @@ import {BarCodeScanner} from 'expo-barcode-scanner';
 import {style} from './ConnectQR.style';
 import SnackBar from '../../general_components/SnackBar';
 import {apiFactory} from '../../api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ConnectQR = (props) => {
   const {navigation} = props;
@@ -16,11 +17,13 @@ const ConnectQR = (props) => {
       navigation.navigate('ConnectDevice', {qrData});
     } else {
       setScanned(false);
+      setLogType('error');
       setError("QR Code not found or doesn't contain the right data!");
     }
   };
 
   const [error, setError] = useState(null);
+  const [logType, setLogType] = useState('error');
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [qrData, setQrData] = useState(null);
@@ -34,6 +37,7 @@ const ConnectQR = (props) => {
     try {
       const tokenValue = await AsyncStorage.getItem('token');
       if (tokenValue !== null) {
+        console.log(tokenValue);
         return tokenValue;
       }
     } catch (e) {
@@ -63,6 +67,43 @@ const ConnectQR = (props) => {
   };
 
   console.log(props.route.params);
+
+  const handleDEMOAssociateDevice = async () => {
+    console.log(qrData);
+    if (qrData?.wifiName && qrData?.wifiName !== '') {
+      let serialNumber = qrData.wifiName.replace(new RegExp('-', 'g'), '');
+      console.log(serialNumber);
+      const token = await getToken();
+      const response = await apiFactory()
+        .data.account()
+        .addExistingChargerToUser(token, serialNumber);
+      if (Array.isArray(response)) {
+        console.log(response);
+        setLogType('info');
+        setError('Device added successfully, please go back!');
+      } else {
+        setLogType('error');
+        setError(response);
+      }
+    } else {
+      setScanned(false);
+      setLogType('error');
+      setError("QR Code not found or doesn't contain the right data!");
+    }
+    // const token = await getToken();
+    // console.log(token);
+    // const response = await apiFactory()
+    //   .data.account()
+    //   .addExistingChargerToUser(token);
+    // if (Array.isArray(response)) {
+    //   console.log(response);
+    //   setLogType('info');
+    //   setError('Device added successfully, please go back!');
+    // } else {
+    //   setLogType('error');
+    //   setError(response);
+    // }
+  };
 
   return (
     <Layout>
@@ -100,17 +141,14 @@ const ConnectQR = (props) => {
         <Button2
           text={'Scan QR'}
           marginTop={40}
-          onPressAction={() => {
-            setScanned(false);
-            apiFactory().data.account().addExistingChargerToUser(getToken());
-          }}
+          onPressAction={() => handleDEMOAssociateDevice()}
         />
         {error && (
           <SnackBar
             text={error}
             logSnackbar={error}
             setLogSnackbar={setError}
-            logType="error"
+            logType={logType}
           />
         )}
       </Layout.Footer>
