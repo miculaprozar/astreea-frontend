@@ -2,9 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import useWebSocket, { ReadyState } from 'react-native-use-websocket';
-import { apiFactory } from '../../api/index.js';
 import Button from '../../components/Button/Button';
-import Card from '../../components/Card/Card';
+import ChargerCard from '../../components/Card/ChargerCard';
 import PillButton from '../../components/PillButton/PillButton';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavigator';
@@ -12,20 +11,21 @@ import Layout from '../../general_components/Layout';
 import routes from '../../routes';
 
 import {
+  hourMinutesRenderer,
   kwhRenderer,
   priceRenderer,
-  hourMinutesRenderer,
 } from '../../helpers/formatFunctions';
 
 const Home = (props) => {
-  const [canMessage, setCanMessage] = useState(true);
-
-  const changeCanMessageCallback = () => {
-    // setCanMessage(true);
-  };
+  const { navigation } = props;
+  const { ConnectQR, DeviceDetails } = routes;
 
   const [token, setToken] = useState(null);
+  const [canMessage, setCanMessage] = useState(true);
   const [chargers, setChargers] = useState(null);
+  const [getDevices, setGetDevices] = useState(null);
+  const [filterChargers, setFilterChargers] = useState(0);
+  const [searchfield, setSearchfield] = useState('');
 
   // WEBSOCKET CONNECTION
   const [socketUrl] = React.useState('ws://164.92.234.83:6003');
@@ -55,23 +55,20 @@ const Home = (props) => {
 
   useEffect(() => {
     if (lastMessage?.data) {
-      // console.log(JSON.parse(lastMessage.data.toString()));
       const messageData = JSON.parse(lastMessage.data.toString());
-      console.log(Array.isArray(messageData));
       if (Array.isArray(messageData)) setChargers(messageData);
     }
   }, [lastMessage]);
 
   // // Use in case you need to show connectionStatus in the UI
-  const connectionStatus = {
-    [ReadyState.CONNECTING]: 'Connecting',
-    [ReadyState.OPEN]: 'Open',
-    [ReadyState.CLOSING]: 'Closing',
-    [ReadyState.CLOSED]: 'Closed',
-    [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
-  }[readyState];
+  // const connectionStatus = {
+  //   [ReadyState.CONNECTING]: 'Connecting',
+  //   [ReadyState.OPEN]: 'Open',
+  //   [ReadyState.CLOSING]: 'Closing',
+  //   [ReadyState.CLOSED]: 'Closed',
+  //   [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
+  // }[readyState];
   // /////////////////////////////////////////////////////////////////////////
-  const [getDevices, setGetDevices] = useState(null);
 
   const getDevicesHandler = () => {
     if (readyState === ReadyState.OPEN && token && canMessage) {
@@ -106,66 +103,32 @@ const Home = (props) => {
     clearInterval(getDevices);
   }, [readyState, canMessage]);
 
-  const [myChargers, setMychargers] = useState(null);
-
-  const [searchfield, setSearchfield] = useState('');
-
-  const { navigation } = props;
-
-  const { ConnectQR, DeviceDetails, Account, SignIn } = routes;
-
-  const getData = async () => {
-    try {
-      const tokenValue = await AsyncStorage.getItem('token');
-      setToken(tokenValue);
-      if (tokenValue !== null) {
-        // value previously stored
-      }
-    } catch (e) {
-      console.log('ERROR IN READING', e);
-      // error reading value
-    }
+  const getToken = async () => {
+    const token = await AsyncStorage.getItem('token');
+    token && setToken(token);
   };
 
-  const filteredChargers =
-    chargers &&
-    chargers.length > 0 &&
-    chargers.filter((charger) => {
-      return charger.name.toLowerCase().includes(searchfield.toLowerCase());
-    });
-
-  const adminChargers =
-    myChargers &&
-    filteredChargers.filter((charger) => {
-      return charger.isAdmin === myChargers;
-    });
-
   useEffect(() => {
-    getData();
+    getToken();
   }, []);
 
   const navigateToAddDevice = () => {
-    // clearInterval(getDevices);
-    // setCanMessage(false);
     navigation.navigate(ConnectQR.name, { onBack: changeCanMessageCallback });
   };
 
-  const isCharging = (lastCharge) => {
-    return lastCharge.length > 0 && lastCharge[0].endKwh === null
-      ? true
-      : false;
+  const navigateToDeviceAction = (charger) => {
+    navigation.navigate(DeviceDetails.name, {
+      chargerId: charger.id,
+      isCharging:
+        charger.lastCharge.length > 0 && charger.lastCharge[0].endKwh === null
+          ? true
+          : false,
+      name: charger.name,
+      hourMinutes: hourMinutesRenderer(charger.lastCharge[0]),
+      startStopData: charger.lastCharge[0],
+      price: priceRenderer(charger.lastCharge[0]),
+    });
   };
-
-  const startStopData = (lastCharge) =>
-    lastCharge.length === 0
-      ? null
-      : {
-          startKwh: lastCharge[0].startKwh,
-          endKwh: lastCharge[0].endKwh,
-          voltage: lastCharge[0].voltage,
-          current: lastCharge[0].current,
-          power: lastCharge[0].power,
-        };
 
   return (
     <Layout>
@@ -177,68 +140,45 @@ const Home = (props) => {
         <View style={{ flexDirection: 'row', marginBottom: 20, marginTop: 10 }}>
           <View style={{ flex: 1 }}>
             <PillButton
-              isSecondary={myChargers && true}
-              text={'All'}
-              onPressAction={() => setMychargers(null)}
+              isSecondary={filterChargers && true}
+              text={'Public'}
+              onPressAction={() => setFilterChargers(0)}
             />
           </View>
           <View style={{ flex: 2 }}>
             <PillButton
-              isSecondary={!myChargers && true}
+              isSecondary={!filterChargers && true}
               text={'My chargers'}
               marginLeft={15}
-              onPressAction={() => setMychargers(1)}
+              onPressAction={() => setFilterChargers(1)}
             />
           </View>
           <View style={{ flex: 2 }}></View>
         </View>
         <ScrollView>
           {chargers &&
-          adminChargers &&
-          chargers.length > 0 &&
-          adminChargers.length > 0
-            ? adminChargers.map((item) => (
-                <Card
-                  isCharging={isCharging(item.lastCharge)}
-                  lastCharge={item.lastCharge}
-                  kwh={kwhRenderer(item.lastCharge[0])}
-                  price={priceRenderer(
-                    item.lastCharge,
-                    item.price,
-                    item.currency
-                  )}
-                  key={
-                    item.lastCharge.length > 0 ? item.lastCharge[0].id : item.id
-                  }
+            chargers.length > 0 &&
+            chargers
+              .filter((charger) => {
+                const isSearched = charger.name
+                  .toLowerCase()
+                  .includes(searchfield.toLowerCase());
+                const isFiltered = charger.isAdmin === filterChargers;
+                return isSearched && isFiltered;
+              })
+              .map((item, index) => (
+                <ChargerCard
                   name={item.name}
-                  currency={item.currency}
-                  stateId={item.stateId}
-                  id={item.id}
-                  hourMinutes={hourMinutesRenderer(item.lastCharge[0])}
-                  startStopData={startStopData(item.lastCharge[0])}
-                />
-              ))
-            : chargers &&
-              chargers.length > 0 &&
-              filteredChargers.map((item) => (
-                <Card
-                  isCharging={isCharging(item.lastCharge)}
-                  lastCharge={item.lastCharge}
                   kwh={kwhRenderer(item.lastCharge[0])}
-                  key={
-                    item.lastCharge.length > 0 ? item.lastCharge[0].id : item.id
-                  }
-                  name={item.name}
-                  currency={item.currency}
+                  time={hourMinutesRenderer(item.lastCharge[0])}
                   price={priceRenderer(
                     item.lastCharge[0],
                     item.price,
                     item.currency
                   )}
-                  id={item.id}
-                  stateId={item.stateId}
-                  hourMinutes={hourMinutesRenderer(item.lastCharge[0])}
-                  startStopData={startStopData(item.lastCharge)}
+                  key={'charger_' + index}
+                  statusName={item.state}
+                  onClick={() => navigateToDeviceAction(item)}
                 />
               ))}
         </ScrollView>
