@@ -1,6 +1,6 @@
 import React from 'react';
-import {Pressable, Text, View} from 'react-native';
-import {secondary, primary} from './ButtonStyle';
+import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { primary, secondary } from './ButtonStyle';
 
 const Button = ({
   isSecondary,
@@ -11,6 +11,7 @@ const Button = ({
   children,
   disabled,
   buttonStyle,
+  isLoading,
 }) => {
   let buttonType = isSecondary ? secondary : primary;
 
@@ -19,7 +20,7 @@ const Button = ({
       style={
         buttonStyle
           ? buttonStyle
-          : {marginTop: marginTop, marginBottom: marginBottom}
+          : { marginTop: marginTop, marginBottom: marginBottom }
       }
     >
       <Pressable
@@ -27,10 +28,16 @@ const Button = ({
         style={buttonType.container}
         onPress={onPressAction}
       >
-        {text ? (
-          <Text style={buttonType.text}>{text}</Text>
+        {isLoading ? (
+          () => <ActivityIndicator size={'small'} color={'#ff6400'} />
         ) : (
-          children && <>{children}</>
+          <>
+            {text ? (
+              <Text style={buttonType.text}>{text}</Text>
+            ) : (
+              children && <>{children}</>
+            )}
+          </>
         )}
       </Pressable>
     </View>

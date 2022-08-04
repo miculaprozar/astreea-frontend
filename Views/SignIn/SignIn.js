@@ -1,58 +1,48 @@
-import {yupResolver} from '@hookform/resolvers/yup';
-import {useNavigation} from '@react-navigation/native';
-import React, {useState, useEffect} from 'react';
-import {useForm} from 'react-hook-form';
-import {Text, Pressable} from 'react-native';
-import {apiFactory} from '../../api/index.js';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { Text, Pressable } from 'react-native';
+import { apiFactory } from '../../api/index.js';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import Layout from '../../general_components/Layout.js';
-import {style} from './SignIn.style';
+import { style } from './SignIn.style';
 import validationSchema from './validationSchema';
 import routes from '../../routes.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SnackBar from '../../general_components/SnackBar';
 
 const SignIn = () => {
+  const { Home, SignUp, ForgotPassword } = routes;
   const navigation = useNavigation();
-
   const [error, setError] = useState(false);
-
-  const {Home, SignUp, ForgotPassword} = routes;
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     control,
     handleSubmit,
-    formState: {errors},
+    formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
 
   const onSubmit = async (data) => {
     try {
-      console.log(data);
+      setIsLoading(true);
       const token = await apiFactory().data.account().login(data);
-      console.log(token);
-      storeData(token);
+      await AsyncStorage.setItem('token', token);
       const userData = await apiFactory().data.account().getSpecificUser(token);
-      console.log(userData.firstName, userData.lastName);
       if (userData?.firstName && userData?.lastName) {
         await AsyncStorage.setItem('firstName', userData.firstName);
         await AsyncStorage.setItem('lastName', userData.lastName);
       }
       navigation.navigate(Home.name);
       setError(false);
+      setIsLoading(false);
     } catch (e) {
-      console.log('WE ARE IN CATCHjjjjjj', e);
       setError(e.response.data.message);
-    }
-  };
-
-  const storeData = async (token) => {
-    try {
-      const a = await AsyncStorage.setItem('token', token);
-    } catch (e) {
-      console.log('THE TOKEN ERROR', e);
+      setIsLoading(false);
     }
   };
 
@@ -66,25 +56,10 @@ const SignIn = () => {
       if (token) {
         navigation.navigate(Home.name);
       }
+      isUserLoggedIn().catch((e) =>
+        console.log('Error in getting already logged user token', e)
+      );
     };
-    isUserLoggedIn().catch((e) =>
-      console.log('Error in getting already logged user token', e),
-    );
-  }, []);
-
-  const askAndSetCameraPermission = async () => {
-    try {
-      const permision = await BarCodeScanner.requestPermissionsAsync();
-      if (permision.status === 'granted') {
-        await AsyncStorage.setItem('cameraPermission', 'granted');
-      }
-    } catch (e) {
-      console.log('Error in getting camera permission', e);
-    }
-  };
-
-  useEffect(() => {
-    askAndSetCameraPermission();
   }, []);
 
   return (
@@ -97,7 +72,7 @@ const SignIn = () => {
           </Text>
         </Layout.Header>
 
-        <Layout.Body content="center">
+        <Layout.Body content='center'>
           <Input
             label={'Email'}
             marginBottom={15}
@@ -126,6 +101,8 @@ const SignIn = () => {
             text={'Sign In'}
             marginBottom={10}
             onPressAction={handleSubmit(onSubmit)}
+            isLoading={isLoading}
+            disabled={isLoading}
           />
           <Text style={style.betweenButtonsText}>OR</Text>
           <Button
@@ -144,7 +121,7 @@ const SignIn = () => {
               text={error}
               logSnackbar={error}
               setLogSnackbar={setError}
-              logType="error"
+              logType='error'
             />
           )}
         </Layout.Footer>
