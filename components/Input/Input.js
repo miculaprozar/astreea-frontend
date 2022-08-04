@@ -5,11 +5,13 @@ import {useForm, Controller} from 'react-hook-form';
 
 const Input = ({
   label,
+  placeholder,
   marginTop,
   marginBottom,
   disabled,
   validateInput,
   name,
+  type,
   control,
   errors,
   onChange,
@@ -55,11 +57,14 @@ const Input = ({
       ) : (
         <>
           <TextInput
-            placeholder={`Enter your ${label.toLowerCase()}`}
+            placeholder={
+              placeholder ? placeholder : `Enter your ${label.toLowerCase()}`
+            }
             style={borderColor.input}
             onFocus={() => setBorderColor(inputFocused)}
             onBlur={() => setBorderColor(input)}
             onChangeText={onChange}
+            secureTextEntry={type === 'password' ? true : false}
             value={value}
           />
           {errors && <Text style={textStyle.errorText}>{errors}</Text>}

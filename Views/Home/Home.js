@@ -16,7 +16,7 @@ const Home = (props) => {
   const [canMessage, setCanMessage] = useState(true);
 
   const changeCanMessageCallback = () => {
-    setCanMessage(true);
+    // setCanMessage(true);
   };
 
   const [token, setToken] = useState(null);
@@ -152,8 +152,8 @@ const Home = (props) => {
   }, []);
 
   const navigateToAddDevice = () => {
-    clearInterval(getDevices);
-    setCanMessage(false);
+    // clearInterval(getDevices);
+    // setCanMessage(false);
     navigation.navigate(ConnectQR.name, {onBack: changeCanMessageCallback});
   };
 

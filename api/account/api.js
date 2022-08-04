@@ -38,6 +38,7 @@ export default () => ({
 
     return data;
   },
+
   changePassword: async (token, userInfo) => {
     const {data} = await sendPutRequest(
       api_url + 'ast/api/v1/user',

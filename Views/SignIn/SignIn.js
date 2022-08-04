@@ -72,6 +72,21 @@ const SignIn = () => {
     );
   }, []);
 
+  const askAndSetCameraPermission = async () => {
+    try {
+      const permision = await BarCodeScanner.requestPermissionsAsync();
+      if (permision.status === 'granted') {
+        await AsyncStorage.setItem('cameraPermission', 'granted');
+      }
+    } catch (e) {
+      console.log('Error in getting camera permission', e);
+    }
+  };
+
+  useEffect(() => {
+    askAndSetCameraPermission();
+  }, []);
+
   return (
     <>
       <Layout scrollView={true}>

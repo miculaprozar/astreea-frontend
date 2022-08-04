@@ -29,8 +29,15 @@ const ConnectQR = (props) => {
   const [qrData, setQrData] = useState(null);
 
   const requestPermisionCamera = async () => {
-    const permision = await BarCodeScanner.requestPermissionsAsync();
-    setHasPermission(permision.status === 'granted');
+    const savedCameraPermission = await AsyncStorage.getItem(
+      'cameraPermission',
+    );
+    if (savedCameraPermission === 'granted') {
+      setHasPermission(true);
+    } else {
+      const permision = await BarCodeScanner.requestPermissionsAsync();
+      setHasPermission(permision.status === 'granted');
+    }
   };
 
   const getToken = async () => {
