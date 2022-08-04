@@ -37,8 +37,6 @@ const DeviceDetails = (props) => {
   const [token, setToken] = useState(null);
   const [totalCharge, setTotalCharge] = useState(null);
 
-  console.log(hourMinutes);
-
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
@@ -67,7 +65,6 @@ const DeviceDetails = (props) => {
 
   useEffect(() => {
     console.log('Charging Props:', isChargingProp);
-
     setIsCharging(isChargingProp);
   }, [isChargingProp]);
 
@@ -81,20 +78,22 @@ const DeviceDetails = (props) => {
     try {
       setTriggerRefresh(true);
       if (isCharging) {
-        await apiFactory()
-          .data.device()
-          .startStopCharging(
-            {
-              chargerId: chargerId,
-              voltage: 1,
-              current: 1,
-              power: 1,
-              endKwh:
-                startStopData.endKwh + demoGetEndKwh(startDate, new Date()),
-            },
-            token,
-          );
+        const demoEndKwh =
+          startStopData.endKwh + demoGetEndKwh(startDate, new Date());
+
+        await apiFactory().data.device().startStopCharging(
+          {
+            chargerId: chargerId,
+            voltage: 1,
+            current: 1,
+            power: 1,
+            endKwh: demoEndKwh,
+          },
+          token,
+        );
+        startStopData.endKwh = demoEndKwh;
       } else {
+        console.log('endKwh', startStopData.endKwh);
         await apiFactory().data.device().startStopCharging(
           {
             chargerId: chargerId,
@@ -110,7 +109,7 @@ const DeviceDetails = (props) => {
       setIsCharging(!isCharging);
       setTriggerRefresh(false);
     } catch (e) {
-      console.log('ERROR IN START STOP CHARGING', e.response.data);
+      console.error('DeviceDetails.StartStopCharging Error:', e.response.data);
     }
   };
 
@@ -122,7 +121,10 @@ const DeviceDetails = (props) => {
       setTotalCharge(totalCharge);
       console.log(totalCharge);
     } catch (e) {
-      console.log('the eeeee is ', e.response.data.message);
+      console.error(
+        'DeviceDetails.getChargerTotalData Error:',
+        e.response.data.message,
+      );
     }
   };
 
@@ -251,8 +253,8 @@ const DeviceDetails = (props) => {
                 <Card
                   isCharging={false}
                   details={true}
-                  price={totalCharge.ammountSpent}
-                  kwh={totalCharge.energyDelivered}
+                  price={totalCharge.ammountSpent.toFixed(2)}
+                  kwh={totalCharge.energyDelivered.toFixed(2)}
                   name={isCharging ? 'Charging' : 'Total'}
                   hourMinutes={`${Math.floor(
                     (totalCharge.chargeDuration % 86400000) / 3600000,

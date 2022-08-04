@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useEffect, useState } from 'react';
-import { ScrollView, View } from 'react-native';
-import useWebSocket, { ReadyState } from 'react-native-use-websocket';
+import React, {useEffect, useState} from 'react';
+import {ScrollView, View} from 'react-native';
+import useWebSocket, {ReadyState} from 'react-native-use-websocket';
 import Button from '../../components/Button/Button';
 import ChargerCard from '../../components/Card/ChargerCard';
 import PillButton from '../../components/PillButton/PillButton';
@@ -17,8 +17,8 @@ import {
 } from '../../helpers/formatFunctions';
 
 const Home = (props) => {
-  const { navigation } = props;
-  const { ConnectQR, DeviceDetails } = routes;
+  const {navigation} = props;
+  const {ConnectQR, DeviceDetails} = routes;
 
   const [token, setToken] = useState(null);
   const [canMessage, setCanMessage] = useState(true);
@@ -30,7 +30,7 @@ const Home = (props) => {
   // WEBSOCKET CONNECTION
   const [socketUrl] = React.useState('ws://164.92.234.83:6003');
   const socketMessageHistory = React.useRef([]);
-  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
+  const {sendMessage, lastMessage, readyState} = useWebSocket(socketUrl, {
     retryOnError: true,
     shouldReconnect: () => {
       return true;
@@ -50,13 +50,15 @@ const Home = (props) => {
   });
   socketMessageHistory.current = React.useMemo(
     () => socketMessageHistory.current.concat(lastMessage),
-    [lastMessage]
+    [lastMessage],
   );
 
   useEffect(() => {
     if (lastMessage?.data) {
       const messageData = JSON.parse(lastMessage.data.toString());
-      if (Array.isArray(messageData)) setChargers(messageData);
+      if (Array.isArray(messageData)) {
+        setChargers(messageData);
+      }
     }
   }, [lastMessage]);
 
@@ -80,12 +82,12 @@ const Home = (props) => {
                 method: 'GetKnownDevices',
                 token: token,
                 user: 'Tudor',
-              })
+              }),
             );
           } else {
             clearInterval(getDevices);
           }
-        }, 1000)
+        }, 1000),
       );
     } else if (readyState === ReadyState.CONNECTING && token && canMessage) {
       console.log('Connecting Socket...');
@@ -112,8 +114,10 @@ const Home = (props) => {
     getToken();
   }, []);
 
+  const changeCanMessageCallback = () => {};
+
   const navigateToAddDevice = () => {
-    navigation.navigate(ConnectQR.name, { onBack: changeCanMessageCallback });
+    navigation.navigate(ConnectQR.name, {onBack: changeCanMessageCallback});
   };
 
   const navigateToDeviceAction = (charger) => {
@@ -137,15 +141,15 @@ const Home = (props) => {
       </Layout.Header>
       <Layout.Body>
         <SearchInput setSearchfield={setSearchfield} />
-        <View style={{ flexDirection: 'row', marginBottom: 20, marginTop: 10 }}>
-          <View style={{ flex: 1 }}>
+        <View style={{flexDirection: 'row', marginBottom: 20, marginTop: 10}}>
+          <View style={{flex: 1}}>
             <PillButton
               isSecondary={filterChargers && true}
               text={'Public'}
               onPressAction={() => setFilterChargers(0)}
             />
           </View>
-          <View style={{ flex: 2 }}>
+          <View style={{flex: 2}}>
             <PillButton
               isSecondary={!filterChargers && true}
               text={'My chargers'}
@@ -153,7 +157,7 @@ const Home = (props) => {
               onPressAction={() => setFilterChargers(1)}
             />
           </View>
-          <View style={{ flex: 2 }}></View>
+          <View style={{flex: 2}}></View>
         </View>
         <ScrollView>
           {chargers &&
@@ -174,11 +178,16 @@ const Home = (props) => {
                   price={priceRenderer(
                     item.lastCharge[0],
                     item.price,
-                    item.currency
+                    item.currency,
                   )}
                   key={'charger_' + index}
-                  statusName={item.state}
-                  onClick={() => navigateToDeviceAction(item)}
+                  statusName={item.appStateName}
+                  onClick={() => {
+                    // FOR DEMO PURPOSE
+                    if (item.name === "Frank's Charger") {
+                      navigateToDeviceAction(item);
+                    }
+                  }}
                 />
               ))}
         </ScrollView>

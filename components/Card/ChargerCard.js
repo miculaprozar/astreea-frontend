@@ -1,17 +1,17 @@
 import React from 'react';
 
-import { Text, TouchableWithoutFeedback, View } from 'react-native';
-import { charging } from './CardStyle';
+import {Text, TouchableWithoutFeedback, View} from 'react-native';
+import {charging} from './CardStyle';
 
-const ChargerCard = ({ name, price, kwh, time, statusName, onClick }) => {
+const ChargerCard = ({name, price, kwh, time, statusName, onClick}) => {
   const getBGColorByStatus = (statusName) => {
     switch (statusName) {
       case 'Charging':
-        return '#97A6AD';
-      case 'idle':
-        return '#97A6AD';
-      case 'error':
-        return '#darkred';
+        return '#4F6362';
+      case 'Not Used':
+        return '#393B3B';
+      case 'Disconnected/Error':
+        return 'darkred';
       default:
         return '#4F6363';
     }
@@ -34,7 +34,7 @@ const ChargerCard = ({ name, price, kwh, time, statusName, onClick }) => {
             backgroundColor: getBGColorByStatus(statusName),
           }}
         >
-          <View style={{ flex: 1 }}>
+          <View style={{flex: 1}}>
             <View style={charging.upperTextContainer}>
               <View>
                 <Text style={charging.locationText}>{name}</Text>
@@ -56,7 +56,7 @@ const ChargerCard = ({ name, price, kwh, time, statusName, onClick }) => {
                 flexDirection: 'row',
               }}
             >
-              <View style={{ flex: 1, marginTop: 'auto' }}>
+              <View style={{flex: 1, marginTop: 'auto'}}>
                 <Text
                   style={{
                     ...charging.chargingStatusText,
@@ -67,7 +67,7 @@ const ChargerCard = ({ name, price, kwh, time, statusName, onClick }) => {
                 </Text>
                 <Text style={charging.smallText}>Energy Delivered</Text>
               </View>
-              <View style={{ flex: 1, marginTop: 'auto' }}>
+              <View style={{flex: 1, marginTop: 'auto'}}>
                 <Text
                   style={{
                     ...charging.chargingStatusText,
@@ -78,7 +78,7 @@ const ChargerCard = ({ name, price, kwh, time, statusName, onClick }) => {
                 </Text>
                 <Text style={charging.smallText}>Charge Duration</Text>
               </View>
-              <View style={{ flex: 1, marginTop: 'auto' }}>
+              <View style={{flex: 1, marginTop: 'auto'}}>
                 <Text
                   style={{
                     ...charging.chargingStatusText,
