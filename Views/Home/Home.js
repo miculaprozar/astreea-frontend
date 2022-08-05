@@ -56,7 +56,9 @@ const Home = (props) => {
   useEffect(() => {
     if (lastMessage?.data) {
       const messageData = JSON.parse(lastMessage.data.toString());
-      if (Array.isArray(messageData)) setChargers(messageData);
+      if (Array.isArray(messageData)) {
+        setChargers(messageData);
+      }
     }
   }, [lastMessage]);
 
@@ -111,6 +113,8 @@ const Home = (props) => {
   useEffect(() => {
     getToken();
   }, []);
+
+  const changeCanMessageCallback = () => {};
 
   const navigateToAddDevice = () => {
     navigation.navigate(ConnectQR.name, { onBack: changeCanMessageCallback });

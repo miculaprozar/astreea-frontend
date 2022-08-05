@@ -42,8 +42,6 @@ const DeviceDetails = (props) => {
   const [token, setToken] = useState(null);
   const [totalCharge, setTotalCharge] = useState(null);
 
-  console.log(hourMinutes);
-
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
@@ -77,6 +75,8 @@ const DeviceDetails = (props) => {
   };
 
   useEffect(() => {
+    console.log("Charging Props:", isChargingProp);
+
     setIsCharging(isChargingProp);
   }, [isChargingProp]);
 
@@ -104,6 +104,7 @@ const DeviceDetails = (props) => {
             token
           );
       } else {
+        console.log("endKwh", startStopData.endKwh);
         await apiFactory().data.device().startStopCharging(
           {
             chargerId: chargerId,
