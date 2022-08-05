@@ -142,21 +142,17 @@ const Home = (props) => {
       <Layout.Body>
         <SearchInput setSearchfield={setSearchfield} />
         <View style={{ flexDirection: "row", marginBottom: 20, marginTop: 10 }}>
-          <View style={{ flex: 1 }}>
-            <PillButton
-              isSecondary={filterChargers && true}
-              text={"Public"}
-              onPressAction={() => setFilterChargers(0)}
-            />
-          </View>
-          <View style={{ flex: 2 }}>
-            <PillButton
-              isSecondary={!filterChargers && true}
-              text={"My chargers"}
-              marginLeft={15}
-              onPressAction={() => setFilterChargers(1)}
-            />
-          </View>
+          <PillButton
+            isSecondary={filterChargers && true}
+            text={"Public"}
+            onPressAction={() => setFilterChargers(0)}
+          />
+          <PillButton
+            isSecondary={!filterChargers && true}
+            text={"My chargers"}
+            marginLeft={15}
+            onPressAction={() => setFilterChargers(1)}
+          />
           <View style={{ flex: 2 }}></View>
         </View>
         <ScrollView>
