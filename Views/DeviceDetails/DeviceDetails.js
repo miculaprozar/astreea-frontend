@@ -1,30 +1,27 @@
-import React, {useEffect, useState} from 'react';
-import {Text, View, FlatList, ActivityIndicator} from 'react-native';
-import Button from '../../components/Button/Button';
-import PillButton from '../../components/PillButton/PillButton';
-import ChargerButton from '../../components/ChargerButton/ChargerButton';
-import routes from '../../routes';
-import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavigator';
-import {apiFactory} from '../../api/index';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {MaterialCommunityIcons} from '@expo/vector-icons';
-import {Context} from '../../provider/Provider';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Text, View } from 'react-native';
+import { apiFactory } from '../../api/index';
 import Card from '../../components/Card/Card';
-import moment from 'moment';
-import DateRangePicker from 'react-native-daterange-picker';
+import ChargerButton from '../../components/ChargerButton/ChargerButton';
+import PillButton from '../../components/PillButton/PillButton';
 import Table from '../../components/Table/Table';
-import DatePicker from 'react-native-modern-datepicker';
-import {format, compareAsc} from 'date-fns';
-
-import ModalComponent from '../../components/Modal/Modal';
+import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavigator';
+import routes from '../../routes';
 
 import Calendar from '../../general_components/Calendar/Calendar';
 
-import {style} from './DeviceDetails.style';
+import { style } from './DeviceDetails.style';
 
 import Layout from '../../general_components/Layout';
+import {
+  getEndMonthDate,
+  getFullMonthName,
+  getStartMonthDate,
+} from '../../helpers/dateFormatFunctions';
 const DeviceDetails = (props) => {
-  const {navigation} = props;
+  const { navigation } = props;
   const {
     route: {
       params: {
@@ -38,26 +35,14 @@ const DeviceDetails = (props) => {
     },
   } = props;
 
-  const {ChargerSettings} = routes;
+  const { ChargerSettings } = routes;
   const [token, setToken] = useState(null);
   const [totalCharge, setTotalCharge] = useState(null);
 
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-
-  const theDate = format(new Date(), 'LLLL');
-
-  console.log('THE DATE IS:', theDate);
-
-  const [modalVisible, setModalVisible] = useState(false);
-
   const [isCharging, setIsCharging] = useState(isChargingProp);
 
-  const [tableStartDate, setTableStartDate] = useState(null);
-  const [tableEndDate, setTableEndDate] = useState(null);
-
-  const [displayedDate, setDisplayedDate] = useState(moment());
-  const [isCalendarOpen, SetIsCalendarOpen] = useState(false);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [date, setDate] = useState(getStartMonthDate(new Date()));
 
   const [triggerRefresh, setTriggerRefresh] = useState(false);
 
@@ -101,10 +86,9 @@ const DeviceDetails = (props) => {
               endKwh:
                 startStopData.endKwh + demoGetEndKwh(startDate, new Date()),
             },
-            token,
+            token
           );
       } else {
-        console.log('endKwh', startStopData.endKwh);
         await apiFactory().data.device().startStopCharging(
           {
             chargerId: chargerId,
@@ -113,7 +97,7 @@ const DeviceDetails = (props) => {
             power: 1,
             startKwh: startStopData.endKwh,
           },
-          token,
+          token
         );
       }
       token && getChargerTotalData(token);
@@ -148,56 +132,47 @@ const DeviceDetails = (props) => {
     navigation.navigate(ChargerSettings.name);
   };
 
-  const setDates = (dates) => {
-    if (dates.startDate) {
-      setStartDate(dates.startDate);
-      setTableStartDate(dates.startDate);
-    }
-    if (dates.endDate) {
-      setEndDate(dates.endDate);
-      setTableEndDate(dates.endDate);
-    }
+  // const setDates = (dates) => {
+  //   if (dates.startDate) {
+  //     setStartDate(dates.startDate);
+  //     setTableStartDate(dates.startDate);
+  //   }
+  //   if (dates.endDate) {
+  //     setEndDate(dates.endDate);
+  //     setTableEndDate(dates.endDate);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (startDate && endDate) {
+  //     const requestStartDate = moment(startDate).format('YYYY-MM-DD');
+  //     const requestEndDate = moment(endDate).format('YYYY-MM-DD');
+  //     getChargerTotalData(token, { requestStartDate, requestEndDate });
+
+  //     setTimeout(() => {
+  //       SetIsCalendarOpen(false);
+  //       setStartDate(null);
+  //       setEndDate(null);
+  //     }, 1000);
+  //   }
+  // }, [startDate, endDate]);
+
+  const onSubmitDate = (date) => {
+    setDate(date);
+    setIsCalendarOpen(!isCalendarOpen);
   };
-
-  useEffect(() => {
-    if (startDate && endDate) {
-      const requestStartDate = moment(startDate).format('YYYY-MM-DD');
-      const requestEndDate = moment(endDate).format('YYYY-MM-DD');
-      getChargerTotalData(token, {requestStartDate, requestEndDate});
-
-      setTimeout(() => {
-        SetIsCalendarOpen(false);
-        setStartDate(null);
-        setEndDate(null);
-      }, 1000);
-    }
-  }, [startDate, endDate]);
-
-  const actualDate = format(new Date(2022, 7), 'LLLL');
 
   return (
     <>
       {!triggerRefresh ? (
         <>
-          <DateRangePicker
-            onChange={setDates}
-            endDate={endDate}
-            startDate={startDate}
-            displayedDate={displayedDate}
-            range
-            open={isCalendarOpen}
-            presetButtons={true}
-          >
-            <Text style={{display: 'none'}}></Text>
-          </DateRangePicker>
-
           <Layout>
             <Layout.Header>
               <HeaderNavigator navigation={navigation} />
             </Layout.Header>
             <Layout.Body>
               <View style={style.tittleButtonWrapper}>
-                <View style={{flex: 2}}>
+                <View style={{ flex: 2 }}>
                   <Text style={style.title}> {name}</Text>
                 </View>
                 <View
@@ -215,7 +190,7 @@ const DeviceDetails = (props) => {
               {!isCharging ? (
                 <>
                   <View
-                    style={{...style.tittleButtonWrapper, marginBottom: 10}}
+                    style={{ ...style.tittleButtonWrapper, marginBottom: 10 }}
                   >
                     <View
                       style={{
@@ -223,21 +198,19 @@ const DeviceDetails = (props) => {
                       }}
                     >
                       <PillButton
-                        text={actualDate}
-                        onPressAction={() => setModalVisible(true)}
+                        text={getFullMonthName(date)}
+                        onPressAction={() => setIsCalendarOpen(true)}
                       />
                     </View>
-                    <View style={{flex: 1}}></View>
-                    <View style={{flex: 1}}></View>
+                    <View style={{ flex: 1 }}></View>
+                    <View style={{ flex: 1 }}></View>
                   </View>
 
                   <Table
                     token={token}
                     chargerId={chargerId}
-                    tableStartDate={tableStartDate}
-                    tableEndDate={tableEndDate}
-                    setTableEndDate={setTableEndDate}
-                    setTableStartDate={setTableStartDate}
+                    startDate={date}
+                    endDate={getEndMonthDate(date)}
                     price={price}
                   />
                 </>
@@ -245,9 +218,9 @@ const DeviceDetails = (props) => {
                 <View>
                   <Text style={style.chargingTitle}>Charging</Text>
                   <MaterialCommunityIcons
-                    name="battery-medium"
+                    name='battery-medium'
                     size={350}
-                    color="green"
+                    color='green'
                     style={{
                       marginLeft: 'auto',
                       marginRight: 'auto',
@@ -257,30 +230,30 @@ const DeviceDetails = (props) => {
                 </View>
               )}
             </Layout.Body>
-            <Layout.Footer style={{flex: 2, backgroundColor: 'red'}}>
+            <Layout.Footer style={{ flex: 2, backgroundColor: 'red' }}>
               {totalCharge && (
                 <Card
                   isCharging={false}
                   details={true}
-                  price={totalCharge.ammountSpent.toFixed(2)}
-                  kwh={totalCharge.energyDelivered.toFixed(2)}
+                  price={totalCharge.ammountSpent}
+                  kwh={totalCharge.energyDelivered}
                   name={isCharging ? 'Charging' : 'Total'}
                   hourMinutes={`${Math.floor(
-                    (totalCharge.chargeDuration % 86400000) / 3600000,
+                    (totalCharge.chargeDuration % 86400000) / 3600000
                   )} H, ${Math.round(
-                    ((totalCharge.chargeDuration % 86400000) % 3600000) / 60000,
+                    ((totalCharge.chargeDuration % 86400000) % 3600000) / 60000
                   )} M`}
                 />
               )}
               <View style={style.tittleButtonWrapper}>
-                <View style={{flex: 1}}>
+                <View style={{ flex: 1 }}>
                   <ChargerButton
                     text={'Schedule'}
                     marginRight={10}
                     isSecondary={true}
                   />
                 </View>
-                <View style={{flex: 1}}>
+                <View style={{ flex: 1 }}>
                   <ChargerButton
                     text={isCharging ? 'Stop' : 'Start'}
                     marginLeft={10}
@@ -290,11 +263,9 @@ const DeviceDetails = (props) => {
                 </View>
               </View>
               <Calendar
-                modalVisible={modalVisible}
-                handleModalChange={() =>
-                  setModalVisible((prevState) => !prevState)
-                }
-                calendar={true}
+                isOpen={isCalendarOpen}
+                selected={date}
+                handleSubmitDate={onSubmitDate}
               ></Calendar>
             </Layout.Footer>
           </Layout>

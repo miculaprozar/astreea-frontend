@@ -1,13 +1,14 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
+    paddingBottom: 20,
+    paddingTop: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -22,28 +23,28 @@ export const styles = StyleSheet.create({
     elevation: 2,
     marginLeft: 30,
     marginRight: 30,
+    marginTop: -40,
   },
   buttonOpen: {
-    backgroundColor: "#97a6ad",
+    backgroundColor: '#97a6ad',
   },
   buttonClose: {
-    backgroundColor: "#FF6400",
+    backgroundColor: '#FF6400',
   },
   textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
     fontSize: 16,
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: 20,
   },
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

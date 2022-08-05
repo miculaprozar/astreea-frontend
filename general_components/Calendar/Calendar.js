@@ -1,56 +1,56 @@
-import React, { useState, useEffect } from "react";
-import { Alert, Modal, StyleSheet, Text, Pressable, View } from "react-native";
-import DatePicker, { getFormatedDate } from "react-native-modern-datepicker";
-import { format, compareAsc } from "date-fns";
+import React, { useState, useEffect } from 'react';
+import { Alert, Modal, StyleSheet, Text, Pressable, View } from 'react-native';
+import DatePicker, { getFormatedDate } from 'react-native-modern-datepicker';
+import { format, compareAsc } from 'date-fns';
 
-import { styles } from "./Calendar.style";
+import { styles } from './Calendar.style';
 
-const ModalComponent = ({ handleModalChange, modalText, modalVisible }) => {
-  const [date, setDate] = useState(new Date());
+const ModalComponent = ({ isOpen, handleSubmitDate, selected }) => {
+  const [date, setDate] = useState(selected);
 
   useEffect(() => {
-    // const newDate = date.split(" ");
-
-    console.log("the date is:", date);
-  }, [date]);
+    setDate(selected);
+  }, [selected]);
 
   return (
     <View style={styles.centeredView}>
       <Modal
-        animationType="slide"
+        animationType='slide'
         transparent={true}
-        visible={modalVisible}
+        visible={isOpen}
         onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
+          Alert.alert('Modal has been closed.');
           handleModalChange;
         }}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>{modalText}</Text>
             <View
               style={{
-                display: "flex",
-                flexDirection: "row",
+                display: 'flex',
+                flexDirection: 'row',
               }}
             >
               <DatePicker
-                mode="monthYear"
+                mode='monthYear'
                 selectorStartingYear={2000}
-                // onMonthYearChange={(selectedDate) => setDate(selectedDate)}
-                // curent={format(new Date(2021, 6, 2), "yyyy-MM-dd")}
-                // selected={getFormatedDate(
-                //   new Date(2021, 8, 8),
-                //   "jYYYY/jMM/jDD"
-                // )}
-                current={getFormatedDate(new Date(date), "YYYY/MM/DD")}
-                selected={getFormatedDate(new Date(date), "YYYY/MM/DD")}
-                onMonthYearChange={(selectedDate) => setDate(selectedDate)}
+                current={getFormatedDate(new Date(date), 'YYYY/MM/DD')}
+                selected={getFormatedDate(new Date(date), 'YYYY/MM/DD')}
+                onMonthYearChange={(selectedDate) => {
+                  const dateSplit = selectedDate.split(' ');
+                  const selectedDateFormated = new Date(
+                    dateSplit[0],
+                    dateSplit[1] - 1,
+                    2
+                  );
+                  setDate(selectedDateFormated);
+                }}
+                style={{ padding: 0, width: '100%' }}
               />
             </View>
             <Pressable
               style={[styles.button, styles.buttonClose]}
-              onPress={() => handleModalChange()}
+              onPress={() => handleSubmitDate(date)}
             >
               <Text style={styles.textStyle}>Save Date</Text>
             </Pressable>
