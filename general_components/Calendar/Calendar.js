@@ -9,9 +9,9 @@ const ModalComponent = ({ handleModalChange, modalText, modalVisible }) => {
   const [date, setDate] = useState(new Date());
 
   useEffect(() => {
-    const newDate = date.split(" ");
+    // const newDate = date.split(" ");
 
-    console.log("the date is:", newDate);
+    console.log("the date is:", date);
   }, [date]);
 
   return (
