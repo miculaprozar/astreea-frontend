@@ -1,12 +1,6 @@
 import { StyleSheet } from "react-native";
 
 export const style = StyleSheet.create({
-  wrapper: {
-    backgroundColor: "#F2F6F7",
-    flex: 1,
-    paddingLeft: "10%",
-    paddingRight: "10%",
-  },
   textContainer: {
     flex: 1,
   },
@@ -14,11 +8,14 @@ export const style = StyleSheet.create({
     flex: 4,
   },
   title: {
-    color: "#393B3B",
-    fontSize: 62,
-    fontFamily: "Inter_700Bold",
+    color: "#949597",
+    fontSize: 28,
+    fontFamily: "Inter_600SemiBold",
     marginLeft: "auto",
     marginRight: "auto",
+    marginBottom: 50,
+    marginTop: 50,
+    textAlign: "center",
   },
   greetings: {
     color: "#393B3B",

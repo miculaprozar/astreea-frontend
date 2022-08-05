@@ -1,50 +1,39 @@
 import { StyleSheet } from "react-native";
 
 export const style = StyleSheet.create({
-  wrapper: {
-    backgroundColor: "#F2F6F7",
-    flex: 1,
-    padding: "10%",
-    paddingTop: 70,
-  },
-  textContainer: {
-    flex: 2,
-  },
-  inputButtonsContainer: {
-    flex: 5,
-  },
-  title: {
-    color: "#393B3B",
-    fontSize: 62,
-    fontFamily: "Inter_700Bold",
-    marginLeft: "auto",
-    marginRight: "auto",
-    marginBottom: 30,
-    marginTop: 30,
-  },
-  description: {
-    color: "#393B3B",
-    fontSize: 36,
-    fontFamily: "Inter_700Bold",
-  },
-  betweenButtonsText: {
-    color: "#97A6AD",
-    fontSize: 16,
-    fontFamily: "Inter_600SemiBold",
-    marginLeft: "auto",
-    marginRight: "auto",
-  },
-  termsText: {
-    color: "#C1C1C1",
+  betweenLinesText: {
+    color: "#7F7F7F",
     fontSize: 12,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Inter_600SemiBold",
     marginLeft: "auto",
     marginRight: "auto",
   },
   forgotPasswordText: {
-    color: "#97A6AD",
-    fontSize: 16,
-    fontFamily: "Inter_600SemiBold",
+    color: "#636569",
+    fontSize: 10,
+    fontFamily: "Inter_400Regular",
     marginBottom: 15,
+  },
+  image: {
+    width: 160,
+    height: 160,
+    resizeMode: "contain",
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginBottom: 30,
+  },
+  line: {
+    flex: 8,
+    borderBottomWidth: 1,
+    borderColor: "#7F7F7F",
+    marginBottom: 6,
+  },
+  lineAndTextWrapper: {
+    flexDirection: "row",
+  },
+  textWrapper: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 10,
   },
 });

@@ -1,20 +1,24 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useNavigation } from '@react-navigation/native';
-import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { Text, Pressable } from 'react-native';
-import { apiFactory } from '../../api/index.js';
-import Button from '../../components/Button/Button';
-import Input from '../../components/Input/Input';
-import Layout from '../../general_components/Layout.js';
-import { style } from './SignIn.style';
-import validationSchema from './validationSchema';
-import routes from '../../routes.js';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import SnackBar from '../../general_components/SnackBar';
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useNavigation } from "@react-navigation/native";
+import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { Text, Pressable, Image, View } from "react-native";
+import { apiFactory } from "../../api/index.js";
+import Button from "../../components/Button/Button";
+import Input from "../../components/Input/Input";
+import Layout from "../../general_components/Layout.js";
+import { style } from "./SignIn.style";
+import validationSchema from "./validationSchema";
+import routes from "../../routes.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import SnackBar from "../../general_components/SnackBar";
 
 const SignIn = () => {
-  const { Home, SignUp, ForgotPassword } = routes;
+  const {
+    Home,
+    SignUp: { name: signUpRoute },
+    ForgotPassword: { name: forgotPasswordRoute },
+  } = routes;
   const navigation = useNavigation();
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -31,11 +35,11 @@ const SignIn = () => {
     try {
       setIsLoading(true);
       const token = await apiFactory().data.account().login(data);
-      await AsyncStorage.setItem('token', token);
+      await AsyncStorage.setItem("token", token);
       const userData = await apiFactory().data.account().getSpecificUser(token);
       if (userData?.firstName && userData?.lastName) {
-        await AsyncStorage.setItem('firstName', userData.firstName);
-        await AsyncStorage.setItem('lastName', userData.lastName);
+        await AsyncStorage.setItem("firstName", userData.firstName);
+        await AsyncStorage.setItem("lastName", userData.lastName);
       }
       navigation.navigate(Home.name);
       setError(false);
@@ -47,17 +51,20 @@ const SignIn = () => {
   };
 
   const navigateToSignUp = () => {
-    navigation.navigate(SignUp.name);
+    navigation.navigate(signUpRoute);
+  };
+  const navigateToForgotPassword = () => {
+    navigation.navigate(forgotPasswordRoute);
   };
 
   useEffect(() => {
     const isUserLoggedIn = async () => {
-      const token = await AsyncStorage.getItem('token');
+      const token = await AsyncStorage.getItem("token");
       if (token) {
         navigation.navigate(Home.name);
       }
       isUserLoggedIn().catch((e) =>
-        console.log('Error in getting already logged user token', e)
+        console.log("Error in getting already logged user token", e)
       );
     };
   }, []);
@@ -65,63 +72,64 @@ const SignIn = () => {
   return (
     <>
       <Layout scrollView={true}>
-        <Layout.Header>
-          <Text style={style.title}>astreea</Text>
-          <Text style={style.description}>
-            The only electric charger you need
-          </Text>
-        </Layout.Header>
+        <Layout.Header></Layout.Header>
 
-        <Layout.Body content='center'>
+        <Layout.Body content="center">
+          <Image
+            style={style.image}
+            source={require("../../assets/charger.png")}
+          />
           <Input
-            label={'Email'}
-            marginBottom={15}
+            label={"Email"}
+            marginBottom={25}
             validateInput={true}
             control={control}
             errors={errors.email?.message}
-            name={'email'}
+            name={"email"}
             secureTextEntry={false}
           />
           <Input
-            label={'Password'}
+            label={"Password"}
             marginBottom={15}
             validateInput={true}
             control={control}
             errors={errors.password?.message}
-            name={'password'}
+            name={"password"}
             secureTextEntry={true}
           />
-          <Pressable onPress={() => navigation.navigate(ForgotPassword.name)}>
-            <Text style={style.forgotPasswordText}>Forgot Password</Text>
-          </Pressable>
-        </Layout.Body>
-
-        <Layout.Footer>
           <Button
-            text={'Sign In'}
-            marginBottom={10}
+            text={"SIGN IN"}
+            marginTop={20}
+            marginBottom={15}
             onPressAction={handleSubmit(onSubmit)}
             isLoading={isLoading}
             disabled={isLoading}
+            fill={true}
           />
-          <Text style={style.betweenButtonsText}>OR</Text>
-          <Button
-            isSecondary
-            text={'Sign Up with Email'}
-            marginTop={10}
-            marginBottom={10}
-            onPressAction={navigateToSignUp}
-          />
+          <View style={style.textWrapper}>
+            <Pressable onPress={() => navigateToSignUp()}>
+              <Text style={style.forgotPasswordText}>Sign Up</Text>
+            </Pressable>
+            <Pressable onPress={() => navigateToForgotPassword()}>
+              <Text style={style.forgotPasswordText}>Forgot Password</Text>
+            </Pressable>
+          </View>
+          <View style={style.lineAndTextWrapper}>
+            <View style={style.line}></View>
+            <View style={{ flex: 1 }}>
+              <Text style={style.betweenLinesText}>OR</Text>
+            </View>
+            <View style={style.line}></View>
+          </View>
+        </Layout.Body>
 
-          <Text style={style.termsText}>
-            By Continuing you agree to the Terms and Conditions
-          </Text>
+        <Layout.Footer>
           {error && (
             <SnackBar
               text={error}
               logSnackbar={error}
               setLogSnackbar={setError}
-              logType='error'
+              logType="error"
             />
           )}
         </Layout.Footer>

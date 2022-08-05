@@ -1,19 +1,30 @@
 import { StyleSheet } from "react-native";
 
 export const style = StyleSheet.create({
-  wrapper: {
-    backgroundColor: "#F2F6F7",
-    flex: 1,
-    padding: "10%",
-  },
   title: {
-    fontSize: 36,
-    color: "#393B3B",
-    fontFamily: "Inter_700Bold",
+    fontSize: 28,
+    color: "#949597",
+    fontFamily: "Inter_600SemiBold",
+    textAlign: "center",
+    marginBottom: 30,
+  },
+  changeText: {
+    fontSize: 10,
+    color: "#FFFFFF",
+    fontFamily: "Inter_400Regular",
+    textAlign: "center",
+    marginTop: 5,
+    marginBottom: 10,
   },
   buttonsText: {
     color: "#97A6AD",
     fontSize: 16,
     fontFamily: "Inter_600SemiBold",
+  },
+  image: {
+    width: 60,
+    height: 60,
+    marginLeft: "auto",
+    marginRight: "auto",
   },
 });
