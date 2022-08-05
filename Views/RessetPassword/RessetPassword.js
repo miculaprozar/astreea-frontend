@@ -101,46 +101,40 @@ const RessetPassword = (props) => {
         <HeaderNavigator navigation={navigation} hideAccountSettings={true} />
       </Layout.Header>
       <Layout.Body>
-        <View style={{ flex: 1 }}>
-          <Text style={style.title}>Change your password</Text>
-        </View>
-        <View style={{ flex: 10 }}>
-          <Input
-            label={"Curent passowrd"}
-            marginBottom={12}
-            validateInput={true}
-            control={control}
-            errors={errors.password?.message}
-            name={"password"}
-            secureTextEntry={true}
-          />
-          <Input
-            label={"New password"}
-            marginBottom={12}
-            validateInput={true}
-            control={control}
-            errors={errors.newPassword?.message}
-            name={"newPassword"}
-            secureTextEntry={true}
-          />
-          <Input
-            label={"Confirm new password"}
-            marginBottom={12}
-            validateInput={true}
-            control={control}
-            errors={errors.confirmNewPassword?.message}
-            name={"confirmNewPassword"}
-            secureTextEntry={true}
-          />
-        </View>
-        <View style={{ flex: 3 }}></View>
+        <Text style={style.title}>Change your password</Text>
+        <Input
+          label={"Curent passowrd"}
+          marginBottom={25}
+          validateInput={true}
+          control={control}
+          errors={errors.password?.message}
+          name={"password"}
+          secureTextEntry={true}
+        />
+        <Input
+          label={"New password"}
+          marginBottom={25}
+          validateInput={true}
+          control={control}
+          errors={errors.newPassword?.message}
+          name={"newPassword"}
+          secureTextEntry={true}
+        />
+        <Input
+          label={"Confirm new password"}
+          validateInput={true}
+          control={control}
+          errors={errors.confirmNewPassword?.message}
+          name={"confirmNewPassword"}
+          secureTextEntry={true}
+        />
       </Layout.Body>
       <Layout.Footer>
         <Button
           text={"Change password"}
-          marginTop={10}
           marginBottom={35}
           onPressAction={handleSubmit(onSubmit)}
+          fill={true}
         />
         {(error || succes) && (
           <SnackBar

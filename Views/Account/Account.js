@@ -1,57 +1,57 @@
-import {yupResolver} from '@hookform/resolvers/yup';
-import React, {useEffect, useState} from 'react';
-import {useForm} from 'react-hook-form';
-import {Text, View, Pressable} from 'react-native';
-import Button from '../../components/Button/Button';
-import Input from '../../components/Input/Input';
-import Layout from '../../general_components/Layout';
-import {style} from './Account.style';
-import validationSchema from './validationSchema';
-import routes from '../../routes';
-import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavigator';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {apiFactory} from '../../api/index.js';
-import SnackBar from '../../general_components/SnackBar';
+import { yupResolver } from "@hookform/resolvers/yup";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Text, View, Pressable, Image } from "react-native";
+import Button from "../../components/Button/Button";
+import Input from "../../components/Input/Input";
+import Layout from "../../general_components/Layout";
+import { style } from "./Account.style";
+import validationSchema from "./validationSchema";
+import routes from "../../routes";
+import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { apiFactory } from "../../api/index.js";
+import SnackBar from "../../general_components/SnackBar";
 
 const Account = (props) => {
   const [token, setToken] = useState(null);
   const [error, setError] = useState(false);
-  const [logType, setLogType] = useState('error');
+  const [logType, setLogType] = useState("error");
 
-  const {navigation} = props;
+  const { navigation } = props;
 
-  const {SignIn} = routes;
+  const { SignIn } = routes;
 
   const {
     control,
     handleSubmit,
     setValue,
-    formState: {errors},
+    formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
 
   const getToken = async () => {
     try {
-      const tokenValue = await AsyncStorage.getItem('token');
+      const tokenValue = await AsyncStorage.getItem("token");
       setToken(tokenValue);
       if (tokenValue !== null) {
         // value previously stored
       }
     } catch (e) {
-      console.log('ERROR IN READING', e);
+      console.log("ERROR IN READING", e);
       // error reading value
     }
   };
 
   const populateUserData = async () => {
     try {
-      firstName = await AsyncStorage.getItem('firstName');
-      lastName = await AsyncStorage.getItem('lastName');
-      setValue('firstName', firstName);
-      setValue('lastName', lastName);
+      firstName = await AsyncStorage.getItem("firstName");
+      lastName = await AsyncStorage.getItem("lastName");
+      setValue("firstName", firstName);
+      setValue("lastName", lastName);
     } catch (e) {
-      console.log('Error getting firstName, lastName:', e);
+      console.log("Error getting firstName, lastName:", e);
       // error reading value
     }
   };
@@ -63,7 +63,7 @@ const Account = (props) => {
 
   const removeToken = async () => {
     try {
-      await AsyncStorage.removeItem('token');
+      await AsyncStorage.removeItem("token");
     } catch (exception) {}
   };
   const navigateToSignIn = () => {
@@ -81,14 +81,14 @@ const Account = (props) => {
         lastName: data.lastName,
       });
       console.log(resp);
-      AsyncStorage.setItem('firstName', resp[0].firstName);
-      AsyncStorage.setItem('lastName', resp[0].lastName);
-      setLogType('info');
-      setError('Successfully updated your profile');
+      AsyncStorage.setItem("firstName", resp[0].firstName);
+      AsyncStorage.setItem("lastName", resp[0].lastName);
+      setLogType("info");
+      setError("Successfully updated your profile");
     } catch (e) {
-      console.log('the e is ', e.message);
-      setLogType('error');
-      setError('Error in user details!');
+      console.log("the e is ", e.message);
+      setLogType("error");
+      setError("Error in user details!");
     }
   };
 
@@ -98,54 +98,50 @@ const Account = (props) => {
         <HeaderNavigator navigation={navigation} hideAccountSettings={true} />
       </Layout.Header>
       <Layout.Body>
-        <View style={{flex: 1}}>
-          <Text style={style.title}>My account</Text>
-        </View>
-        <View style={{flex: 10}}>
-          <Input
-            label={'First name'}
-            marginBottom={12}
-            validateInput={true}
-            control={control}
-            errors={errors.firstName?.message}
-            name={'firstName'}
-            secureTextEntry={false}
-            value={'abc'}
-          />
-          <Input
-            label={'Last name'}
-            marginBottom={12}
-            validateInput={true}
-            control={control}
-            errors={errors.lastName?.message}
-            name={'lastName'}
-            secureTextEntry={false}
-          />
-          <Pressable onPress={() => navigation.navigate('RessetPassword')}>
-            <Text style={style.buttonsText}>Change Password</Text>
-          </Pressable>
-        </View>
-        <View style={{flex: 3}}>
-          <Button
-            isSecondary
-            text={'Log out'}
-            marginTop={10}
-            marginBottom={15}
-            onPressAction={navigateToSignIn}
-          />
-          <Button
-            text={'Save settings'}
-            marginTop={10}
-            marginBottom={35}
-            onPressAction={handleSubmit(onSubmit)}
-          />
-          {/* <Button
-            text={"Change password"}
-            marginTop={10}
-            marginBottom={35}
-            onPressAction={handleSubmit(onSubmit)}
-          /> */}
-        </View>
+        <Image
+          style={style.image}
+          source={require("../../assets/myAccount.png")}
+        />
+        <Text style={style.changeText}>Change</Text>
+        <Text style={style.title}>My account</Text>
+        <Input
+          label={"First name"}
+          marginBottom={12}
+          validateInput={true}
+          control={control}
+          errors={errors.firstName?.message}
+          name={"firstName"}
+          secureTextEntry={false}
+          value={"abc"}
+        />
+        <Input
+          label={"Last name"}
+          marginBottom={12}
+          validateInput={true}
+          control={control}
+          errors={errors.lastName?.message}
+          name={"lastName"}
+          secureTextEntry={false}
+        />
+        <Pressable onPress={() => navigation.navigate("RessetPassword")}>
+          <Text style={style.buttonsText}>Change Password</Text>
+        </Pressable>
+      </Layout.Body>
+      <Layout.Footer>
+        <Button
+          text={"SAVE"}
+          marginBottom={20}
+          onPressAction={handleSubmit(onSubmit)}
+          fill={true}
+        />
+        <Button
+          isSecondary
+          text={"LOG OUT"}
+          marginBottom={15}
+          onPressAction={navigateToSignIn}
+          fill={true}
+        />
+
         {error && (
           <SnackBar
             text={error}
@@ -154,7 +150,7 @@ const Account = (props) => {
             logType={logType}
           />
         )}
-      </Layout.Body>
+      </Layout.Footer>
     </Layout>
   );
 };

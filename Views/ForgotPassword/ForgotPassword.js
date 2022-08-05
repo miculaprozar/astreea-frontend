@@ -69,13 +69,12 @@ const ForgotPassword = () => {
           />
         </Layout.Header>
 
-        <Layout.Body content="center"></Layout.Body>
-
         <Layout.Footer>
           <Button
             text={"Reset password"}
             marginBottom={10}
             onPressAction={handleSubmit(onSubmit)}
+            fill={true}
           />
           {(error || succes) && (
             <SnackBar

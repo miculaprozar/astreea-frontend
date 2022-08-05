@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Text, View, Pressable, Image } from "react-native";
+import React, { useEffect } from "react";
+import { Text, Image } from "react-native";
 import Button from "../../components/Button/Button";
 import { style } from "./Permision.style";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -8,7 +8,7 @@ import routes from "../../routes";
 
 import Layout from "../../general_components/Layout";
 
-const Permision = (props) => {
+const Permision = () => {
   const navigation = useNavigation();
 
   const {
