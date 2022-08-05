@@ -1,6 +1,6 @@
-import React from 'react';
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
-import { primary, secondary } from './ButtonStyle';
+import React from "react";
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import { primary, secondary } from "./ButtonStyle";
 
 const Button = ({
   isSecondary,
@@ -12,9 +12,10 @@ const Button = ({
   disabled,
   buttonStyle,
   isLoading,
+  fill,
 }) => {
   let buttonType = isSecondary ? secondary : primary;
-
+  let fillButton = fill ? {} : buttonType.dontFill;
   return (
     <View
       style={
@@ -25,11 +26,11 @@ const Button = ({
     >
       <Pressable
         disabled={disabled}
-        style={buttonType.container}
+        style={{ ...buttonType.container, ...fillButton }}
         onPress={onPressAction}
       >
         {isLoading ? (
-          () => <ActivityIndicator size={'small'} color={'#ff6400'} />
+          () => <ActivityIndicator size={"small"} color={"#ff6400"} />
         ) : (
           <>
             {text ? (
