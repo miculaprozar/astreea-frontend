@@ -38,6 +38,12 @@ export default routes = {
       headerShown: false,
     },
   },
+  Permision: {
+    name: "Permision",
+    navigationOptions: {
+      ...defaultNavigationOptions,
+    },
+  },
   ForgotPassword: {
     name: "ForgotPassword",
     navigationOptions: {
