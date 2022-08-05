@@ -7,12 +7,11 @@ import Card from '../../components/Card/Card';
 import ChargerButton from '../../components/ChargerButton/ChargerButton';
 import PillButton from '../../components/PillButton/PillButton';
 import Table from '../../components/Table/Table';
+import Calendar from '../../general_components/Calendar/Calendar';
 import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavigator';
 import routes from '../../routes';
-
-import Calendar from '../../general_components/Calendar/Calendar';
-
 import { style } from './DeviceDetails.style';
+import moment from 'moment';
 
 import Layout from '../../general_components/Layout';
 import {
@@ -20,142 +19,107 @@ import {
   getFullMonthName,
   getStartMonthDate,
 } from '../../helpers/dateFormatFunctions';
+import { formatMs } from '../../helpers/formatFunctions';
+import useTime from './useTime';
+
 const DeviceDetails = (props) => {
   const { navigation } = props;
   const {
     route: {
-      params: {
-        chargerId,
-        isCharging: isChargingProp,
-        name,
-        hourMinutes,
-        startStopData,
-        price,
-      },
+      params: { serialNumber },
     },
   } = props;
 
   const { ChargerSettings } = routes;
-  const [token, setToken] = useState(null);
+  const [charger, setCharger] = useState(null);
   const [totalCharge, setTotalCharge] = useState(null);
-
-  const [isCharging, setIsCharging] = useState(isChargingProp);
+  const [timer, setStartTimer] = useTime();
 
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [date, setDate] = useState(getStartMonthDate(new Date()));
 
   const [triggerRefresh, setTriggerRefresh] = useState(false);
 
-  const getData = async () => {
-    try {
-      const tokenValue = await AsyncStorage.getItem('token');
-      setToken(tokenValue);
-      if (tokenValue !== null) {
-        // value previously stored
-      }
-    } catch (e) {
-      console.log('ERROR IN READING', e);
-      // error reading value
-    }
-  };
-
-  useEffect(() => {
-    console.log('Charging Props:', isChargingProp);
-
-    setIsCharging(isChargingProp);
-  }, [isChargingProp]);
-
   const demoGetEndKwh = (startDate, endDate) => {
-    var diffMs = endDate - startDate; // milliseconds between now & Christmas
-    var diffSec = Math.round((((diffMs % 86400000) % 3600000) % 60000) / 1000); // seconds
-    return diffSec * 0.2;
+    var diffMs = endDate - startDate;
+    var diffSec = Math.round((((diffMs % 86400000) % 3600000) % 60000) / 1000);
+    return Math.abs(diffSec * 0.2);
   };
 
   const StartStopCharging = async () => {
     try {
+      const token = await AsyncStorage.getItem('token');
       setTriggerRefresh(true);
-      if (isCharging) {
+      const lastCharge = charger.lastCharge[0];
+      if (charger && charger.isInCharge) {
         await apiFactory()
           .data.device()
           .startStopCharging(
             {
-              chargerId: chargerId,
+              chargerId: charger.id,
               voltage: 1,
               current: 1,
               power: 1,
-              endKwh:
-                startStopData.endKwh + demoGetEndKwh(startDate, new Date()),
+              endKwh: lastCharge.startKwh + demoGetEndKwh(date, new Date()),
             },
             token
           );
       } else {
         await apiFactory().data.device().startStopCharging(
           {
-            chargerId: chargerId,
+            chargerId: charger.id,
             voltage: 1,
             current: 1,
             power: 1,
-            startKwh: startStopData.endKwh,
+            startKwh: lastCharge.endKwh,
           },
           token
         );
       }
-      token && getChargerTotalData(token);
-      setIsCharging(!isCharging);
+
+      getChargerInfo();
       setTriggerRefresh(false);
     } catch (e) {
       console.log('ERROR IN START STOP CHARGING', e.response.data);
     }
   };
 
-  const getChargerTotalData = async (token, dates) => {
-    try {
-      const totalCharge = await apiFactory()
-        .data.device()
-        .getTotalChargingData(chargerId, token, dates);
-      setTotalCharge(totalCharge);
-      console.log(totalCharge);
-    } catch (e) {
-      console.log('the eeeee is ', e.response.data.message);
-    }
+  const getChargerTotalData = async (chargerID, dates) => {
+    const token = await AsyncStorage.getItem('token');
+    const totalCharge = await apiFactory()
+      .data.device()
+      .getTotalChargingData(chargerID, token, dates);
+    setTotalCharge(totalCharge);
   };
 
   useEffect(() => {
-    getData();
+    getChargerInfo();
   }, []);
-
-  useEffect(() => {
-    token && getChargerTotalData(token);
-  }, [token]);
 
   const navigateToChargerSettings = () => {
     navigation.navigate(ChargerSettings.name);
   };
 
-  // const setDates = (dates) => {
-  //   if (dates.startDate) {
-  //     setStartDate(dates.startDate);
-  //     setTableStartDate(dates.startDate);
-  //   }
-  //   if (dates.endDate) {
-  //     setEndDate(dates.endDate);
-  //     setTableEndDate(dates.endDate);
-  //   }
-  // };
+  useEffect(() => {
+    if (date && charger) {
+      const requestStartDate = moment(date).format('YYYY-MM-DD');
+      const requestEndDate = moment(getEndMonthDate(date)).format('YYYY-MM-DD');
+      getChargerTotalData(charger.id, { requestStartDate, requestEndDate });
+    }
+  }, [date, charger]);
 
-  // useEffect(() => {
-  //   if (startDate && endDate) {
-  //     const requestStartDate = moment(startDate).format('YYYY-MM-DD');
-  //     const requestEndDate = moment(endDate).format('YYYY-MM-DD');
-  //     getChargerTotalData(token, { requestStartDate, requestEndDate });
+  const getChargerInfo = async () => {
+    const token = await AsyncStorage.getItem('token');
+    const chargerData = await apiFactory()
+      .data.device()
+      .getChargerData(serialNumber, token);
+    setCharger(chargerData);
+    if (chargerData.isInCharge) {
+      setStartTimer(new Date(chargerData.lastCharge[0].startDate));
+    }
 
-  //     setTimeout(() => {
-  //       SetIsCalendarOpen(false);
-  //       setStartDate(null);
-  //       setEndDate(null);
-  //     }, 1000);
-  //   }
-  // }, [startDate, endDate]);
+    getChargerTotalData(chargerData.id);
+  };
 
   const onSubmitDate = (date) => {
     setDate(date);
@@ -164,7 +128,7 @@ const DeviceDetails = (props) => {
 
   return (
     <>
-      {!triggerRefresh ? (
+      {!triggerRefresh && charger ? (
         <>
           <Layout>
             <Layout.Header>
@@ -173,7 +137,7 @@ const DeviceDetails = (props) => {
             <Layout.Body>
               <View style={style.tittleButtonWrapper}>
                 <View style={{ flex: 2 }}>
-                  <Text style={style.title}> {name}</Text>
+                  <Text style={style.title}> {charger.name}</Text>
                 </View>
                 <View
                   style={{
@@ -187,7 +151,7 @@ const DeviceDetails = (props) => {
                   />
                 </View>
               </View>
-              {!isCharging ? (
+              {!charger.isInCharge ? (
                 <>
                   <View
                     style={{ ...style.tittleButtonWrapper, marginBottom: 10 }}
@@ -207,11 +171,10 @@ const DeviceDetails = (props) => {
                   </View>
 
                   <Table
-                    token={token}
-                    chargerId={chargerId}
+                    chargerId={charger.id}
                     startDate={date}
                     endDate={getEndMonthDate(date)}
-                    price={price}
+                    price={charger.price}
                   />
                 </>
               ) : (
@@ -219,7 +182,7 @@ const DeviceDetails = (props) => {
                   <Text style={style.chargingTitle}>Charging</Text>
                   <MaterialCommunityIcons
                     name='battery-medium'
-                    size={350}
+                    size={250}
                     color='green'
                     style={{
                       marginLeft: 'auto',
@@ -231,18 +194,23 @@ const DeviceDetails = (props) => {
               )}
             </Layout.Body>
             <Layout.Footer style={{ flex: 2, backgroundColor: 'red' }}>
-              {totalCharge && (
+              {totalCharge && !charger.isInCharge ? (
                 <Card
                   isCharging={false}
                   details={true}
-                  price={totalCharge.ammountSpent}
-                  kwh={totalCharge.energyDelivered}
-                  name={isCharging ? 'Charging' : 'Total'}
-                  hourMinutes={`${Math.floor(
-                    (totalCharge.chargeDuration % 86400000) / 3600000
-                  )} H, ${Math.round(
-                    ((totalCharge.chargeDuration % 86400000) % 3600000) / 60000
-                  )} M`}
+                  price={totalCharge.ammountSpent.toFixed(2)}
+                  kwh={totalCharge.energyDelivered.toFixed(2)}
+                  name={'Total'}
+                  hourMinutes={formatMs(totalCharge.chargeDuration)}
+                />
+              ) : (
+                <Card
+                  isCharging={true}
+                  details={true}
+                  price={'--'}
+                  kwh={'--kwh'}
+                  name={'Charging'}
+                  hourMinutes={timer}
                 />
               )}
               <View style={style.tittleButtonWrapper}>
@@ -255,9 +223,9 @@ const DeviceDetails = (props) => {
                 </View>
                 <View style={{ flex: 1 }}>
                   <ChargerButton
-                    text={isCharging ? 'Stop' : 'Start'}
+                    text={charger.isInCharge ? 'Stop' : 'Start'}
                     marginLeft={10}
-                    isDanger={isCharging}
+                    isDanger={charger.isInCharge}
                     onPressAction={() => StartStopCharging()}
                   />
                 </View>
