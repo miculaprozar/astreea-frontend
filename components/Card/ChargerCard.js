@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
-import {Text, TouchableWithoutFeedback, View} from 'react-native';
-import {charging} from './CardStyle';
+import { Text, TouchableWithoutFeedback, View } from 'react-native';
+import { charging } from './CardStyle';
+import useTime from '../../helpers/useTime';
 
-const ChargerCard = ({name, price, kwh, time, statusName, onClick}) => {
+const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
+  const [timer, setStartTimer] = useTime();
+  const chargingState = useRef(null);
   const getBGColorByStatus = (statusName) => {
     switch (statusName) {
       case 'Charging':
@@ -25,16 +28,26 @@ const ChargerCard = ({name, price, kwh, time, statusName, onClick}) => {
     }
   };
 
+  useEffect(() => {
+    if (
+      charger.isInCharge &&
+      (chargingState.current === null || chargingState.current === false)
+    ) {
+      setStartTimer(new Date(charger.lastCharge[0].startDate));
+      chargingState.current = true;
+    }
+  }, [charger]);
+
   return (
     <>
       <TouchableWithoutFeedback onPress={() => onClick()}>
         <View
           style={{
             ...charging.wrapper,
-            backgroundColor: getBGColorByStatus(statusName),
+            backgroundColor: getBGColorByStatus(charger.appStateName),
           }}
         >
-          <View style={{flex: 1}}>
+          <View style={{ flex: 1 }}>
             <View style={charging.upperTextContainer}>
               <View>
                 <Text style={charging.locationText}>{name}</Text>
@@ -44,10 +57,10 @@ const ChargerCard = ({name, price, kwh, time, statusName, onClick}) => {
               <Text
                 style={{
                   ...charging.chargingStatusText,
-                  color: getTextColorByStatus(statusName),
+                  color: getTextColorByStatus(charger.appStateName),
                 }}
               >
-                {statusName}
+                {charger.appStateName}
               </Text>
             </View>
             <View
@@ -56,33 +69,33 @@ const ChargerCard = ({name, price, kwh, time, statusName, onClick}) => {
                 flexDirection: 'row',
               }}
             >
-              <View style={{flex: 1, marginTop: 'auto'}}>
+              <View style={{ flex: 1, marginTop: 'auto' }}>
                 <Text
                   style={{
                     ...charging.chargingStatusText,
-                    color: getTextColorByStatus(statusName),
+                    color: getTextColorByStatus(charger.appStateName),
                   }}
                 >
                   {kwh}
                 </Text>
                 <Text style={charging.smallText}>Energy Delivered</Text>
               </View>
-              <View style={{flex: 1, marginTop: 'auto'}}>
+              <View style={{ flex: 1, marginTop: 'auto' }}>
                 <Text
                   style={{
                     ...charging.chargingStatusText,
-                    color: getTextColorByStatus(statusName),
+                    color: getTextColorByStatus(charger.appStateName),
                   }}
                 >
-                  {time}
+                  {charger.isInCharge ? timer : time}
                 </Text>
                 <Text style={charging.smallText}>Charge Duration</Text>
               </View>
-              <View style={{flex: 1, marginTop: 'auto'}}>
+              <View style={{ flex: 1, marginTop: 'auto' }}>
                 <Text
                   style={{
                     ...charging.chargingStatusText,
-                    color: getTextColorByStatus(statusName),
+                    color: getTextColorByStatus(charger.appStateName),
                   }}
                 >
                   {price}

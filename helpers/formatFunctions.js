@@ -17,6 +17,8 @@ const differenceDates = (startDate, endDate) => {
   return `${diffHrs}h ${diffMins}m`;
 };
 export const realTimeDifference = (startDate, endDate) => {
+  if (startDate === null || endDate === null) return '--';
+
   var diffMs = endDate - startDate; // milliseconds between now & Christmas
   const secs = Math.floor(Math.abs(diffMs) / 1000);
   const mins = Math.floor(secs / 60);

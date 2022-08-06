@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { realTimeDifference } from '../../helpers/formatFunctions';
+import { realTimeDifference } from './formatFunctions';
 
 function useTime() {
   const [startTimer, setStartTimer] = useState(null);
@@ -7,13 +7,21 @@ function useTime() {
 
   useEffect(() => {
     if (startTimer) {
+      console.log(startTimer, endDate);
       const setNewTime = setInterval(() => {
         setEndTime(new Date());
       }, 1000);
     }
   }, [startTimer]);
 
-  return [realTimeDifference(startTimer, endDate), setStartTimer];
+  const setTimeHandler = (startDate) => {
+    if (startTimer === null) {
+      setStartTimer(startDate);
+      setEndTime(new Date());
+    }
+  };
+
+  return [realTimeDifference(startTimer, endDate), setTimeHandler];
 }
 
 export default useTime;

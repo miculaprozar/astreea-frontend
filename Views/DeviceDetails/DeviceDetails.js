@@ -20,7 +20,7 @@ import {
   getStartMonthDate,
 } from '../../helpers/dateFormatFunctions';
 import { formatMs } from '../../helpers/formatFunctions';
-import useTime from './useTime';
+import useTime from '../../helpers/useTime';
 
 const DeviceDetails = (props) => {
   const { navigation } = props;
