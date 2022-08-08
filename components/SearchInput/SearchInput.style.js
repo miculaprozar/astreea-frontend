@@ -17,7 +17,8 @@ export const style = StyleSheet.create({
     width: 20,
     height: 20,
     position: 'absolute',
-    right: 10,
+    right: 15,
+    top: 15,
   },
   wrapper: {
     flexDirection: 'row',

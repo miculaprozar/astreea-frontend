@@ -137,7 +137,7 @@ const Home = (props) => {
   };
 
   return (
-    <Layout>
+    <Layout diffuseBG={true}>
       <Layout.Header>
         <HeaderNavigator navigation={navigation} hideBack={true} />
       </Layout.Header>

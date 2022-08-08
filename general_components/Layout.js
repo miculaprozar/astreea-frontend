@@ -5,11 +5,23 @@ import { style } from './Layout.style';
 
 import AvoidingKeyboardWrapper from './AvoidingKeboardWrapper';
 
-const Layout = ({ children, scrollView }) => {
+const Layout = ({ children, scrollView, diffuseBG = false }) => {
   return (
     <AvoidingKeyboardWrapper scrollView={scrollView}>
-      <View style={style.device_container}>
-        <View style={style.layout_container}>{children}</View>
+      <View
+        style={{
+          ...style.device_container,
+          ...(diffuseBG && { backgroundColor: '#949597' }),
+        }}
+      >
+        <View
+          style={{
+            ...style.layout_container,
+            ...(diffuseBG && { backgroundColor: '#949597' }),
+          }}
+        >
+          {children}
+        </View>
       </View>
     </AvoidingKeyboardWrapper>
   );
