@@ -20,7 +20,7 @@ const Layout = ({
           ...customLayoutStyle,
         }}
       >
-        {/* {customBackgroundUrl ? (
+        {customBackgroundUrl ? (
           <ImageBackground
             resizeMode="cover"
             style={{
@@ -37,8 +37,8 @@ const Layout = ({
           </ImageBackground>
         ) : (
           {children}
-        )} */}
-        {children}
+        )}
+        {/* {children} */}
       </View>
     </AvoidingKeyboardWrapper>
   );

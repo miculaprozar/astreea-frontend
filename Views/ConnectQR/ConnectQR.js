@@ -1,55 +1,48 @@
-import React, {useEffect, useState} from 'react';
-import {Text, View, StyleSheet, Button, Pressable} from 'react-native';
-import Button2 from '../../components/Button/Button';
-import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavigator';
-import Layout from '../../general_components/Layout';
-import {BarCodeScanner} from 'expo-barcode-scanner';
-import {style} from './ConnectQR.style';
-import SnackBar from '../../general_components/SnackBar';
-import {apiFactory} from '../../api';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import QRViewBackground from '../../assets/qrBackground.jpg';
+import React, { useEffect, useState } from "react";
+import { Text, View, StyleSheet, Button, Pressable } from "react-native";
+import Button2 from "../../components/Button/Button";
+import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
+import Layout from "../../general_components/Layout";
+import { BarCodeScanner } from "expo-barcode-scanner";
+import { style } from "./ConnectQR.style";
+import SnackBar from "../../general_components/SnackBar";
+import { apiFactory } from "../../api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import QRViewBackground from "../../assets/qrBackground.jpg";
 
 const ConnectQR = (props) => {
-  const {navigation} = props;
+  const { navigation } = props;
 
   const navigateToStep2 = () => {
     if (qrData) {
-      navigation.navigate('ConnectDevice', {qrData});
+      navigation.navigate("ConnectDevice", { qrData });
     } else {
       setScanned(false);
-      setLogType('error');
+      setLogType("error");
       setError("QR Code not found or doesn't contain the right data!");
     }
   };
 
   const [error, setError] = useState(null);
-  const [logType, setLogType] = useState('error');
+  const [logType, setLogType] = useState("error");
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [qrData, setQrData] = useState(null);
 
   const requestPermisionCamera = async () => {
-    const savedCameraPermission = await AsyncStorage.getItem(
-      'cameraPermission',
-    );
-    if (savedCameraPermission === 'granted') {
-      setHasPermission(true);
-    } else {
-      const permision = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(permision.status === 'granted');
-    }
+    const permision = await BarCodeScanner.requestPermissionsAsync();
+    setHasPermission(permision.status === "granted");
   };
 
   const getToken = async () => {
     try {
-      const tokenValue = await AsyncStorage.getItem('token');
+      const tokenValue = await AsyncStorage.getItem("token");
       if (tokenValue !== null) {
         console.log(tokenValue);
         return tokenValue;
       }
     } catch (e) {
-      console.log('ERROR IN READING', e);
+      console.log("ERROR IN READING", e);
       // error reading value
     }
   };
@@ -58,15 +51,15 @@ const ConnectQR = (props) => {
     requestPermisionCamera();
   }, []);
 
-  const handleBarCodeScanned = ({type, data}) => {
+  const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
     data = JSON.parse(data);
     if (
       data.wifiName &&
       data.wifiPass &&
-      data.wifiName !== '' &&
-      data.wifiPass !== ''
+      data.wifiName !== "" &&
+      data.wifiPass !== ""
     ) {
       setQrData(data);
     } else {
@@ -78,8 +71,8 @@ const ConnectQR = (props) => {
 
   const handleDEMOAssociateDevice = async () => {
     console.log(qrData);
-    if (qrData?.wifiName && qrData?.wifiName !== '') {
-      let serialNumber = qrData.wifiName.replace(new RegExp('-', 'g'), '');
+    if (qrData?.wifiName && qrData?.wifiName !== "") {
+      let serialNumber = qrData.wifiName.replace(new RegExp("-", "g"), "");
       console.log(serialNumber);
       const token = await getToken();
       const response = await apiFactory()
@@ -87,15 +80,15 @@ const ConnectQR = (props) => {
         .addExistingChargerToUser(token, serialNumber);
       if (Array.isArray(response)) {
         console.log(response);
-        setLogType('info');
-        setError('Device added successfully, please go back!');
+        setLogType("info");
+        setError("Device added successfully, please go back!");
       } else {
-        setLogType('error');
+        setLogType("error");
         setError(response);
       }
     } else {
       setScanned(false);
-      setLogType('error');
+      setLogType("error");
       setError("QR Code not found or doesn't contain the right data!");
     }
     // const token = await getToken();
@@ -117,7 +110,7 @@ const ConnectQR = (props) => {
     <Layout
       customBackgroundUrl={QRViewBackground}
       customLayoutStyle={{
-        backgroundColor: 'red',
+        backgroundColor: "red",
         paddingLeft: 0,
         paddingRight: 0,
         paddingTop: 0,
@@ -135,8 +128,8 @@ const ConnectQR = (props) => {
         <View
           style={{
             flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'flex-start',
+            flexDirection: "column",
+            justifyContent: "flex-start",
           }}
         >
           {/* <BarCodeScanner
@@ -146,6 +139,11 @@ const ConnectQR = (props) => {
           /> */}
           <Text style={style.title}>The only electric charger you need</Text>
         </View>
+
+        <Text style={style.description}>
+          Look for the QR code on the charger and scan it to connect it to your
+          charger.
+        </Text>
         {/* <Text style={style.description}>
           Scan device QR code to register the device
         </Text>
@@ -161,7 +159,7 @@ const ConnectQR = (props) => {
       </Layout.Body>
       <Layout.Footer>
         <Button2
-          text={'Scan QR'}
+          text={"Open Scanner"}
           marginTop={40}
           onPressAction={() => handleDEMOAssociateDevice()}
         />
