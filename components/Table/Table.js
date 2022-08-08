@@ -4,7 +4,9 @@ import { apiFactory } from '../../api';
 import { style } from './Table.style';
 import { Table, Row, Rows } from 'react-native-table-component';
 import PillButton from '../PillButton/PillButton';
-const TableComponent = ({ token, chargerId, startDate, endDate, price }) => {
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const TableComponent = ({ chargerId, startDate, endDate, price }) => {
   const [chargerHistory, setChargerHistory] = useState([]);
   const [tableData, setTableData] = useState([]);
   const [tableDimension, setTableDimension] = React.useState(null);
@@ -15,15 +17,16 @@ const TableComponent = ({ token, chargerId, startDate, endDate, price }) => {
 
   const [rowsHeight, setRowsHeight] = useState(0);
 
-  const getChargerDatesHistory = async (token, dates) => {
+  const getChargerDatesHistory = async (dates) => {
     try {
+      const tokenValue = await AsyncStorage.getItem('token');
       const { data: theChargerHistory } = await apiFactory()
         .data.device()
         .chargerHistory(
           chargerId,
           page,
           tableItems,
-          token,
+          tokenValue,
           dates.splitStartDate ? dates : null
         );
 
@@ -73,12 +76,10 @@ const TableComponent = ({ token, chargerId, startDate, endDate, price }) => {
   }, [tableDimension]);
 
   useEffect(() => {
-    if (token) {
-      const splitStartDate = startDate?.toISOString().split('T')[0];
-      const splitEndDate = endDate?.toISOString().split('T')[0];
-      getChargerDatesHistory(token, { splitStartDate, splitEndDate });
-    }
-  }, [token, page, startDate, endDate, tableItems]);
+    const splitStartDate = startDate?.toISOString().split('T')[0];
+    const splitEndDate = endDate?.toISOString().split('T')[0];
+    getChargerDatesHistory({ splitStartDate, splitEndDate });
+  }, [page, startDate, endDate, tableItems]);
 
   const tableHead = ['Date', 'Time', 'Kw', 'Cost'];
 

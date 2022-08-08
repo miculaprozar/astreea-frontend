@@ -131,6 +131,7 @@ const Home = (props) => {
       hourMinutes: hourMinutesRenderer(charger.lastCharge[0]),
       startStopData: charger.lastCharge[0],
       price: priceRenderer(charger.lastCharge[0]),
+      serialNumber: charger.serialNumber,
     });
   };
 

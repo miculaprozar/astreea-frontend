@@ -1,17 +1,22 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 
 import {Text, TouchableWithoutFeedback, View} from 'react-native';
 import {charging} from './CardStyle';
+import useTime from '../../helpers/useTime';
 
-const ChargerCard = ({name, price, kwh, time, statusName, onClick}) => {
+const ChargerCard = ({name, price, kwh, time, charger, onClick}) => {
+  const [timer, setStartTimer] = useTime();
+  const chargingState = useRef(null);
   const getBGColorByStatus = (statusName) => {
     switch (statusName) {
       case 'Charging':
-        return '#4F6362';
+        return '#181A1B';
       case 'Not Used':
-        return '#393B3B';
+        return '#464C4E';
       case 'Disconnected/Error':
-        return 'darkred';
+        return '#181A1B';
+      case 'In use':
+        return '#464C4E';
       default:
         return '#4F6363';
     }
@@ -20,10 +25,26 @@ const ChargerCard = ({name, price, kwh, time, statusName, onClick}) => {
     switch (statusName) {
       case 'Charging':
         return '#22EEAB';
+      case 'Disconnected/Error':
+        return '#FF6400';
+      case 'In use':
+        return '#B1AAA0';
+      case 'Not Used':
+        return '#B1AAA0';
       default:
         return 'white';
     }
   };
+
+  useEffect(() => {
+    if (
+      charger.isInCharge &&
+      (chargingState.current === null || chargingState.current === false)
+    ) {
+      setStartTimer(new Date(charger.lastCharge[0].startDate));
+      chargingState.current = true;
+    }
+  }, [charger]);
 
   return (
     <>
@@ -31,23 +52,30 @@ const ChargerCard = ({name, price, kwh, time, statusName, onClick}) => {
         <View
           style={{
             ...charging.wrapper,
-            backgroundColor: getBGColorByStatus(statusName),
+            backgroundColor: getBGColorByStatus(charger.appStateName),
           }}
         >
           <View style={{flex: 1}}>
             <View style={charging.upperTextContainer}>
               <View>
-                <Text style={charging.locationText}>{name}</Text>
+                <Text
+                  style={[
+                    charging.locationText,
+                    {color: getTextColorByStatus(charger.appStateName)},
+                  ]}
+                >
+                  {name}
+                </Text>
 
                 {/* <Text style={charging.smallText}>Now</Text> */}
               </View>
               <Text
                 style={{
                   ...charging.chargingStatusText,
-                  color: getTextColorByStatus(statusName),
+                  color: getTextColorByStatus(charger.appStateName),
                 }}
               >
-                {statusName}
+                {charger.appStateName}
               </Text>
             </View>
             <View
@@ -60,7 +88,7 @@ const ChargerCard = ({name, price, kwh, time, statusName, onClick}) => {
                 <Text
                   style={{
                     ...charging.chargingStatusText,
-                    color: getTextColorByStatus(statusName),
+                    color: getTextColorByStatus(charger.appStateName),
                   }}
                 >
                   {kwh}
@@ -71,10 +99,10 @@ const ChargerCard = ({name, price, kwh, time, statusName, onClick}) => {
                 <Text
                   style={{
                     ...charging.chargingStatusText,
-                    color: getTextColorByStatus(statusName),
+                    color: getTextColorByStatus(charger.appStateName),
                   }}
                 >
-                  {time}
+                  {charger.isInCharge ? timer : time}
                 </Text>
                 <Text style={charging.smallText}>Charge Duration</Text>
               </View>
@@ -82,7 +110,7 @@ const ChargerCard = ({name, price, kwh, time, statusName, onClick}) => {
                 <Text
                   style={{
                     ...charging.chargingStatusText,
-                    color: getTextColorByStatus(statusName),
+                    color: getTextColorByStatus(charger.appStateName),
                   }}
                 >
                   {price}
