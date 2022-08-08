@@ -178,7 +178,7 @@ const Home = (props) => {
                     item.currency
                   )}
                   key={"charger_" + index}
-                  statusName={item.state}
+                  charger={item}
                   onClick={() => navigateToDeviceAction(item)}
                 />
               ))}
