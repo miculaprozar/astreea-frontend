@@ -37,6 +37,21 @@ const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
     }
   };
 
+  const getLightingImageByStatus = (statusName) => {
+    switch (statusName) {
+      case "Charging":
+        return require("../../assets/greenLighting.png");
+      case "Disconnected/Error":
+        return require("../../assets/orangeLighting.png");
+      case "In use":
+        return require("../../assets/greenLighting.png");
+      case "Not Used":
+        return require("../../assets/greyLighting.png");
+      default:
+        return require("../../assets/greyLighting.png");
+    }
+  };
+
   useEffect(() => {
     if (
       charger.isInCharge &&
@@ -60,7 +75,7 @@ const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Image
                 style={charging.image}
-                source={require("../../assets/greenLighting.png")}
+                source={getLightingImageByStatus(charger.appStateName)}
               />
 
               <Text
@@ -81,12 +96,24 @@ const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
               >
                 {charger.appStateName}
               </Text>
-              <View style={{ ...charging.circle, marginLeft: 10 }} />
+              <View
+                style={{
+                  ...charging.circle,
+                  marginLeft: 10,
+                  backgroundColor: getTextColorByStatus(charger.appStateName),
+                }}
+              />
             </View>
           </View>
           <View style={charging.lastUsedWrapper}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <View style={{ ...charging.circle, marginRight: 10 }} />
+              <View
+                style={{
+                  ...charging.circle,
+                  marginRight: 10,
+                  backgroundColor: getTextColorByStatus(charger.appStateName),
+                }}
+              />
 
               <Text
                 style={[
