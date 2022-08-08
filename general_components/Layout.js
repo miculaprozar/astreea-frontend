@@ -1,28 +1,30 @@
-import React from "react";
-import { View } from "react-native";
+import React from 'react';
+import { View } from 'react-native';
 
-import { style } from "./Layout.style";
+import { style } from './Layout.style';
 
-import AvoidingKeyboardWrapper from "./AvoidingKeboardWrapper";
+import AvoidingKeyboardWrapper from './AvoidingKeboardWrapper';
 
 const Layout = ({ children, scrollView }) => {
-	return (
-		<AvoidingKeyboardWrapper scrollView={scrollView}>
-			<View style={style.layout_container}>{children}</View>
-		</AvoidingKeyboardWrapper>
-	);
+  return (
+    <AvoidingKeyboardWrapper scrollView={scrollView}>
+      <View style={style.device_container}>
+        <View style={style.layout_container}>{children}</View>
+      </View>
+    </AvoidingKeyboardWrapper>
+  );
 };
 
 const Body = ({ children, content }) => {
-	return (
-		<View style={{ ...style.body, justifyContent: content }}>{children}</View>
-	);
+  return (
+    <View style={{ ...style.body, justifyContent: content }}>{children}</View>
+  );
 };
 const Header = ({ children }) => {
-	return <View style={style.header}>{children}</View>;
+  return <View style={style.header}>{children}</View>;
 };
 const Footer = ({ children }) => {
-	return <View style={style.footer}>{children}</View>;
+  return <View style={style.footer}>{children}</View>;
 };
 
 Layout.Body = Body;
