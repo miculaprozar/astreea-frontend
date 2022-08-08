@@ -1,33 +1,42 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from "react-native";
 
 export const style = StyleSheet.create({
+  device_container: {
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#0E0E0E",
+  },
   layout_container: {
-    backgroundColor: '#0E0E0E',
+    backgroundColor: "#0E0E0E",
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 15,
     paddingBottom: 15,
-    maxHeight: '100%',
+    maxHeight: "100%",
+    width: "100%",
+    maxWidth: 375,
   },
   body: {
     flex: 1,
     paddingBottom: 15,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    width: 375,
+    marginLeft: "auto",
+    marginRight: "auto",
+    width: "100%",
   },
   header: {
     paddingBottom: 15,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    width: 375,
+    marginLeft: "auto",
+    marginRight: "auto",
+    width: "100%",
   },
   footer: {
     paddingBottom: 15,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    width: 375,
+    marginLeft: "auto",
+    marginRight: "auto",
+    width: "100%",
   },
 });

@@ -1,36 +1,37 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, {useEffect, useState} from 'react';
-import {ScrollView, View} from 'react-native';
-import useWebSocket, {ReadyState} from 'react-native-use-websocket';
-import Button from '../../components/Button/Button';
-import ChargerCard from '../../components/Card/ChargerCard';
-import PillButton from '../../components/PillButton/PillButton';
-import SearchInput from '../../components/SearchInput/SearchInput';
-import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavigator';
-import Layout from '../../general_components/Layout';
-import routes from '../../routes';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from "react";
+import { ScrollView, View } from "react-native";
+import useWebSocket, { ReadyState } from "react-native-use-websocket";
+import Button from "../../components/Button/Button";
+import ChargerCard from "../../components/Card/ChargerCard";
+import PillButton from "../../components/PillButton/PillButton";
+import SearchInput from "../../components/SearchInput/SearchInput";
+import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
+import Layout from "../../general_components/Layout";
+import routes from "../../routes";
+import Label from "../../components/Input/Label";
 
 import {
   hourMinutesRenderer,
   kwhRenderer,
   priceRenderer,
-} from '../../helpers/formatFunctions';
+} from "../../helpers/formatFunctions";
 
 const Home = (props) => {
-  const {navigation} = props;
-  const {ConnectQR, DeviceDetails} = routes;
+  const { navigation } = props;
+  const { ConnectQR, DeviceDetails } = routes;
 
   const [token, setToken] = useState(null);
   const [canMessage, setCanMessage] = useState(true);
   const [chargers, setChargers] = useState(null);
   const [getDevices, setGetDevices] = useState(null);
   const [filterChargers, setFilterChargers] = useState(0);
-  const [searchfield, setSearchfield] = useState('');
+  const [searchfield, setSearchfield] = useState("");
 
   // WEBSOCKET CONNECTION
-  const [socketUrl] = React.useState('ws://164.92.234.83:6003');
+  const [socketUrl] = React.useState("ws://164.92.234.83:6003");
   const socketMessageHistory = React.useRef([]);
-  const {sendMessage, lastMessage, readyState} = useWebSocket(socketUrl, {
+  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
     retryOnError: true,
     shouldReconnect: () => {
       return true;
@@ -38,19 +39,19 @@ const Home = (props) => {
     reconnectInterval: 10000,
     reconnectAttempts: Infinity,
     onClose: () => {
-      console.log('Socket closed');
+      console.log("Socket closed");
     },
     onError: (error) => {
-      if (!error?.message?.includes('Failed to connect'))
-        console.log('Socket error', error);
+      if (!error?.message?.includes("Failed to connect"))
+        console.log("Socket error", error);
     },
     onOpen: () => {
-      console.log('Socket opened');
+      console.log("Socket opened");
     },
   });
   socketMessageHistory.current = React.useMemo(
     () => socketMessageHistory.current.concat(lastMessage),
-    [lastMessage],
+    [lastMessage]
   );
 
   useEffect(() => {
@@ -79,23 +80,23 @@ const Home = (props) => {
           if (readyState === ReadyState.OPEN && token) {
             sendMessage(
               JSON.stringify({
-                method: 'GetKnownDevices',
+                method: "GetKnownDevices",
                 token: token,
-                user: 'Tudor',
-              }),
+                user: "Tudor",
+              })
             );
           } else {
             clearInterval(getDevices);
           }
-        }, 1000),
+        }, 1000)
       );
     } else if (readyState === ReadyState.CONNECTING && token && canMessage) {
-      console.log('Connecting Socket...');
+      console.log("Connecting Socket...");
     } else if (readyState === ReadyState.CLOSING && token && canMessage) {
-      console.log('Closing Socket...');
+      console.log("Closing Socket...");
       clearInterval(getDevices);
     } else if (readyState === ReadyState.CLOSED && token && canMessage) {
-      console.log('Closed Socket...');
+      console.log("Closed Socket...");
       clearInterval(getDevices);
     } else clearInterval(getDevices);
   };
@@ -106,7 +107,7 @@ const Home = (props) => {
   }, [readyState, canMessage]);
 
   const getToken = async () => {
-    const token = await AsyncStorage.getItem('token');
+    const token = await AsyncStorage.getItem("token");
     token && setToken(token);
   };
 
@@ -117,7 +118,7 @@ const Home = (props) => {
   const changeCanMessageCallback = () => {};
 
   const navigateToAddDevice = () => {
-    navigation.navigate(ConnectQR.name, {onBack: changeCanMessageCallback});
+    navigation.navigate(ConnectQR.name, { onBack: changeCanMessageCallback });
   };
 
   const navigateToDeviceAction = (charger) => {
@@ -136,29 +137,27 @@ const Home = (props) => {
   };
 
   return (
-    <Layout>
+    <Layout diffuseBG={true}>
       <Layout.Header>
         <HeaderNavigator navigation={navigation} hideBack={true} />
       </Layout.Header>
       <Layout.Body>
+        <Label white text="Search" />
         <SearchInput setSearchfield={setSearchfield} />
-        <View style={{flexDirection: 'row', marginBottom: 20, marginTop: 10}}>
-          <View style={{flex: 1}}>
-            <PillButton
-              isSecondary={filterChargers && true}
-              text={'Public'}
-              onPressAction={() => setFilterChargers(0)}
-            />
-          </View>
-          <View style={{flex: 2}}>
-            <PillButton
-              isSecondary={!filterChargers && true}
-              text={'My chargers'}
-              marginLeft={15}
-              onPressAction={() => setFilterChargers(1)}
-            />
-          </View>
-          <View style={{flex: 2}}></View>
+        <Label white text="Chargers" />
+        <View style={{ flexDirection: "row", marginBottom: 15 }}>
+          <PillButton
+            isSecondary={filterChargers && true}
+            text={"Public"}
+            onPressAction={() => setFilterChargers(0)}
+          />
+          <PillButton
+            isSecondary={!filterChargers && true}
+            text={"My chargers"}
+            marginLeft={15}
+            onPressAction={() => setFilterChargers(1)}
+          />
+          <View style={{ flex: 2 }}></View>
         </View>
         <ScrollView>
           {chargers &&
@@ -179,9 +178,9 @@ const Home = (props) => {
                   price={priceRenderer(
                     item.lastCharge[0],
                     item.price,
-                    item.currency,
+                    item.currency
                   )}
-                  key={'charger_' + index}
+                  key={"charger_" + index}
                   charger={item}
                   onClick={() => navigateToDeviceAction(item)}
                 />
@@ -190,7 +189,7 @@ const Home = (props) => {
       </Layout.Body>
       <Layout.Footer>
         <Button
-          text={'Start Pairing'}
+          text={"Start Pairing"}
           marginTop={10}
           onPressAction={navigateToAddDevice}
         />

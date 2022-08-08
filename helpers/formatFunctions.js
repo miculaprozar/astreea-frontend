@@ -1,13 +1,15 @@
+import { format } from "date-fns";
+
 export const kwhRenderer = (charge) => {
   return !charge || charge?.length === 0 || charge?.endKwh === null
-    ? '-- kWh'
-    : (charge.endKwh - charge.startKwh).toFixed(2) + ' kWh';
+    ? "-- kWh"
+    : (charge.endKwh - charge.startKwh).toFixed(2) + " kWh";
 };
 
 export const priceRenderer = (charge, price, curency) =>
   !charge || charge?.length === 0 || charge?.endKwh === null
-    ? '-- '
-    : (price * (charge.endKwh - charge.startKwh)).toFixed(2) + ' ' + curency;
+    ? "-- "
+    : (price * (charge.endKwh - charge.startKwh)).toFixed(2) + " " + curency;
 
 const differenceDates = (startDate, endDate) => {
   var diffMs = endDate - startDate; // milliseconds between now & Christmas
@@ -17,7 +19,7 @@ const differenceDates = (startDate, endDate) => {
   return `${diffHrs}h ${diffMins}m`;
 };
 export const realTimeDifference = (startDate, endDate) => {
-  if (startDate === null || endDate === null) return '--';
+  if (startDate === null || endDate === null) return "--";
 
   var diffMs = endDate - startDate; // milliseconds between now & Christmas
   const secs = Math.floor(Math.abs(diffMs) / 1000);
@@ -35,9 +37,42 @@ export const formatMs = (diffMs) => {
 
 export const hourMinutesRenderer = (charge) =>
   !charge || charge?.length === 0 || charge?.endKwh === null
-    ? '-h -m'
+    ? "-h -m"
     : differenceDates(new Date(charge.startDate), new Date(charge.endDate));
 
 export const isCharging = (charger) => {
   return charger.stateId === 1;
+};
+
+export const chargeLastUsed = (charge) => {
+  const { isInCharge, lastCharge } = charge;
+  let lastUsed = "Last Pair";
+  isInCharge && (lastUsed = "Today");
+
+  if (
+    lastCharge[0] &&
+    lastCharge?.length !== 0 &&
+    lastCharge[0].endDate !== null
+  ) {
+    lastUsed = "Last Use";
+  }
+
+  return lastUsed;
+};
+
+export const chargeDate = (charge) => {
+  const { lastCharge, isInCharge } = charge;
+  let chargeText = "Your charger running normal";
+
+  if (
+    lastCharge[0] &&
+    lastCharge?.length !== 0 &&
+    lastCharge[0].endDate !== null
+  ) {
+    chargeText = format(new Date(lastCharge[0].endDate), "MM LLLL  p");
+  }
+
+  if (isInCharge) chargeText = "Your charger running normal";
+
+  return chargeText;
 };

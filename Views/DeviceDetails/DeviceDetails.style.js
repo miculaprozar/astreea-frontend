@@ -1,6 +1,14 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export const style = StyleSheet.create({
+  table_container: {
+    height: '100%',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    padding: 10,
+    borderRadius: 10,
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+  },
   wrapper: {
     backgroundColor: '#F2F6F7',
     flex: 1,

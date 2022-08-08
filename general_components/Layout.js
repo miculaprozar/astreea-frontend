@@ -1,58 +1,41 @@
-import React from 'react';
-import {ImageBackground, View} from 'react-native';
+import React from "react";
+import { ImageBackground, View } from "react-native";
 
-import {style} from './Layout.style';
+import { style } from "./Layout.style";
 
-import AvoidingKeyboardWrapper from './AvoidingKeboardWrapper';
+import AvoidingKeyboardWrapper from "./AvoidingKeboardWrapper";
 
-const Layout = ({
-  children,
-  scrollView,
-  customLayoutStyle,
-  customBackgroundUrl,
-}) => {
-  console.log(Array.isArray(children));
+const Layout = ({ children, scrollView, diffuseBG = false }) => {
   return (
     <AvoidingKeyboardWrapper scrollView={scrollView}>
       <View
         style={{
-          ...style.layout_container,
-          ...customLayoutStyle,
+          ...style.device_container,
+          ...(diffuseBG && { backgroundColor: "#949597" }),
         }}
       >
-        {customBackgroundUrl ? (
-          <ImageBackground
-            resizeMode="cover"
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              paddingLeft: 20,
-              paddingRight: 20,
-              paddingTop: 15,
-              paddingBottom: 15,
-            }}
-            source={customBackgroundUrl}
-          >
-            {children}
-          </ImageBackground>
-        ) : (
+        <View
+          style={{
+            ...style.layout_container,
+            ...(diffuseBG && { backgroundColor: "#949597" }),
+          }}
+        >
           {children}
-        )}
-        {/* {children} */}
+        </View>
       </View>
     </AvoidingKeyboardWrapper>
   );
 };
 
-const Body = ({children, content}) => {
+const Body = ({ children, content }) => {
   return (
-    <View style={{...style.body, justifyContent: content}}>{children}</View>
+    <View style={{ ...style.body, justifyContent: content }}>{children}</View>
   );
 };
-const Header = ({children}) => {
+const Header = ({ children }) => {
   return <View style={style.header}>{children}</View>;
 };
-const Footer = ({children}) => {
+const Footer = ({ children }) => {
   return <View style={style.footer}>{children}</View>;
 };
 
