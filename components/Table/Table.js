@@ -29,17 +29,6 @@ const TableComponent = ({ chargerId, startDate, endDate, price }) => {
           tokenValue,
           dates.splitStartDate ? dates : null
         );
-
-      // theChargerHistory.length === 0 && setEndList(true);
-
-      // function onlyUnique(value, index, self) {
-      //   return self.indexOf(value) === index;
-      // }
-
-      // const arrayToFIlter = [...chargerHistory, ...theChargerHistory];
-
-      // const unique = arrayToFIlter.filter(onlyUnique);
-
       setChargerHistory(theChargerHistory);
     } catch (e) {}
   };
@@ -94,12 +83,12 @@ const TableComponent = ({ chargerId, startDate, endDate, price }) => {
           </Text>
         </View>
       ) : (
-        <View style={{ flex: 1 }}>
+        <>
           <View
             style={{ flex: 1 }}
             onLayout={(event) => {
               const { height } = event.nativeEvent.layout;
-              setTableDimension(height);
+              setTableDimension(height - 40);
             }}
           >
             <Table>
@@ -143,7 +132,7 @@ const TableComponent = ({ chargerId, startDate, endDate, price }) => {
               />
             </View>
           </View>
-        </View>
+        </>
       )}
     </View>
   );

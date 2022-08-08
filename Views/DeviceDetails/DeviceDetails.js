@@ -30,7 +30,6 @@ const DeviceDetails = (props) => {
     },
   } = props;
 
-  const { ChargerSettings } = routes;
   const [charger, setCharger] = useState(null);
   const [totalCharge, setTotalCharge] = useState(null);
   const [timer, setStartTimer] = useTime();
@@ -39,6 +38,7 @@ const DeviceDetails = (props) => {
   const [date, setDate] = useState(getStartMonthDate(new Date()));
 
   const [triggerRefresh, setTriggerRefresh] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const demoGetEndKwh = (startDate, endDate) => {
     var diffMs = endDate - startDate;
@@ -47,6 +47,7 @@ const DeviceDetails = (props) => {
   };
 
   const StartStopCharging = async () => {
+    setIsLoading(true);
     try {
       const token = await AsyncStorage.getItem('token');
       setTriggerRefresh(true);
@@ -79,6 +80,7 @@ const DeviceDetails = (props) => {
 
       getChargerInfo();
       setTriggerRefresh(false);
+      setIsLoading(false);
     } catch (e) {
       console.log('ERROR IN START STOP CHARGING', e.response.data);
     }
@@ -93,12 +95,10 @@ const DeviceDetails = (props) => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     getChargerInfo();
+    setIsLoading(false);
   }, []);
-
-  const navigateToChargerSettings = () => {
-    navigation.navigate(ChargerSettings.name);
-  };
 
   useEffect(() => {
     if (date && charger) {
@@ -126,16 +126,18 @@ const DeviceDetails = (props) => {
     setIsCalendarOpen(!isCalendarOpen);
   };
 
+  console.log(charger);
+
   return (
     <>
-      {!triggerRefresh && charger ? (
+      {!triggerRefresh && charger && !isLoading ? (
         <>
-          <Layout>
+          <Layout diffuseBG>
             <Layout.Header>
               <HeaderNavigator navigation={navigation} />
             </Layout.Header>
             <Layout.Body>
-              <View style={style.tittleButtonWrapper}>
+              {/* <View style={style.tittleButtonWrapper}>
                 <View style={{ flex: 2 }}>
                   <Text style={style.title}> {charger.name}</Text>
                 </View>
@@ -150,33 +152,20 @@ const DeviceDetails = (props) => {
                     onPressAction={navigateToChargerSettings}
                   />
                 </View>
-              </View>
+              </View> */}
               {!charger.isInCharge ? (
-                <>
-                  <View
-                    style={{ ...style.tittleButtonWrapper, marginBottom: 10 }}
-                  >
-                    <View
-                      style={{
-                        flex: 1,
-                      }}
-                    >
-                      <PillButton
-                        text={getFullMonthName(date)}
-                        onPressAction={() => setIsCalendarOpen(true)}
-                      />
-                    </View>
-                    <View style={{ flex: 1 }}></View>
-                    <View style={{ flex: 1 }}></View>
-                  </View>
-
+                <View style={style.table_container}>
+                  <PillButton
+                    text={getFullMonthName(date)}
+                    onPressAction={() => setIsCalendarOpen(true)}
+                  />
                   <Table
                     chargerId={charger.id}
                     startDate={date}
                     endDate={getEndMonthDate(date)}
                     price={charger.price}
                   />
-                </>
+                </View>
               ) : (
                 <View>
                   <Text style={style.chargingTitle}>Charging</Text>
