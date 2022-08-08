@@ -1,11 +1,11 @@
 export const kwhRenderer = (charge) => {
-  return charge.length === 0 || charge.endKwh === null
+  return !charge || charge?.length === 0 || charge?.endKwh === null
     ? '-- kWh'
     : (charge.endKwh - charge.startKwh).toFixed(2) + ' kWh';
 };
 
 export const priceRenderer = (charge, price, curency) =>
-  charge.length === 0 || charge.endKwh === null
+  !charge || charge?.length === 0 || charge?.endKwh === null
     ? '-- '
     : (price * (charge.endKwh - charge.startKwh)).toFixed(2) + ' ' + curency;
 
@@ -34,7 +34,7 @@ export const formatMs = (diffMs) => {
 };
 
 export const hourMinutesRenderer = (charge) =>
-  charge.length === 0 || charge.endKwh === null
+  !charge || charge?.length === 0 || charge?.endKwh === null
     ? '-h -m'
     : differenceDates(new Date(charge.startDate), new Date(charge.endDate));
 

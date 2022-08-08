@@ -1,20 +1,22 @@
-import React, { useEffect, useRef } from 'react';
+import React, {useEffect, useRef} from 'react';
 
-import { Text, TouchableWithoutFeedback, View } from 'react-native';
-import { charging } from './CardStyle';
+import {Text, TouchableWithoutFeedback, View} from 'react-native';
+import {charging} from './CardStyle';
 import useTime from '../../helpers/useTime';
 
-const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
+const ChargerCard = ({name, price, kwh, time, charger, onClick}) => {
   const [timer, setStartTimer] = useTime();
   const chargingState = useRef(null);
   const getBGColorByStatus = (statusName) => {
     switch (statusName) {
       case 'Charging':
-        return '#4F6362';
+        return '#181A1B';
       case 'Not Used':
-        return '#393B3B';
+        return '#464C4E';
       case 'Disconnected/Error':
-        return 'darkred';
+        return '#181A1B';
+      case 'In use':
+        return '#464C4E';
       default:
         return '#4F6363';
     }
@@ -23,6 +25,12 @@ const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
     switch (statusName) {
       case 'Charging':
         return '#22EEAB';
+      case 'Disconnected/Error':
+        return '#FF6400';
+      case 'In use':
+        return '#B1AAA0';
+      case 'Not Used':
+        return '#B1AAA0';
       default:
         return 'white';
     }
@@ -47,10 +55,17 @@ const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
             backgroundColor: getBGColorByStatus(charger.appStateName),
           }}
         >
-          <View style={{ flex: 1 }}>
+          <View style={{flex: 1}}>
             <View style={charging.upperTextContainer}>
               <View>
-                <Text style={charging.locationText}>{name}</Text>
+                <Text
+                  style={[
+                    charging.locationText,
+                    {color: getTextColorByStatus(charger.appStateName)},
+                  ]}
+                >
+                  {name}
+                </Text>
 
                 {/* <Text style={charging.smallText}>Now</Text> */}
               </View>
@@ -69,7 +84,7 @@ const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
                 flexDirection: 'row',
               }}
             >
-              <View style={{ flex: 1, marginTop: 'auto' }}>
+              <View style={{flex: 1, marginTop: 'auto'}}>
                 <Text
                   style={{
                     ...charging.chargingStatusText,
@@ -80,7 +95,7 @@ const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
                 </Text>
                 <Text style={charging.smallText}>Energy Delivered</Text>
               </View>
-              <View style={{ flex: 1, marginTop: 'auto' }}>
+              <View style={{flex: 1, marginTop: 'auto'}}>
                 <Text
                   style={{
                     ...charging.chargingStatusText,
@@ -91,7 +106,7 @@ const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
                 </Text>
                 <Text style={charging.smallText}>Charge Duration</Text>
               </View>
-              <View style={{ flex: 1, marginTop: 'auto' }}>
+              <View style={{flex: 1, marginTop: 'auto'}}>
                 <Text
                   style={{
                     ...charging.chargingStatusText,
