@@ -8,6 +8,7 @@ import {style} from './ConnectQR.style';
 import SnackBar from '../../general_components/SnackBar';
 import {apiFactory} from '../../api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import QRViewBackground from '../../assets/qrBackground.jpg';
 
 const ConnectQR = (props) => {
   const {navigation} = props;
@@ -113,7 +114,16 @@ const ConnectQR = (props) => {
   };
 
   return (
-    <Layout>
+    <Layout
+      customBackgroundUrl={QRViewBackground}
+      customLayoutStyle={{
+        backgroundColor: 'red',
+        paddingLeft: 0,
+        paddingRight: 0,
+        paddingTop: 0,
+        paddingBottom: 0,
+      }}
+    >
       <Layout.Header>
         <HeaderNavigator
           navigation={navigation}
@@ -123,15 +133,20 @@ const ConnectQR = (props) => {
       </Layout.Header>
       <Layout.Body>
         <View
-          style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}
+          style={{
+            flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+          }}
         >
-          <BarCodeScanner
+          {/* <BarCodeScanner
             onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
             barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
             style={StyleSheet.absoluteFillObject}
-          />
+          /> */}
+          <Text style={style.title}>The only electric charger you need</Text>
         </View>
-        <Text style={style.description}>
+        {/* <Text style={style.description}>
           Scan device QR code to register the device
         </Text>
         {hasPermission === null ? (
@@ -142,7 +157,7 @@ const ConnectQR = (props) => {
               No access to camera. Click for request the acces
             </Text>
           </Pressable>
-        ) : null}
+        ) : null} */}
       </Layout.Body>
       <Layout.Footer>
         <Button2
