@@ -9,7 +9,6 @@ export const style = StyleSheet.create({
     backgroundColor: "#0E0E0E",
   },
   layout_container: {
-    backgroundColor: "#0E0E0E",
     flex: 1,
     justifyContent: "space-between",
     paddingLeft: 20,

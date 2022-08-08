@@ -9,25 +9,18 @@ import SnackBar from "../../general_components/SnackBar";
 import { apiFactory } from "../../api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import QRViewBackground from "../../assets/qrBackground.jpg";
+import ModalComponent from "../../components/Modal/Modal";
+import QRModal from "../../components/Modal/QRModal";
 
 const ConnectQR = (props) => {
   const { navigation } = props;
-
-  const navigateToStep2 = () => {
-    if (qrData) {
-      navigation.navigate("ConnectDevice", { qrData });
-    } else {
-      setScanned(false);
-      setLogType("error");
-      setError("QR Code not found or doesn't contain the right data!");
-    }
-  };
 
   const [error, setError] = useState(null);
   const [logType, setLogType] = useState("error");
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [qrData, setQrData] = useState(null);
+  const [qrModalVisible, setQrModalVisible] = useState(false);
 
   const requestPermisionCamera = async () => {
     const permision = await BarCodeScanner.requestPermissionsAsync();
@@ -47,9 +40,15 @@ const ConnectQR = (props) => {
     }
   };
 
-  useEffect(() => {
-    requestPermisionCamera();
-  }, []);
+  const navigateToStep2 = () => {
+    if (qrData) {
+      navigation.navigate("ConnectDevice", { qrData });
+    } else {
+      setScanned(false);
+      setLogType("error");
+      setError("QR Code not found or doesn't contain the right data!");
+    }
+  };
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
@@ -66,8 +65,6 @@ const ConnectQR = (props) => {
       setScanned(false);
     }
   };
-
-  console.log(props.route.params);
 
   const handleDEMOAssociateDevice = async () => {
     console.log(qrData);
@@ -105,6 +102,10 @@ const ConnectQR = (props) => {
     //   setError(response);
     // }
   };
+
+  useEffect(() => {
+    requestPermisionCamera();
+  }, []);
 
   return (
     <Layout
@@ -161,7 +162,7 @@ const ConnectQR = (props) => {
         <Button2
           text={"Open Scanner"}
           marginTop={40}
-          onPressAction={() => handleDEMOAssociateDevice()}
+          onPressAction={() => setQrModalVisible(true)}
         />
         {error && (
           <SnackBar
@@ -171,6 +172,16 @@ const ConnectQR = (props) => {
             logType={logType}
           />
         )}
+        <QRModal
+          modalVisible={qrModalVisible}
+          setModalVisible={setQrModalVisible}
+        >
+          <BarCodeScanner
+            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+            barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
+            style={{ width: 250, height: "100%" }}
+          />
+        </QRModal>
       </Layout.Footer>
     </Layout>
   );

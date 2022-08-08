@@ -5,23 +5,48 @@ import { style } from "./Layout.style";
 
 import AvoidingKeyboardWrapper from "./AvoidingKeboardWrapper";
 
-const Layout = ({ children, scrollView, diffuseBG = false }) => {
+const Layout = ({
+  children,
+  scrollView,
+  customLayoutStyle,
+  customBackgroundUrl,
+  diffuseBG = false,
+}) => {
+  const innerView = (
+    <View
+      style={{
+        ...style.layout_container,
+        ...(diffuseBG && { backgroundColor: "#949597" }),
+      }}
+    >
+      {children}
+    </View>
+  );
+
   return (
     <AvoidingKeyboardWrapper scrollView={scrollView}>
       <View
         style={{
           ...style.device_container,
           ...(diffuseBG && { backgroundColor: "#949597" }),
+          ...customLayoutStyle,
         }}
       >
-        <View
-          style={{
-            ...style.layout_container,
-            ...(diffuseBG && { backgroundColor: "#949597" }),
-          }}
-        >
-          {children}
-        </View>
+        {customBackgroundUrl ? (
+          <ImageBackground
+            source={customBackgroundUrl}
+            style={{
+              width: "100%",
+              height: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {innerView}
+          </ImageBackground>
+        ) : (
+          innerView
+        )}
       </View>
     </AvoidingKeyboardWrapper>
   );

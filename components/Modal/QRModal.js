@@ -1,7 +1,16 @@
 import React, { useState } from "react";
-import { Alert, Modal, StyleSheet, Text, Pressable, View } from "react-native";
-
-const ModalComponent = ({
+import {
+  Alert,
+  Modal,
+  StyleSheet,
+  Text,
+  Pressable,
+  View,
+  ImageBackground,
+} from "react-native";
+import QRMargins from "../../assets/qrMargins2.png";
+const QRModal = ({
+  children,
   modalVisible,
   setModalVisible,
   modalText,
@@ -21,42 +30,48 @@ const ModalComponent = ({
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>{modalText}</Text>
+            {children}
             <View
               style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
+                position: "absolute",
+                // borderWidth: 5,
+                // borderColor: "white",
+                top: "19%",
+                left: "8.2%",
+                width: 200,
+                height: 200,
               }}
             >
-              <Pressable
-                style={[styles.button, styles.buttonOpen]}
-                onPress={() => actionCallback()}
-              >
-                <Text style={[styles.textStyle]}>{actionText}</Text>
-              </Pressable>
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <Text style={styles.textStyle}>Close</Text>
-              </Pressable>
+              <ImageBackground
+                style={{
+                  width: "90%",
+                  height: "90%",
+                  margin: "10%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                source={QRMargins}
+              ></ImageBackground>
             </View>
           </View>
+          <Text style={styles.modalText}>
+            Scan device QR code to register device
+          </Text>
         </View>
       </Modal>
     </View>
   );
 };
 
-export default ModalComponent;
+export default QRModal;
 
 const styles = StyleSheet.create({
   modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
+    maxHeight: 325,
+    maxWidth: 300,
+    backgroundColor: "transparent",
+
+    overflow: "hidden",
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -87,14 +102,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   modalText: {
-    marginBottom: 15,
+    marginTop: 10,
     textAlign: "center",
-    fontSize: 20,
+    fontSize: 12,
+    color: "white",
   },
   centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22,
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
 });
