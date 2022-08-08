@@ -1,38 +1,39 @@
-import React, {useEffect, useRef} from 'react';
+import React, { useEffect, useRef } from "react";
 
-import {Text, TouchableWithoutFeedback, View} from 'react-native';
-import {charging} from './CardStyle';
-import useTime from '../../helpers/useTime';
+import { Text, TouchableWithoutFeedback, View, Image } from "react-native";
+import { charging } from "./CardStyle";
+import useTime from "../../helpers/useTime";
+import { chargeDate, chargeLastUsed } from "../../helpers/formatFunctions";
 
-const ChargerCard = ({name, price, kwh, time, charger, onClick}) => {
+const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
   const [timer, setStartTimer] = useTime();
   const chargingState = useRef(null);
   const getBGColorByStatus = (statusName) => {
     switch (statusName) {
-      case 'Charging':
-        return '#181A1B';
-      case 'Not Used':
-        return '#464C4E';
-      case 'Disconnected/Error':
-        return '#181A1B';
-      case 'In use':
-        return '#464C4E';
+      case "Charging":
+        return "#FFFFFF";
+      case "Not Used":
+        return "#FFFFFF";
+      case "Disconnected/Error":
+        return "#FFFFFF";
+      case "In use":
+        return "#FFFFFF";
       default:
-        return '#4F6363';
+        return "#FFFFFF";
     }
   };
   const getTextColorByStatus = (statusName) => {
     switch (statusName) {
-      case 'Charging':
-        return '#22EEAB';
-      case 'Disconnected/Error':
-        return '#FF6400';
-      case 'In use':
-        return '#B1AAA0';
-      case 'Not Used':
-        return '#B1AAA0';
+      case "Charging":
+        return "#44CD54";
+      case "Disconnected/Error":
+        return "#FF6400";
+      case "In use":
+        return "#B1AAA0";
+      case "Not Used":
+        return "#B1AAA0";
       default:
-        return 'white';
+        return "#B1AAA0";
     }
   };
 
@@ -55,20 +56,23 @@ const ChargerCard = ({name, price, kwh, time, charger, onClick}) => {
             backgroundColor: getBGColorByStatus(charger.appStateName),
           }}
         >
-          <View style={{flex: 1}}>
-            <View style={charging.upperTextContainer}>
-              <View>
-                <Text
-                  style={[
-                    charging.locationText,
-                    {color: getTextColorByStatus(charger.appStateName)},
-                  ]}
-                >
-                  {name}
-                </Text>
+          <View style={charging.upperTextContainer}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Image
+                style={charging.image}
+                source={require("../../assets/greenLighting.png")}
+              />
 
-                {/* <Text style={charging.smallText}>Now</Text> */}
-              </View>
+              <Text
+                style={[
+                  charging.locationText,
+                  { color: getTextColorByStatus(charger.appStateName) },
+                ]}
+              >
+                {name}
+              </Text>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text
                 style={{
                   ...charging.chargingStatusText,
@@ -77,46 +81,73 @@ const ChargerCard = ({name, price, kwh, time, charger, onClick}) => {
               >
                 {charger.appStateName}
               </Text>
+              <View style={{ ...charging.circle, marginLeft: 10 }} />
             </View>
-            <View
+          </View>
+          <View style={charging.lastUsedWrapper}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View style={{ ...charging.circle, marginRight: 10 }} />
+
+              <Text
+                style={[
+                  charging.locationText,
+                  { color: getTextColorByStatus(charger.appStateName) },
+                  { fontSize: 12 },
+                ]}
+              >
+                {chargeLastUsed(charger)}
+              </Text>
+            </View>
+
+            <Text
               style={{
-                flex: 1,
-                flexDirection: 'row',
+                ...charging.chargingStatusText,
+                color: getTextColorByStatus(charger.appStateName),
+                fontSize: 10,
               }}
             >
-              <View style={{flex: 1, marginTop: 'auto'}}>
-                <Text
-                  style={{
-                    ...charging.chargingStatusText,
-                    color: getTextColorByStatus(charger.appStateName),
-                  }}
-                >
-                  {kwh}
-                </Text>
-                <Text style={charging.smallText}>Energy Delivered</Text>
-              </View>
-              <View style={{flex: 1, marginTop: 'auto'}}>
-                <Text
-                  style={{
-                    ...charging.chargingStatusText,
-                    color: getTextColorByStatus(charger.appStateName),
-                  }}
-                >
-                  {charger.isInCharge ? timer : time}
-                </Text>
-                <Text style={charging.smallText}>Charge Duration</Text>
-              </View>
-              <View style={{flex: 1, marginTop: 'auto'}}>
-                <Text
-                  style={{
-                    ...charging.chargingStatusText,
-                    color: getTextColorByStatus(charger.appStateName),
-                  }}
-                >
-                  {price}
-                </Text>
-                <Text style={charging.smallText}>Amount Paid</Text>
-              </View>
+              {chargeDate(charger)}
+            </Text>
+          </View>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+            }}
+          >
+            <View style={{ flex: 1, marginTop: "auto" }}>
+              <Text style={charging.smallText}>Energy Delivered</Text>
+
+              <Text
+                style={{
+                  ...charging.chargingStatusText,
+                  color: getTextColorByStatus(charger.appStateName),
+                }}
+              >
+                {kwh}
+              </Text>
+            </View>
+            <View style={{ flex: 1, marginTop: "auto" }}>
+              <Text style={charging.smallText}>Charge Duration</Text>
+              <Text
+                style={{
+                  ...charging.chargingStatusText,
+                  color: getTextColorByStatus(charger.appStateName),
+                }}
+              >
+                {charger.isInCharge ? timer : time}
+              </Text>
+            </View>
+            <View style={{ flex: 1, marginTop: "auto" }}>
+              <Text style={charging.smallText}>Amount Paid</Text>
+              <Text
+                style={{
+                  ...charging.chargingStatusText,
+                  color: getTextColorByStatus(charger.appStateName),
+                }}
+              >
+                {price}
+              </Text>
             </View>
           </View>
         </View>
