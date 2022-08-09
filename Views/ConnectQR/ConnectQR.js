@@ -1,55 +1,93 @@
-import React, {useEffect, useState} from 'react';
-import {Text, View, StyleSheet, Button, Pressable} from 'react-native';
-import Button2 from '../../components/Button/Button';
-import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavigator';
-import Layout from '../../general_components/Layout';
-import {BarCodeScanner} from 'expo-barcode-scanner';
-import {style} from './ConnectQR.style';
-import SnackBar from '../../general_components/SnackBar';
-import {apiFactory} from '../../api';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect, useState } from "react";
+import { Text, View, StyleSheet, Button, Pressable } from "react-native";
+import Button2 from "../../components/Button/Button";
+import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
+import Layout from "../../general_components/Layout";
+import { BarCodeScanner } from "expo-barcode-scanner";
+import { style } from "./ConnectQR.style";
+import SnackBar from "../../general_components/SnackBar";
+import { apiFactory } from "../../api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import QRViewBackground from "../../assets/qrBackground.jpg";
+import ModalComponent from "../../components/Modal/Modal";
+import QRModal from "../../components/Modal/QRModal";
 
 const ConnectQR = (props) => {
-  const {navigation} = props;
-
-  const navigateToStep2 = () => {
-    if (qrData) {
-      navigation.navigate('ConnectDevice', {qrData});
-    } else {
-      setScanned(false);
-      setLogType('error');
-      setError("QR Code not found or doesn't contain the right data!");
-    }
-  };
+  const { navigation } = props;
 
   const [error, setError] = useState(null);
-  const [logType, setLogType] = useState('error');
+  const [logType, setLogType] = useState("error");
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
-  const [qrData, setQrData] = useState(null);
+  const [qrModalVisible, setQrModalVisible] = useState(false);
 
   const requestPermisionCamera = async () => {
-    const savedCameraPermission = await AsyncStorage.getItem(
-      'cameraPermission',
-    );
-    if (savedCameraPermission === 'granted') {
-      setHasPermission(true);
-    } else {
-      const permision = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(permision.status === 'granted');
-    }
+    const permision = await BarCodeScanner.requestPermissionsAsync();
+    console.log("Camera permision: ", permision.status === "granted");
+    setHasPermission(permision.status === "granted");
   };
 
   const getToken = async () => {
     try {
-      const tokenValue = await AsyncStorage.getItem('token');
+      const tokenValue = await AsyncStorage.getItem("token");
       if (tokenValue !== null) {
-        console.log(tokenValue);
         return tokenValue;
       }
     } catch (e) {
-      console.log('ERROR IN READING', e);
-      // error reading value
+      console.log("Token Provider Error", e);
+    }
+  };
+
+  const handleBarCodeScanned = async ({ type, data }) => {
+    setScanned(true);
+    try {
+      data = JSON.parse(data);
+    } catch (error) {
+      setScanned(false);
+      setLogType("error");
+      setError("QR code doesn't contain the right data!");
+      console.error("Data missing ConnectQR:102");
+    }
+    if (
+      data.wifiName &&
+      data.wifiPass &&
+      data.wifiName !== "" &&
+      data.wifiPass !== ""
+    ) {
+      setQrModalVisible(false);
+      const token = await getToken();
+      try {
+        const checkData = await apiFactory()
+          .data.device()
+          .getChargerData(data.wifiName, token);
+        if (checkData) {
+          const response = await apiFactory()
+            .data.account()
+            .addExistingChargerToUser(token, data.wifiName);
+          console.log(response);
+
+          if (Array.isArray(response)) {
+            setLogType("info");
+            setError(
+              "Device added successfully, please return to home screen!"
+            );
+          } else {
+            setLogType("error");
+            setError(response);
+            setScanned(false);
+          }
+        }
+      } catch (error) {
+        if (JSON.parse(JSON.stringify(error)).status == "500") {
+          console.log("Device Not Registered");
+          navigation.navigate("ConnectDevice", { qrData: data });
+        }
+      }
+    } else {
+      setScanned(false);
+      setLogType("error");
+      setError("QR code doesn't contain the right data!");
+      console.error("Data missing ConnectQR:102");
     }
   };
 
@@ -57,63 +95,17 @@ const ConnectQR = (props) => {
     requestPermisionCamera();
   }, []);
 
-  const handleBarCodeScanned = ({type, data}) => {
-    setScanned(true);
-    // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-    data = JSON.parse(data);
-    if (
-      data.wifiName &&
-      data.wifiPass &&
-      data.wifiName !== '' &&
-      data.wifiPass !== ''
-    ) {
-      setQrData(data);
-    } else {
-      setScanned(false);
-    }
-  };
-
-  console.log(props.route.params);
-
-  const handleDEMOAssociateDevice = async () => {
-    console.log(qrData);
-    if (qrData?.wifiName && qrData?.wifiName !== '') {
-      let serialNumber = qrData.wifiName.replace(new RegExp('-', 'g'), '');
-      console.log(serialNumber);
-      const token = await getToken();
-      const response = await apiFactory()
-        .data.account()
-        .addExistingChargerToUser(token, serialNumber);
-      if (Array.isArray(response)) {
-        console.log(response);
-        setLogType('info');
-        setError('Device added successfully, please go back!');
-      } else {
-        setLogType('error');
-        setError(response);
-      }
-    } else {
-      setScanned(false);
-      setLogType('error');
-      setError("QR Code not found or doesn't contain the right data!");
-    }
-    // const token = await getToken();
-    // console.log(token);
-    // const response = await apiFactory()
-    //   .data.account()
-    //   .addExistingChargerToUser(token);
-    // if (Array.isArray(response)) {
-    //   console.log(response);
-    //   setLogType('info');
-    //   setError('Device added successfully, please go back!');
-    // } else {
-    //   setLogType('error');
-    //   setError(response);
-    // }
-  };
-
   return (
-    <Layout>
+    <Layout
+      customBackgroundUrl={QRViewBackground}
+      customLayoutStyle={{
+        backgroundColor: "transparent",
+        paddingLeft: 0,
+        paddingRight: 0,
+        paddingTop: 0,
+        paddingBottom: 0,
+      }}
+    >
       <Layout.Header>
         <HeaderNavigator
           navigation={navigation}
@@ -123,41 +115,51 @@ const ConnectQR = (props) => {
       </Layout.Header>
       <Layout.Body>
         <View
-          style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}
+          style={{
+            flex: 1,
+            flexDirection: "column",
+            justifyContent: "flex-start",
+          }}
+        >
+          <Text style={style.title}>The only electric charger you need</Text>
+        </View>
+
+        <Text style={style.description}>
+          Look for the QR code on the charger and scan it to connect it to your
+          charger.
+        </Text>
+      </Layout.Body>
+      <Layout.Footer>
+        <Button2
+          text={"Open Scanner"}
+          marginTop={40}
+          onPressAction={() => {
+            if (hasPermission) {
+              setQrModalVisible(true);
+            } else {
+              setLogType("error");
+              setError("Please grant camera permission!");
+            }
+          }}
+        />
+        <QRModal
+          modalVisible={qrModalVisible}
+          setModalVisible={setQrModalVisible}
         >
           <BarCodeScanner
             onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
             barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
-            style={StyleSheet.absoluteFillObject}
+            style={{ width: 250, height: "100%" }}
           />
-        </View>
-        <Text style={style.description}>
-          Scan device QR code to register the device
-        </Text>
-        {hasPermission === null ? (
-          <Text>Requesting for camera permission</Text>
-        ) : hasPermission === false ? (
-          <Pressable onPress={() => requestPermisionCamera()}>
-            <Text style={{...style.description, color: 'red'}}>
-              No access to camera. Click for request the acces
-            </Text>
-          </Pressable>
-        ) : null}
-      </Layout.Body>
-      <Layout.Footer>
-        <Button2
-          text={'Scan QR'}
-          marginTop={40}
-          onPressAction={() => handleDEMOAssociateDevice()}
-        />
-        {error && (
-          <SnackBar
-            text={error}
-            logSnackbar={error}
-            setLogSnackbar={setError}
-            logType={logType}
-          />
-        )}
+          {error && (
+            <SnackBar
+              text={error}
+              logSnackbar={error}
+              setLogSnackbar={setError}
+              logType={logType}
+            />
+          )}
+        </QRModal>
       </Layout.Footer>
     </Layout>
   );

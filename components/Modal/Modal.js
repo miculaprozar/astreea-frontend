@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Alert, Modal, StyleSheet, Text, Pressable, View} from 'react-native';
+import React, { useState } from "react";
+import { Alert, Modal, StyleSheet, Text, Pressable, View } from "react-native";
 
 const ModalComponent = ({
   modalVisible,
@@ -11,11 +11,11 @@ const ModalComponent = ({
   return (
     <View style={styles.centeredView}>
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
+          Alert.alert("Modal has been closed.");
           setModalVisible(!modalVisible);
         }}
       >
@@ -24,9 +24,9 @@ const ModalComponent = ({
             <Text style={styles.modalText}>{modalText}</Text>
             <View
               style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
               }}
             >
               <Pressable
@@ -54,11 +54,11 @@ export default ModalComponent;
 const styles = StyleSheet.create({
   modalView: {
     margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -75,26 +75,26 @@ const styles = StyleSheet.create({
     marginRight: 30,
   },
   buttonOpen: {
-    backgroundColor: '#97a6ad',
+    backgroundColor: "#97a6ad",
   },
   buttonClose: {
-    backgroundColor: '#FF6400',
+    backgroundColor: "#FF6400",
   },
   textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
     fontSize: 16,
   },
   modalText: {
     marginBottom: 15,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 20,
   },
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 22,
   },
 });

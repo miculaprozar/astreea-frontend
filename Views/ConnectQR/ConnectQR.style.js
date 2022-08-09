@@ -7,8 +7,20 @@ export const style = StyleSheet.create({
     padding: "10%",
   },
   description: {
+    textAlign: "center",
+    marginTop: 10,
     fontSize: 17,
-    color: "#393B3B",
+    color: "#FFFFFF",
     fontFamily: "Inter_500Medium",
+  },
+  title: {
+    color: "#FFFFFF",
+    fontSize: 28,
+    fontFamily: "Inter_600SemiBold",
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginBottom: 50,
+    marginTop: 50,
+    textAlign: "center",
   },
 });

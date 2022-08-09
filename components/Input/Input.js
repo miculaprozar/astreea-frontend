@@ -5,6 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 
 const Input = ({
   label,
+  showLabel,
   placeholder,
   marginTop,
   marginBottom,
@@ -23,7 +24,7 @@ const Input = ({
 
   return (
     <View style={{ marginTop: marginTop, marginBottom: marginBottom }}>
-      {/* <Text style={textStyle.text}>{label}</Text> */}
+      {showLabel && <Text style={textStyle.text}>{label}</Text>}
 
       {disabled ? (
         <TextInput

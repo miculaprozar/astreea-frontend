@@ -1,30 +1,33 @@
-import React, {useState} from 'react';
-import {Text, View} from 'react-native';
-import Button from '../../components/Button/Button';
-import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavigator';
+import React, { useState } from "react";
+import { Text, View } from "react-native";
+import Button from "../../components/Button/Button";
+import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
 
-import Input from '../../components/Input/Input';
-import Layout from '../../general_components/Layout';
-import {style} from './ConnectDevice.style';
-import routes from '../../routes';
-import {apiFactory} from '../../api';
-import {PermissionsAndroid, ActivityIndicator, StyleSheet} from 'react-native';
-import WifiManager from 'react-native-wifi-reborn';
-import HeaderBackButton from '../../general_components/HeaderBackButton';
+import Input from "../../components/Input/Input";
+import Layout from "../../general_components/Layout";
+import { style } from "./ConnectDevice.style";
+import routes from "../../routes";
+import { apiFactory } from "../../api";
+import {
+  PermissionsAndroid,
+  ActivityIndicator,
+  StyleSheet,
+} from "react-native";
+import WifiManager from "react-native-wifi-reborn";
+import HeaderBackButton from "../../general_components/HeaderBackButton";
 
 const ConnectDevice = (props) => {
-  const {navigation} = props;
-  const {ConnectQR, SetupDevice} = routes;
+  const { navigation } = props;
+  const { ConnectQR, SetupDevice } = routes;
+  console.log("DATA IN ROUTE PRAMS", props.route.params);
   const [deviceHotspotName, setDeviceHotspotName] = useState(
-    props.route.params
-      ? props.route.params.qrData.wifiName
-      : 'Astreea-Charger-1',
+    props.route.params ? props.route.params.qrData.wifiName : ""
   );
   const [deviceHotspotPass, setDeviceHotspotPass] = useState(
-    props.route.params ? props.route.params.qrData.wifiPass : 'astreeacharger1',
+    props.route.params ? props.route.params.qrData.wifiPass : ""
   );
 
-  const [logText, setLogText] = useState('');
+  const [logText, setLogText] = useState("");
   const [waitingForData, setWaitingForData] = useState(false);
 
   React.useLayoutEffect(() => {
@@ -39,11 +42,11 @@ const ConnectDevice = (props) => {
     const currentDate = new Date();
     return (
       currentDate.getHours() +
-      ':' +
+      ":" +
       currentDate.getMinutes() +
-      ':' +
+      ":" +
       currentDate.getSeconds() +
-      ' '
+      " "
     );
   };
 
@@ -51,32 +54,32 @@ const ConnectDevice = (props) => {
     WifiManager.connectToProtectedSSID(
       deviceHotspotName,
       deviceHotspotPass,
-      false,
+      false
     ).then(
       async () => {
         WifiManager.getCurrentWifiSSID().then(
           (ssid) => {
-            console.log('Your current connected wifi SSID is ' + ssid);
+            console.log("Your current connected wifi SSID is " + ssid);
           },
           () => {
-            console.log('Cannot get current SSID!');
-          },
+            console.log("Cannot get current SSID!");
+          }
         );
 
-        console.log('Connected successfully!');
+        console.log("Connected successfully!");
         try {
           setWaitingForData(true);
           const connectionStatus = await apiFactory()
             .data.device()
             .checkConnection();
           setLogText(logTime() + connectionStatus);
-          if (connectionStatus === 'Connection OK.') {
+          if (connectionStatus === "Connection OK.") {
             const wifiNetworks = await apiFactory()
               .data.device()
               .availableWifiNetowrks();
             setWaitingForData(false);
             if (wifiNetworks.wifiNames.length > 0) {
-              navigation.navigate(SetupDevice.name, {wifiNetworks});
+              navigation.navigate(SetupDevice.name, { wifiNetworks });
             } else {
               // TODO: Notifcation for error and why
             }
@@ -89,27 +92,27 @@ const ConnectDevice = (props) => {
       },
       () => {
         setWaitingForData(false);
-        console.log('Connection failed!');
-      },
+        console.log("Connection failed!");
+      }
     );
   };
 
   const checkAndNavigateToSetup = async () => {
     const checkWifiPermisions = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
     );
 
     if (!checkWifiPermisions) {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         {
-          title: 'Location permission is required for WiFi connections',
+          title: "Location permission is required for WiFi connections",
           message:
-            'This app needs location permission as this is required  ' +
-            'to scan for wifi networks.',
-          buttonNegative: 'DENY',
-          buttonPositive: 'ALLOW',
-        },
+            "This app needs location permission as this is required  " +
+            "to scan for wifi networks.",
+          buttonNegative: "DENY",
+          buttonPositive: "ALLOW",
+        }
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         connectToWifi();
@@ -130,7 +133,8 @@ const ConnectDevice = (props) => {
       <Layout.Body>
         <Text style={style.title}>Connect to Device</Text>
         <Input
-          label={'Hotspot name'}
+          showLabel={true}
+          label={"Hotspot name"}
           marginBottom={15}
           marginTop={15}
           value={deviceHotspotName}
@@ -139,7 +143,8 @@ const ConnectDevice = (props) => {
           }}
         />
         <Input
-          label={'Password'}
+          showLabel={true}
+          label={"Password"}
           marginBottom={15}
           value={deviceHotspotPass}
           onChange={(inputValue) => {
@@ -162,8 +167,8 @@ const ConnectDevice = (props) => {
             <>
               {waitingForData ? (
                 <ActivityIndicator
-                  size={'large'}
-                  color={'#ff6400'}
+                  size={"large"}
+                  color={"#ff6400"}
                 ></ActivityIndicator>
               ) : (
                 <Text>Test Connection</Text>

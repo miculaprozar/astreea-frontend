@@ -11,7 +11,8 @@ export const style = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: "red",
     bottom: 10,
-    zIndex: 5,
+    zIndex: 999,
+    elevation: 999,
   },
   text: {
     color: "#FFFFFF",
