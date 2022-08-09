@@ -18,7 +18,8 @@ import {
 } from "../../helpers/formatFunctions";
 
 const Home = (props) => {
-  const { navigation } = props;
+  const { navigation, route } = props;
+
   const { ConnectQR, DeviceDetails } = routes;
 
   const [token, setToken] = useState(null);
@@ -137,7 +138,11 @@ const Home = (props) => {
   return (
     <Layout diffuseBG={true}>
       <Layout.Header>
-        <HeaderNavigator navigation={navigation} hideBack={true} />
+        <HeaderNavigator
+          navigation={navigation}
+          hideBack={true}
+          route={route}
+        />
       </Layout.Header>
       <Layout.Body>
         <Label white text="Search" />
