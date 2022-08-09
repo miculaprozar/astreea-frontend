@@ -12,8 +12,34 @@ export const style = StyleSheet.create({
     alignItems: "center",
   },
   backButton: {
-    fontSize: 16,
-    color: "#FF6400",
-    marginLeft: 4,
+    fontSize: 10,
+    color: "#FFFFFF",
+    fontFamily: "Inter_400Regular",
+    position: "absolute",
+    left: 16,
+  },
+  leftText: {
+    fontSize: 10,
+    color: "#FFFFFF",
+    fontFamily: "Inter_400Regular",
+  },
+  backImage: {
+    width: 60,
+    height: 35,
+  },
+  chargerImage: {
+    width: 100,
+    height: 20,
+    resizeMode: "contain",
+  },
+  titleWhite: {
+    width: 50,
+    height: 30,
+    resizeMode: "contain",
+  },
+  nameText: {
+    fontSize: 10,
+    color: "#FFFFFF",
+    fontFamily: "Inter_700Bold",
   },
 });
