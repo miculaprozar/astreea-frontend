@@ -13,7 +13,7 @@ const QRModal = ({
   children,
   modalVisible,
   setModalVisible,
-  modalText,
+
   actionText,
   actionCallback,
 }) => {
@@ -34,8 +34,6 @@ const QRModal = ({
             <View
               style={{
                 position: "absolute",
-                // borderWidth: 5,
-                // borderColor: "white",
                 top: "19%",
                 left: "8.2%",
                 width: 200,
@@ -70,7 +68,6 @@ const styles = StyleSheet.create({
     maxHeight: 325,
     maxWidth: 300,
     backgroundColor: "transparent",
-
     overflow: "hidden",
     alignItems: "center",
     shadowColor: "#000",
@@ -81,25 +78,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-  },
-  button: {
-    borderRadius: 15,
-    padding: 15,
-    elevation: 2,
-    marginLeft: 30,
-    marginRight: 30,
-  },
-  buttonOpen: {
-    backgroundColor: "#97a6ad",
-  },
-  buttonClose: {
-    backgroundColor: "#FF6400",
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 16,
   },
   modalText: {
     marginTop: 10,

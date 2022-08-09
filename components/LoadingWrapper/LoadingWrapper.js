@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const LoadingWrapper = ({ children, isLoading }) => {
   console.log(isLoading);
@@ -6,7 +6,7 @@ const LoadingWrapper = ({ children, isLoading }) => {
     <>
       {isLoading ? (
         <View>
-          <ActivityIndicator size={'large'} color={'#ff6400'} />
+          <ActivityIndicator size={"large"} color={"#ffffff"} />
         </View>
       ) : (
         // children

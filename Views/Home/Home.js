@@ -115,10 +115,8 @@ const Home = (props) => {
     getToken();
   }, []);
 
-  const changeCanMessageCallback = () => {};
-
   const navigateToAddDevice = () => {
-    navigation.navigate(ConnectQR.name, { onBack: changeCanMessageCallback });
+    navigation.navigate(ConnectQR.name);
   };
 
   const navigateToDeviceAction = (charger) => {

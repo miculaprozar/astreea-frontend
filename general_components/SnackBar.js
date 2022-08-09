@@ -18,7 +18,7 @@ const SnackBar = ({ text, logSnackbar, setLogSnackbar, logType }) => {
 
   return (
     <View style={{ ...style.wrapper, backgroundColor: bkColor }}>
-      <Text style={style.text}>{text}</Text>
+      <Text style={{ ...style.text, elevation: 999 }}>{text}</Text>
     </View>
   );
 };

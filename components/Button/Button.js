@@ -30,7 +30,7 @@ const Button = ({
         onPress={onPressAction}
       >
         {isLoading ? (
-          () => <ActivityIndicator size={"small"} color={"#ff6400"} />
+          () => <ActivityIndicator size={"small"} color={"#ffffff"} />
         ) : (
           <>
             {text ? (

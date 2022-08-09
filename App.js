@@ -45,7 +45,7 @@ export default function App() {
   return (
     <Provider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="ConnectQR">
+        <Stack.Navigator initialRouteName="Permisions">
           <Stack.Screen
             name={routes.SignIn.name}
             options={routes.SignIn.navigationOptions}

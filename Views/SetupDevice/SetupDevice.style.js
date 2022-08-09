@@ -1,30 +1,37 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from "react-native";
 
 export const style = StyleSheet.create({
   wrapper: {
-    backgroundColor: '#F2F6F7',
+    backgroundColor: "#F2F6F7",
     flex: 1,
-    padding: '10%',
+    padding: "10%",
   },
   title: {
     fontSize: 36,
-    color: '#393B3B',
-    fontFamily: 'Inter_700Bold',
+    color: "#393B3B",
+    fontFamily: "Inter_700Bold",
   },
   description: {
     fontSize: 17,
-    color: '#393B3B',
-    fontFamily: 'Inter_500Medium',
+    color: "#393B3B",
+    fontFamily: "Inter_500Medium",
     marginTop: 15,
+  },
+  label: {
+    fontSize: 17,
+    color: "#393B3B",
+    fontFamily: "Inter_400Regular",
+    marginTop: 15,
+    marginBottom: 5,
   },
 
   dropdown: {
-    width: '100%',
+    width: "100%",
     borderRadius: 37,
-    backgroundColor: '#F2F6F7',
+    backgroundColor: "#F2F6F7",
     borderWidth: 1,
-    borderColor: '#393B3B',
+    borderColor: "#393B3B",
     fontSize: 14,
-    color: '#393B3B',
+    color: "#393B3B",
   },
 });
