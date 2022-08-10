@@ -57,4 +57,19 @@ export const charging = StyleSheet.create({
     height: 10,
     marginTop: 2,
   },
+  pairButtonWrapper: {
+    backgroundColor: "#FF6400",
+    padding: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "40%",
+    borderRadius: 30,
+    marginLeft: "auto",
+    marginTop: 30,
+  },
+  pairButtonText: {
+    color: "#FFFFFF",
+    fontSize: 10,
+    fontFamily: "Inter_400Regular",
+  },
 });
