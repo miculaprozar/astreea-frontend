@@ -1,16 +1,22 @@
 import React from "react";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { Image } from "react-native";
 
-const Icon = ({ isSecondary, isDanger, isShare }) => {
-  const iconToRender = isSecondary
-    ? "calendar-day"
-    : isDanger
-    ? "minus-circle"
-    : isShare
-    ? "share-alt"
-    : "gas-pump";
-
-  return <FontAwesome5 name={iconToRender} size={21} color="#393B3B" />;
+const Icon = ({ isSecondary }) => {
+  const iconToRender = isSecondary ? "calendar-day" : "Power";
+  const getLightingImageByStatus = (statusName) => {
+    switch (statusName) {
+      case "Power":
+        return require("../../assets/powerWhite.png");
+      default:
+        return require("../../assets/settingWhite.png");
+    }
+  };
+  return (
+    <Image
+      source={getLightingImageByStatus(iconToRender)}
+      style={{ width: 20, height: 20, resizeMode: "contain" }}
+    />
+  );
 };
 
 export default Icon;
