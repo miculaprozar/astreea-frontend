@@ -1,40 +1,40 @@
-import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, Button, Pressable } from "react-native";
-import Button2 from "../../components/Button/Button";
-import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
-import Layout from "../../general_components/Layout";
-import { BarCodeScanner } from "expo-barcode-scanner";
-import { style } from "./ConnectQR.style";
-import SnackBar from "../../general_components/SnackBar";
-import { apiFactory } from "../../api";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import QRViewBackground from "../../assets/qrBackground.jpg";
-import ModalComponent from "../../components/Modal/Modal";
-import QRModal from "../../components/Modal/QRModal";
+import React, { useEffect, useState } from 'react';
+import { Text, View, StyleSheet, Button, Pressable } from 'react-native';
+import Button2 from '../../components/Button/Button';
+import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavigator';
+import Layout from '../../general_components/Layout';
+import { BarCodeScanner } from 'expo-barcode-scanner';
+import { style } from './ConnectQR.style';
+import SnackBar from '../../general_components/SnackBar';
+import { apiFactory } from '../../api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import QRViewBackground from '../../assets/qrBackground.jpg';
+import ModalComponent from '../../components/Modal/Modal';
+import QRModal from '../../components/Modal/QRModal';
 
 const ConnectQR = (props) => {
   const { navigation } = props;
 
   const [error, setError] = useState(null);
-  const [logType, setLogType] = useState("error");
+  const [logType, setLogType] = useState('error');
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [qrModalVisible, setQrModalVisible] = useState(false);
 
   const requestPermisionCamera = async () => {
     const permision = await BarCodeScanner.requestPermissionsAsync();
-    console.log("Camera permision: ", permision.status === "granted");
-    setHasPermission(permision.status === "granted");
+    console.log('Camera permision: ', permision.status === 'granted');
+    setHasPermission(permision.status === 'granted');
   };
 
   const getToken = async () => {
     try {
-      const tokenValue = await AsyncStorage.getItem("token");
+      const tokenValue = await AsyncStorage.getItem('token');
       if (tokenValue !== null) {
         return tokenValue;
       }
     } catch (e) {
-      console.log("Token Provider Error", e);
+      console.log('Token Provider Error', e);
     }
   };
 
@@ -44,15 +44,15 @@ const ConnectQR = (props) => {
       data = JSON.parse(data);
     } catch (error) {
       setScanned(false);
-      setLogType("error");
+      setLogType('error');
       setError("QR code doesn't contain the right data!");
-      console.error("Data missing ConnectQR:102");
+      console.error('Data missing ConnectQR:102');
     }
     if (
       data.wifiName &&
       data.wifiPass &&
-      data.wifiName !== "" &&
-      data.wifiPass !== ""
+      data.wifiName !== '' &&
+      data.wifiPass !== ''
     ) {
       setQrModalVisible(false);
       const token = await getToken();
@@ -67,27 +67,27 @@ const ConnectQR = (props) => {
           console.log(response);
 
           if (Array.isArray(response)) {
-            setLogType("info");
+            setLogType('info');
             setError(
-              "Device added successfully, please return to home screen!"
+              'Device added successfully, please return to home screen!'
             );
           } else {
-            setLogType("error");
+            setLogType('error');
             setError(response);
             setScanned(false);
           }
         }
       } catch (error) {
-        if (JSON.parse(JSON.stringify(error)).status == "500") {
-          console.log("Device Not Registered");
-          navigation.navigate("ConnectDevice", { qrData: data });
+        if (JSON.parse(JSON.stringify(error)).status == '500') {
+          console.log('Device Not Registered');
+          navigation.navigate('ConnectDevice', { qrData: data });
         }
       }
     } else {
       setScanned(false);
-      setLogType("error");
+      setLogType('error');
       setError("QR code doesn't contain the right data!");
-      console.error("Data missing ConnectQR:102");
+      console.error('Data missing ConnectQR:102');
     }
   };
 
@@ -99,7 +99,7 @@ const ConnectQR = (props) => {
     <Layout
       customBackgroundUrl={QRViewBackground}
       customLayoutStyle={{
-        backgroundColor: "transparent",
+        backgroundColor: 'transparent',
         paddingLeft: 0,
         paddingRight: 0,
         paddingTop: 0,
@@ -117,8 +117,8 @@ const ConnectQR = (props) => {
         <View
           style={{
             flex: 1,
-            flexDirection: "column",
-            justifyContent: "flex-start",
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
           }}
         >
           <Text style={style.title}>The only electric charger you need</Text>
@@ -131,14 +131,14 @@ const ConnectQR = (props) => {
       </Layout.Body>
       <Layout.Footer>
         <Button2
-          text={"Open Scanner"}
+          text={'Open Scanner'}
           marginTop={40}
           onPressAction={() => {
             if (hasPermission) {
               setQrModalVisible(true);
             } else {
-              setLogType("error");
-              setError("Please grant camera permission!");
+              setLogType('error');
+              setError('Please grant camera permission!');
             }
           }}
         />
@@ -149,7 +149,7 @@ const ConnectQR = (props) => {
           <BarCodeScanner
             onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
             barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
-            style={{ width: 250, height: "100%" }}
+            style={{ width: 300, height: '100%' }}
           />
           {error && (
             <SnackBar
