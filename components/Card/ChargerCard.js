@@ -1,56 +1,28 @@
 import React, { useEffect, useRef } from "react";
 
-import { Text, TouchableWithoutFeedback, View, Image } from "react-native";
+import {
+  Text,
+  TouchableWithoutFeedback,
+  View,
+  Image,
+  Pressable,
+} from "react-native";
 import { charging } from "./CardStyle";
 import useTime from "../../helpers/useTime";
 import { chargeDate, chargeLastUsed } from "../../helpers/formatFunctions";
+import {
+  getBGColorByStatus,
+  getTextColorByStatus,
+  headerTextColor,
+  circleColor,
+  getLightingImageByStatus,
+} from "./getCardColorsByStatus";
 
 const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
   const [timer, setStartTimer] = useTime();
   const chargingState = useRef(null);
-  const getBGColorByStatus = (statusName) => {
-    switch (statusName) {
-      case "Charging":
-        return "#FFFFFF";
-      case "Not Used":
-        return "#FFFFFF";
-      case "Disconnected/Error":
-        return "#FFFFFF";
-      case "In use":
-        return "#FFFFFF";
-      default:
-        return "#FFFFFF";
-    }
-  };
-  const getTextColorByStatus = (statusName) => {
-    switch (statusName) {
-      case "Charging":
-        return "#44CD54";
-      case "Disconnected/Error":
-        return "#FF6400";
-      case "In use":
-        return "#B1AAA0";
-      case "Not Used":
-        return "#B1AAA0";
-      default:
-        return "#B1AAA0";
-    }
-  };
 
-  const getLightingImageByStatus = (statusName) => {
-    switch (statusName) {
-      case "Charging":
-        return require("../../assets/greenLighting.png");
-      case "Disconnected/Error":
-        return require("../../assets/orangeLighting.png");
-      case "In use":
-        return require("../../assets/greenLighting.png");
-      case "Not Used":
-        return require("../../assets/greyLighting.png");
-      default:
-        return require("../../assets/greyLighting.png");
-    }
-  };
+  // console.log("THE CARGER IS:", charger);
 
   useEffect(() => {
     if (
@@ -68,20 +40,23 @@ const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
         <View
           style={{
             ...charging.wrapper,
-            backgroundColor: getBGColorByStatus(charger.appStateName),
+            backgroundColor: getBGColorByStatus(charger.appState),
+            ...(charger.isAdmin && charger.appState === 5 && { height: 170 }),
           }}
         >
           <View style={charging.upperTextContainer}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Image
                 style={charging.image}
-                source={getLightingImageByStatus(charger.appStateName)}
+                source={getLightingImageByStatus(charger.appState)}
               />
 
               <Text
                 style={[
                   charging.locationText,
-                  { color: getTextColorByStatus(charger.appStateName) },
+                  {
+                    color: headerTextColor(charger),
+                  },
                 ]}
               >
                 {name}
@@ -91,7 +66,7 @@ const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
               <Text
                 style={{
                   ...charging.chargingStatusText,
-                  color: getTextColorByStatus(charger.appStateName),
+                  color: headerTextColor(charger),
                 }}
               >
                 {charger.appStateName}
@@ -100,7 +75,7 @@ const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
                 style={{
                   ...charging.circle,
                   marginLeft: 10,
-                  backgroundColor: getTextColorByStatus(charger.appStateName),
+                  backgroundColor: circleColor(charger, 1),
                 }}
               />
             </View>
@@ -111,14 +86,14 @@ const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
                 style={{
                   ...charging.circle,
                   marginRight: 10,
-                  backgroundColor: getTextColorByStatus(charger.appStateName),
+                  backgroundColor: circleColor(charger, 0),
                 }}
               />
 
               <Text
                 style={[
                   charging.locationText,
-                  { color: getTextColorByStatus(charger.appStateName) },
+                  { color: getTextColorByStatus(charger.appState) },
                   { fontSize: 12 },
                 ]}
               >
@@ -129,7 +104,7 @@ const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
             <Text
               style={{
                 ...charging.chargingStatusText,
-                color: getTextColorByStatus(charger.appStateName),
+                color: getTextColorByStatus(charger.appState),
                 fontSize: 10,
               }}
             >
@@ -148,7 +123,7 @@ const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
               <Text
                 style={{
                   ...charging.chargingStatusText,
-                  color: getTextColorByStatus(charger.appStateName),
+                  color: getTextColorByStatus(charger.appState),
                 }}
               >
                 {kwh}
@@ -159,7 +134,7 @@ const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
               <Text
                 style={{
                   ...charging.chargingStatusText,
-                  color: getTextColorByStatus(charger.appStateName),
+                  color: getTextColorByStatus(charger.appState),
                 }}
               >
                 {charger.isInCharge ? timer : time}
@@ -170,13 +145,21 @@ const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
               <Text
                 style={{
                   ...charging.chargingStatusText,
-                  color: getTextColorByStatus(charger.appStateName),
+                  color: getTextColorByStatus(charger.appState),
                 }}
               >
                 {price}
               </Text>
             </View>
           </View>
+          {charger.isAdmin && charger.appState === 5 ? (
+            <Pressable
+              style={charging.pairButtonWrapper}
+              onPress={() => console.log("Pressed")}
+            >
+              <Text style={charging.pairButtonText}>PAIR AGAIN</Text>
+            </Pressable>
+          ) : null}
         </View>
       </TouchableWithoutFeedback>
     </>
