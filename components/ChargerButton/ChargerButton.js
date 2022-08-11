@@ -1,8 +1,8 @@
-import React from "react";
-import { Pressable, View } from "react-native";
-import { button } from "./ChargerButtonStyle";
+import React from 'react';
+import { Pressable, View } from 'react-native';
+import { button } from './ChargerButtonStyle';
 
-import Icon from "./Icon";
+import Icon from './Icon';
 
 const ChargerButton = ({
   isSecondary,
@@ -11,6 +11,7 @@ const ChargerButton = ({
   marginLeft,
   marginRight,
   onPressAction,
+  isCharging,
 }) => {
   return (
     <View
@@ -24,11 +25,12 @@ const ChargerButton = ({
       <Pressable
         style={{
           ...button.container,
-          ...(!isSecondary && { backgroundColor: "rgba(0,186,255,0.11)" }),
+          ...(!isSecondary && { backgroundColor: 'rgba(0,186,255,0.11)' }),
+          ...(isCharging && { backgroundColor: 'rgba(238,0,5,0.30)' }),
         }}
         onPress={onPressAction}
       >
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: 'row' }}>
           <Icon isSecondary={isSecondary} />
         </View>
       </Pressable>
