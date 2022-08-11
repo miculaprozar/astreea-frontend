@@ -29,6 +29,7 @@ import {
 } from '../../helpers/formatFunctions';
 import useTime from '../../helpers/useTime';
 import ChargerCard from '../../components/Card/ChargerCard';
+import DetailsCard from '../../components/Card/DetailsCard';
 
 const DeviceDetails = (props) => {
   const { navigation, route } = props;
@@ -40,7 +41,6 @@ const DeviceDetails = (props) => {
 
   const [charger, setCharger] = useState(null);
   const [totalCharge, setTotalCharge] = useState(null);
-  const [timer, setStartTimer] = useTime();
 
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [date, setDate] = useState(getStartMonthDate(new Date()));
@@ -122,10 +122,6 @@ const DeviceDetails = (props) => {
       .data.device()
       .getChargerData(serialNumber, token);
     setCharger(chargerData);
-    if (chargerData.isInCharge) {
-      setStartTimer(new Date(chargerData.lastCharge[0].startDate));
-    }
-
     getChargerTotalData(chargerData.id);
   };
 
@@ -160,7 +156,13 @@ const DeviceDetails = (props) => {
             </Layout.Body>
             <Layout.Footer style={{ flex: 2, backgroundColor: 'red' }}>
               {totalCharge && !charger.isInCharge ? (
-                <View></View>
+                <DetailsCard
+                  name={charger.name}
+                  kwh={totalCharge.energyDelivered.toFixed(2)}
+                  price={totalCharge.ammountSpent.toFixed(2)}
+                  time={formatMs(totalCharge.chargeDuration)}
+                  charger={charger}
+                />
               ) : (
                 // <Card
                 //   isCharging={false}
