@@ -19,7 +19,6 @@ import HeaderBackButton from "../../general_components/HeaderBackButton";
 const ConnectDevice = (props) => {
   const { navigation, route } = props;
   const { ConnectQR, SetupDevice } = routes;
-  console.log("DATA IN ROUTE PRAMS", props.route.params);
   const [deviceHotspotName, setDeviceHotspotName] = useState(
     props.route.params ? props.route.params.qrData.wifiName : ""
   );

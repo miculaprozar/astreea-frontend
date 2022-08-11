@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Text, View } from "react-native";
 import Input from "../../components/Input/Input";
+import Label from "../../components/Input/Label";
 import PillButton from "../../components/PillButton/PillButton";
 import ChargerButton from "../../components/ChargerButton/ChargerButton";
 import Button from "../../components/Button/Button";
@@ -10,20 +11,49 @@ import { apiFactory } from "../../api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { style } from "./ChargerSettings.style";
 import Layout from "../../general_components/Layout";
+import SnackBar from "../../general_components/SnackBar";
 
 const ChargerSettings = ({ navigation, route }) => {
-  const getToken = async () => {
+  const {
+    params: { serialNumber },
+  } = route;
+
+  const [charger, setCharger] = useState(null);
+
+  const [chargerName, setChargerName] = useState("");
+  const [error, setError] = useState(false);
+  const [succes, setSucces] = useState(false);
+  const [inputError, setInputError] = useState(false);
+
+  const getChargerInfo = async () => {
+    const token = await AsyncStorage.getItem("token");
+    const chargerData = await apiFactory()
+      .data.device()
+      .getChargerData(serialNumber, token);
+    setCharger(chargerData);
+    setChargerName(chargerData.name);
+  };
+
+  const updateChargerName = async () => {
     try {
-      const tokenValue = await AsyncStorage.getItem("token");
-      if (tokenValue !== null) {
-        console.log(tokenValue);
-        return tokenValue;
-      }
+      const token = await AsyncStorage.getItem("token");
+      await apiFactory()
+        .data.device()
+        .updateChargerData({ name: chargerName }, charger.id, token);
+      setSucces(true);
     } catch (e) {
-      console.log("ERROR IN READING", e);
-      // error reading value
+      setError(e.response.data.message);
     }
   };
+
+  const handleChargerNameChange = (event) => {
+    event.length > 0 ? setInputError(false) : setInputError(true);
+    setChargerName(event);
+  };
+
+  useEffect(() => {
+    getChargerInfo();
+  }, []);
 
   const removeDEMOCharger = async () => {
     const token = await getToken();
@@ -36,51 +66,62 @@ const ChargerSettings = ({ navigation, route }) => {
         <HeaderNavigator navigation={navigation} route={route} />
       </Layout.Header>
       <Layout.Body>
-        <Input label={"Charger name"} marginBottom={15} marginTop={15} />
+        <Label text={"Charger name"} white={true} />
+        <Input
+          marginBottom={25}
+          placeholder={"Enter charger name"}
+          value={chargerName}
+          onChange={(event) => handleChargerNameChange(event)}
+          errors={inputError ? "Name is required" : false}
+        />
 
         <View style={{ flexDirection: "row" }}>
-          <View style={{ flex: 2 }}>
+          <View style={{ flex: 1 }}>
             <Text style={style.pillsLabel}>Curency</Text>
-            <PillButton text={"USD"} />
+            <PillButton text={charger?.currency} isSecondary={true} />
           </View>
-          <View style={{ flex: 1 }}></View>
-          <View style={{ flex: 2 }}>
+          <View style={{ flex: 1, marginBottom: 25 }}>
             <Text style={style.pillsLabel}>kWh Cost</Text>
-            <PillButton text={"0.2"} isSecondary={true} />
+            <PillButton text={charger?.price} isSecondary={true} />
           </View>
         </View>
-        <Text style={style.inputLabel}>Wifi settings</Text>
-        <Input
-          label={""}
-          placeholder="Wifi SSID"
-          marginBottom={0}
-          marginTop={-10}
-        />
-        <Input
-          label={""}
-          type="password"
-          placeholder="Wifi Password"
-          marginBottom={35}
-        />
-        <Card isCharging={false} details={true} />
+
+        <Label text={"Wifi name"} white={true} />
+        <Input marginBottom={10} disabled={true} value={"Jhon Does"} />
+        <Label text={"Wifi strength"} white={true} />
+        <Input marginBottom={25} disabled={true} value={"Medium"} />
       </Layout.Body>
       <Layout.Footer>
-        <View style={{ flexDirection: "row" }}>
-          <View style={{ flex: 1 }}>
-            <ChargerButton text={"Share"} marginRight={10} isShare={true} />
-          </View>
-          <View style={{ flex: 1 }}>
-            <ChargerButton
+        <View style={style.buttonsWrapper}>
+          <View style={{ flex: 2 }}>
+            <Button
               text={"Remove"}
-              marginLeft={10}
               isDanger={true}
               onPressAction={() => {
                 removeDEMOCharger();
               }}
+              half={true}
+            />
+          </View>
+          <View style={{ flex: 0.4 }}></View>
+          <View style={{ flex: 2 }}>
+            <Button
+              disabled={inputError ? true : false}
+              text={"Save settings"}
+              isSecondary={true}
+              half={true}
+              onPressAction={() => updateChargerName()}
             />
           </View>
         </View>
-        <Button text={"Save settings"} marginTop={25} marginBottom={35} />
+        {(error || succes) && (
+          <SnackBar
+            text={error ? error : succes ? "Name changed" : ""}
+            logSnackbar={error}
+            setLogSnackbar={error ? setError : succes ? setSucces : null}
+            logType={error ? "error" : "success"}
+          />
+        )}
       </Layout.Footer>
     </Layout>
   );

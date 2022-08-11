@@ -1,5 +1,9 @@
 import { device_url, api_url } from "../utils/consts.js";
-import { sendGetRequest, sendPostRequest } from "../utils/network.js";
+import {
+  sendGetRequest,
+  sendPostRequest,
+  sendPutRequest,
+} from "../utils/network.js";
 
 export default () => ({
   checkConnection: async () => {
@@ -9,6 +13,15 @@ export default () => ({
   getChargerData: async (deviceSerialNumber, token) => {
     const { data } = await sendGetRequest(
       api_url + "ast/api/v1/charger/" + deviceSerialNumber,
+      token
+    );
+    return data;
+  },
+
+  updateChargerData: async (chargerData, deviceId, token) => {
+    const { data } = await sendPutRequest(
+      api_url + "ast/api/v1/charger/" + deviceId,
+      chargerData,
       token
     );
     return data;
