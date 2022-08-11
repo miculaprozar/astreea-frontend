@@ -5,7 +5,7 @@ export const getBGColorByStatus = (statusId) => {
     case 5:
       return "#FFFFFF";
     case 4:
-      return "#FFFFFF";
+      return "#AEAEAE";
     case 1:
       return "#FFFFFF";
     default:
@@ -20,7 +20,7 @@ export const getTextColorByStatus = (statusId) => {
     case 5:
       return "#FF6400";
     case 4:
-      return "#B1AAA0";
+      return "#54565A";
     case 1:
       return "#B1AAA0";
     default:
@@ -35,7 +35,7 @@ const getHeaderTextByStatus = (statusId) => {
     case 5:
       return ["#FF6400"];
     case 4:
-      return ["#B1AAA0"];
+      return ["#54565A"];
     case 1:
       return ["#B1AAA0"];
     default:

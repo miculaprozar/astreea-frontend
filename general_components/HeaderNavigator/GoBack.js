@@ -13,7 +13,7 @@ const GoBack = ({ navigation, navProps, route }) => {
         navigation.goBack();
       }}
     >
-      {!route && (
+      {route && route.name !== "SignIn" && route.name !== "Home" && (
         <>
           <Image
             style={style.backImage}

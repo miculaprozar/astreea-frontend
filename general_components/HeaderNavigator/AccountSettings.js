@@ -9,12 +9,14 @@ const AccountSettings = ({ navigation, route }) => {
     lastName: "",
   });
 
+  const { name: routeName } = route;
+
   const getName = async () => {
     try {
       const firstName = await AsyncStorage.getItem("firstName");
       const lastName = await AsyncStorage.getItem("lastName");
 
-      setName({ firstName, lastName });
+      setName({ firstName: firstName, lastName: lastName });
     } catch (e) {
       console.log("Error getting firstName, lastName:", e);
       // error reading value
@@ -23,7 +25,7 @@ const AccountSettings = ({ navigation, route }) => {
 
   useEffect(() => {
     getName();
-  }, []);
+  }, [routeName]);
 
   return (
     <>

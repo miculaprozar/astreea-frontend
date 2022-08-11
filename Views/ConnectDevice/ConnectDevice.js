@@ -17,7 +17,7 @@ import WifiManager from "react-native-wifi-reborn";
 import HeaderBackButton from "../../general_components/HeaderBackButton";
 
 const ConnectDevice = (props) => {
-  const { navigation } = props;
+  const { navigation, route } = props;
   const { ConnectQR, SetupDevice } = routes;
   console.log("DATA IN ROUTE PRAMS", props.route.params);
   const [deviceHotspotName, setDeviceHotspotName] = useState(
@@ -128,7 +128,11 @@ const ConnectDevice = (props) => {
   return (
     <Layout>
       <Layout.Header>
-        <HeaderNavigator navigation={navigation} hideAccountSettings={true} />
+        <HeaderNavigator
+          navigation={navigation}
+          hideAccountSettings={true}
+          route={route}
+        />
       </Layout.Header>
       <Layout.Body>
         <Text style={style.title}>Connect to Device</Text>

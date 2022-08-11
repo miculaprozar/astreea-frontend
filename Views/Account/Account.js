@@ -18,7 +18,9 @@ const Account = (props) => {
   const [error, setError] = useState(false);
   const [logType, setLogType] = useState("error");
 
-  const { navigation } = props;
+  const [email, setEmail] = useState("");
+
+  const { navigation, route } = props;
 
   const { SignIn } = routes;
 
@@ -46,8 +48,10 @@ const Account = (props) => {
 
   const populateUserData = async () => {
     try {
-      firstName = await AsyncStorage.getItem("firstName");
-      lastName = await AsyncStorage.getItem("lastName");
+      const firstName = await AsyncStorage.getItem("firstName");
+      const lastName = await AsyncStorage.getItem("lastName");
+      const email = await AsyncStorage.getItem("email");
+      setEmail(email);
       setValue("firstName", firstName);
       setValue("lastName", lastName);
     } catch (e) {
@@ -95,7 +99,11 @@ const Account = (props) => {
   return (
     <Layout scrollView={true}>
       <Layout.Header>
-        <HeaderNavigator navigation={navigation} hideAccountSettings={true} />
+        <HeaderNavigator
+          navigation={navigation}
+          hideAccountSettings={true}
+          route={route}
+        />
       </Layout.Header>
       <Layout.Body>
         <Image
@@ -104,6 +112,14 @@ const Account = (props) => {
         />
         <Text style={style.changeText}>Change</Text>
         <Text style={style.title}>My account</Text>
+        <Input
+          disabled={true}
+          label={"Email"}
+          marginBottom={12}
+          name={"firstName"}
+          secureTextEntry={false}
+          value={email}
+        />
         <Input
           label={"First name"}
           marginBottom={12}

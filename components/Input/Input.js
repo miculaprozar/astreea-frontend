@@ -32,6 +32,7 @@ const Input = ({
           placeholder={`Request data`}
           style={inputDisabled.input}
           editable={false}
+          value={value}
         />
       ) : validateInput ? (
         <>

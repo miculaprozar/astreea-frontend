@@ -10,16 +10,31 @@ export const input = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#393B3B",
     backgroundColor: "#393B3B",
-    borderWidth: 1,
     borderColor: "#393B3B",
     fontSize: 12,
     color: "#959595",
+    fontFamily: "Inter_400Regular",
   },
 });
 
 export const inputFocused = StyleSheet.create({
   input: {
-    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 14,
+    paddingHorizontal: 10,
+    borderRadius: 37,
+    borderWidth: 1,
+    borderColor: "#000000",
+    backgroundColor: "#393B3B",
+    fontSize: 12,
+    color: "#C1C1C1",
+    fontFamily: "Inter_400Regular",
+  },
+});
+
+export const inputDisabled = StyleSheet.create({
+  input: {
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 14,
@@ -30,25 +45,7 @@ export const inputFocused = StyleSheet.create({
     backgroundColor: "#232323",
     fontSize: 12,
     color: "#959595",
-    shadowColor: "#000000",
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-  },
-});
-
-export const inputDisabled = StyleSheet.create({
-  input: {
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 14,
-    paddingHorizontal: 10,
-    borderRadius: 37,
     fontFamily: "Inter_400Regular",
-    fontSize: 16,
-    backgroundColor: "#97A6AD",
-    borderWidth: 0,
-    color: "#FFFFFF",
   },
 });
 

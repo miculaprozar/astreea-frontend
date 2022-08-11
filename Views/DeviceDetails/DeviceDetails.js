@@ -1,30 +1,30 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
-import { apiFactory } from '../../api/index';
-import Card from '../../components/Card/Card';
-import ChargerButton from '../../components/ChargerButton/ChargerButton';
-import PillButton from '../../components/PillButton/PillButton';
-import Table from '../../components/Table/Table';
-import Calendar from '../../general_components/Calendar/Calendar';
-import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavigator';
-import routes from '../../routes';
-import { style } from './DeviceDetails.style';
-import moment from 'moment';
-import DetailsBackground from '../../assets/chargingScreen.jpg';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, Text, View } from "react-native";
+import { apiFactory } from "../../api/index";
+import Card from "../../components/Card/Card";
+import ChargerButton from "../../components/ChargerButton/ChargerButton";
+import PillButton from "../../components/PillButton/PillButton";
+import Table from "../../components/Table/Table";
+import Calendar from "../../general_components/Calendar/Calendar";
+import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
+import routes from "../../routes";
+import { style } from "./DeviceDetails.style";
+import moment from "moment";
+import DetailsBackground from "../../assets/chargingScreen.jpg";
 
-import Layout from '../../general_components/Layout';
+import Layout from "../../general_components/Layout";
 import {
   getEndMonthDate,
   getFullMonthName,
   getStartMonthDate,
-} from '../../helpers/dateFormatFunctions';
-import { formatMs } from '../../helpers/formatFunctions';
-import useTime from '../../helpers/useTime';
+} from "../../helpers/dateFormatFunctions";
+import { formatMs } from "../../helpers/formatFunctions";
+import useTime from "../../helpers/useTime";
 
 const DeviceDetails = (props) => {
-  const { navigation } = props;
+  const { navigation, route } = props;
   const {
     route: {
       params: { serialNumber },
@@ -50,7 +50,7 @@ const DeviceDetails = (props) => {
   const StartStopCharging = async () => {
     setIsLoading(true);
     try {
-      const token = await AsyncStorage.getItem('token');
+      const token = await AsyncStorage.getItem("token");
       setTriggerRefresh(true);
       const lastCharge = charger.lastCharge[0];
       if (charger && charger.isInCharge) {
@@ -83,12 +83,12 @@ const DeviceDetails = (props) => {
       setTriggerRefresh(false);
       setIsLoading(false);
     } catch (e) {
-      console.log('ERROR IN START STOP CHARGING', e.response.data);
+      console.log("ERROR IN START STOP CHARGING", e.response.data);
     }
   };
 
   const getChargerTotalData = async (chargerID, dates) => {
-    const token = await AsyncStorage.getItem('token');
+    const token = await AsyncStorage.getItem("token");
     const totalCharge = await apiFactory()
       .data.device()
       .getTotalChargingData(chargerID, token, dates);
@@ -103,14 +103,14 @@ const DeviceDetails = (props) => {
 
   useEffect(() => {
     if (date && charger) {
-      const requestStartDate = moment(date).format('YYYY-MM-DD');
-      const requestEndDate = moment(getEndMonthDate(date)).format('YYYY-MM-DD');
+      const requestStartDate = moment(date).format("YYYY-MM-DD");
+      const requestEndDate = moment(getEndMonthDate(date)).format("YYYY-MM-DD");
       getChargerTotalData(charger.id, { requestStartDate, requestEndDate });
     }
   }, [date, charger]);
 
   const getChargerInfo = async () => {
-    const token = await AsyncStorage.getItem('token');
+    const token = await AsyncStorage.getItem("token");
     const chargerData = await apiFactory()
       .data.device()
       .getChargerData(serialNumber, token);
@@ -135,7 +135,7 @@ const DeviceDetails = (props) => {
         <>
           <Layout customBackgroundUrl={DetailsBackground}>
             <Layout.Header>
-              <HeaderNavigator navigation={navigation} />
+              <HeaderNavigator navigation={navigation} route={route} />
             </Layout.Header>
             <Layout.Body>
               {/* <View style={style.tittleButtonWrapper}>
@@ -171,49 +171,49 @@ const DeviceDetails = (props) => {
                 <View>
                   <Text style={style.chargingTitle}>Charging</Text>
                   <MaterialCommunityIcons
-                    name='battery-medium'
+                    name="battery-medium"
                     size={250}
-                    color='green'
+                    color="green"
                     style={{
-                      marginLeft: 'auto',
-                      marginRight: 'auto',
+                      marginLeft: "auto",
+                      marginRight: "auto",
                       marginTop: 30,
                     }}
                   />
                 </View>
               )}
             </Layout.Body>
-            <Layout.Footer style={{ flex: 2, backgroundColor: 'red' }}>
+            <Layout.Footer style={{ flex: 2, backgroundColor: "red" }}>
               {totalCharge && !charger.isInCharge ? (
                 <Card
                   isCharging={false}
                   details={true}
                   price={totalCharge.ammountSpent.toFixed(2)}
                   kwh={totalCharge.energyDelivered.toFixed(2)}
-                  name={'Total'}
+                  name={"Total"}
                   hourMinutes={formatMs(totalCharge.chargeDuration)}
                 />
               ) : (
                 <Card
                   isCharging={true}
                   details={true}
-                  price={'--'}
-                  kwh={'--kwh'}
-                  name={'Charging'}
+                  price={"--"}
+                  kwh={"--kwh"}
+                  name={"Charging"}
                   hourMinutes={timer}
                 />
               )}
               <View style={style.tittleButtonWrapper}>
                 <View style={{ flex: 1 }}>
                   <ChargerButton
-                    text={'Schedule'}
+                    text={"Schedule"}
                     marginRight={10}
                     isSecondary={true}
                   />
                 </View>
                 <View style={{ flex: 1 }}>
                   <ChargerButton
-                    text={charger.isInCharge ? 'Stop' : 'Start'}
+                    text={charger.isInCharge ? "Stop" : "Start"}
                     marginLeft={10}
                     isDanger={charger.isInCharge}
                     onPressAction={() => StartStopCharging()}
@@ -229,7 +229,7 @@ const DeviceDetails = (props) => {
           </Layout>
         </>
       ) : (
-        <ActivityIndicator size={'large'} color={'#ffffff'}></ActivityIndicator>
+        <ActivityIndicator size={"large"} color={"#ffffff"}></ActivityIndicator>
       )}
     </>
   );

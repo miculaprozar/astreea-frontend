@@ -34,6 +34,7 @@ const SignIn = (props) => {
 
   const onSubmit = async (data) => {
     try {
+      const { email } = data;
       setIsLoading(true);
       const token = await apiFactory().data.account().login(data);
       await AsyncStorage.setItem("token", token);
@@ -41,6 +42,7 @@ const SignIn = (props) => {
       if (userData?.firstName && userData?.lastName) {
         await AsyncStorage.setItem("firstName", userData.firstName);
         await AsyncStorage.setItem("lastName", userData.lastName);
+        await AsyncStorage.setItem("email", email);
       }
       navigation.navigate(Home.name);
       setError(false);

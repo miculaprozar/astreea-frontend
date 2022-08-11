@@ -22,8 +22,6 @@ const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
   const [timer, setStartTimer] = useTime();
   const chargingState = useRef(null);
 
-  // console.log("THE CARGER IS:", charger);
-
   useEffect(() => {
     if (
       charger.isInCharge &&

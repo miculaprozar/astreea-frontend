@@ -12,7 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import SnackBar from "../../general_components/SnackBar";
 
 const SetupDevice = (props) => {
-  const { navigation } = props;
+  const { navigation, route } = props;
 
   const { ConnectDevice } = routes;
   const [waitingForData, setWaitingForData] = useState(false);
@@ -47,7 +47,11 @@ const SetupDevice = (props) => {
   return (
     <Layout scrollView={true}>
       <Layout.Header>
-        <HeaderNavigator navigation={navigation} hideAccountSettings={true} />
+        <HeaderNavigator
+          navigation={navigation}
+          hideAccountSettings={true}
+          route={route}
+        />
       </Layout.Header>
       <Layout.Body>
         <Text style={style.title}>Set up your device</Text>
