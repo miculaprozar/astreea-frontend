@@ -63,6 +63,7 @@ const Input = ({
             placeholder={
               placeholder ? placeholder : `Enter your ${label.toLowerCase()}`
             }
+            placeholderTextColor="#7F7F7F"
             style={borderColor.input}
             onFocus={() => setBorderColor(inputFocused)}
             onBlur={() => setBorderColor(input)}
