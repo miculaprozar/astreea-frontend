@@ -15,6 +15,7 @@ import {
 } from "react-native";
 import WifiManager from "react-native-wifi-reborn";
 import HeaderBackButton from "../../general_components/HeaderBackButton";
+import SnackBar from "../../general_components/SnackBar";
 
 const ConnectDevice = (props) => {
   const { navigation } = props;
@@ -29,6 +30,9 @@ const ConnectDevice = (props) => {
 
   const [logText, setLogText] = useState("");
   const [waitingForData, setWaitingForData] = useState(false);
+
+  const [error, setError] = useState(null);
+  const [logType, setLogType] = useState("error");
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -51,23 +55,10 @@ const ConnectDevice = (props) => {
   };
 
   const connectToWifi = async () => {
-    WifiManager.connectToProtectedSSID(
-      deviceHotspotName,
-      deviceHotspotPass,
-      false
-    ).then(
-      async () => {
-        WifiManager.getCurrentWifiSSID().then(
-          (ssid) => {
-            console.log("Your current connected wifi SSID is " + ssid);
-          },
-          () => {
-            console.log("Cannot get current SSID!");
-          }
-        );
-
-        console.log("Connected successfully!");
-        try {
+    WifiManager.getCurrentWifiSSID().then(
+      async (ssid) => {
+        console.log("Your current connected wifi SSID is " + ssid);
+        if (ssid === deviceHotspotName) {
           setWaitingForData(true);
           const connectionStatus = await apiFactory()
             .data.device()
@@ -84,15 +75,48 @@ const ConnectDevice = (props) => {
               // TODO: Notifcation for error and why
             }
           }
-        } catch (e) {
-          setWaitingForData(false);
-          setLogText(logTime() + e);
-          // TODO: Notifcation for error and why
+        } else {
+          console.log("Not Device SSID!");
+          WifiManager.connectToProtectedSSID(
+            deviceHotspotName,
+            deviceHotspotPass,
+            false
+          ).then(
+            async () => {
+              console.log("Connected successfully!");
+              try {
+                setWaitingForData(true);
+                const connectionStatus = await apiFactory()
+                  .data.device()
+                  .checkConnection();
+                setLogText(logTime() + connectionStatus);
+                if (connectionStatus === "Connection OK.") {
+                  const wifiNetworks = await apiFactory()
+                    .data.device()
+                    .availableWifiNetowrks();
+                  setWaitingForData(false);
+                  if (wifiNetworks.wifiNames.length > 0) {
+                    navigation.navigate(SetupDevice.name, { wifiNetworks });
+                  } else {
+                    // TODO: Notifcation for error and why
+                  }
+                }
+              } catch (e) {
+                setWaitingForData(false);
+                setLogText(logTime() + e);
+                // TODO: Notifcation for error and why
+              }
+            },
+            () => {
+              setWaitingForData(false);
+              console.log("Connection failed!");
+            }
+          );
         }
       },
       () => {
-        setWaitingForData(false);
-        console.log("Connection failed!");
+        setLogType("info");
+        setError("Please start your device WiFi!");
       }
     );
   };
@@ -176,6 +200,14 @@ const ConnectDevice = (props) => {
             </>
           }
         />
+        {error && (
+          <SnackBar
+            text={error}
+            logSnackbar={error}
+            setLogSnackbar={setError}
+            logType={logType}
+          />
+        )}
       </Layout.Footer>
     </Layout>
   );

@@ -2,7 +2,13 @@ import React, { useEffect } from "react";
 import { Pressable, Text, View } from "react-native";
 import { style } from "./SnackBar.style";
 
-const SnackBar = ({ text, logSnackbar, setLogSnackbar, logType }) => {
+const SnackBar = ({
+  text,
+  logSnackbar,
+  setLogSnackbar,
+  logType,
+  customStyle,
+}) => {
   const bkColor =
     logType === "error"
       ? "#ff6400"
@@ -17,7 +23,9 @@ const SnackBar = ({ text, logSnackbar, setLogSnackbar, logType }) => {
   }, [logSnackbar]);
 
   return (
-    <View style={{ ...style.wrapper, backgroundColor: bkColor }}>
+    <View
+      style={{ ...style.wrapper, ...customStyle, backgroundColor: bkColor }}
+    >
       <Text style={{ ...style.text, elevation: 999 }}>{text}</Text>
     </View>
   );

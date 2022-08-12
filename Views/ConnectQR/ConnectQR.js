@@ -46,7 +46,7 @@ const ConnectQR = (props) => {
       setScanned(false);
       setLogType("error");
       setError("QR code doesn't contain the right data!");
-      console.error("Data missing ConnectQR:102");
+      console.log("Data missing ConnectQR:102");
     }
     if (
       data.wifiName &&
@@ -84,10 +84,12 @@ const ConnectQR = (props) => {
         }
       }
     } else {
-      setScanned(false);
-      setLogType("error");
-      setError("QR code doesn't contain the right data!");
-      console.error("Data missing ConnectQR:102");
+      setTimeout(() => {
+        setScanned(false);
+        setLogType("error");
+        setError("QR code doesn't contain the right data!");
+        console.log("Data missing ConnectQR:102");
+      }, 1000);
     }
   };
 
@@ -157,6 +159,7 @@ const ConnectQR = (props) => {
               logSnackbar={error}
               setLogSnackbar={setError}
               logType={logType}
+              customStyle={{ position: "absolute", bottom: 0, left: 0 }}
             />
           )}
         </QRModal>
