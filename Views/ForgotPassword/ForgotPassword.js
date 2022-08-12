@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
 import { Text } from "react-native";
 import Layout from "../../general_components/Layout.js";
@@ -13,9 +12,8 @@ import SnackBar from "../../general_components/SnackBar";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 
-const ForgotPassword = () => {
-  const navigation = useNavigation();
-
+const ForgotPassword = (props) => {
+  const { navigation, route } = props;
   const [error, setError] = useState(false);
   const [succes, setSucces] = useState(false);
 
@@ -55,7 +53,11 @@ const ForgotPassword = () => {
     <>
       <Layout scrollView={true}>
         <Layout.Header>
-          <HeaderNavigator navigation={navigation} hideAccountSettings={true} />
+          <HeaderNavigator
+            navigation={navigation}
+            hideAccountSettings={true}
+            route={route}
+          />
           <Text style={style.title}>
             Enter your email to reset your password
           </Text>

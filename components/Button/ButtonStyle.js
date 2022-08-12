@@ -23,6 +23,37 @@ export const primary = StyleSheet.create({
     marginLeft: "auto",
     marginRight: "auto",
   },
+  width100: {
+    width: "100%",
+  },
+});
+
+export const danger = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 14,
+    borderRadius: 37,
+    backgroundColor: "red",
+    shadowColor: "red",
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    paddingLeft: 30,
+    paddingRight: 30,
+  },
+  text: {
+    color: "#FFFFFF",
+    fontSize: 14,
+    fontFamily: "Inter_400Regular",
+  },
+  dontFill: {
+    width: "70%",
+    marginLeft: "auto",
+    marginRight: "auto",
+  },
+  width100: {
+    width: "100%",
+  },
 });
 
 export const secondary = StyleSheet.create({
@@ -31,8 +62,8 @@ export const secondary = StyleSheet.create({
     justifyContent: "center",
     paddingVertical: 14,
     borderRadius: 37,
-    backgroundColor: "#393B3B",
-    shadowColor: "#393B3B",
+    backgroundColor: "#232323",
+    shadowColor: "#232323",
     shadowOpacity: 0.2,
     shadowRadius: 5,
   },
@@ -45,5 +76,8 @@ export const secondary = StyleSheet.create({
     width: "70%",
     marginLeft: "auto",
     marginRight: "auto",
+  },
+  width100: {
+    width: "100%",
   },
 });

@@ -19,7 +19,7 @@ const RessetPassword = (props) => {
   const [error, setError] = useState(false);
   const [succes, setSucces] = useState(false);
 
-  const { navigation } = props;
+  const { navigation, route } = props;
 
   const { Home } = routes;
 
@@ -98,7 +98,11 @@ const RessetPassword = (props) => {
   return (
     <Layout scrollView={true}>
       <Layout.Header>
-        <HeaderNavigator navigation={navigation} hideAccountSettings={true} />
+        <HeaderNavigator
+          navigation={navigation}
+          hideAccountSettings={true}
+          route={route}
+        />
       </Layout.Header>
       <Layout.Body>
         <Text style={style.title}>Change your password</Text>

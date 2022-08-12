@@ -13,7 +13,7 @@ import ModalComponent from "../../components/Modal/Modal";
 import QRModal from "../../components/Modal/QRModal";
 
 const ConnectQR = (props) => {
-  const { navigation } = props;
+  const { navigation, route } = props;
 
   const [error, setError] = useState(null);
   const [logType, setLogType] = useState("error");
@@ -112,7 +112,8 @@ const ConnectQR = (props) => {
         <HeaderNavigator
           navigation={navigation}
           hideAccountSettings={true}
-          navProps={props.route.params}
+          navProps={route.params}
+          route={route}
         />
       </Layout.Header>
       <Layout.Body>
@@ -151,7 +152,7 @@ const ConnectQR = (props) => {
           <BarCodeScanner
             onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
             barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
-            style={{ width: 250, height: "100%" }}
+            style={{ width: 300, height: "100%" }}
           />
           {error && (
             <SnackBar

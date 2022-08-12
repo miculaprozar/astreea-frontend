@@ -1,56 +1,34 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from 'react';
 
-import { Text, TouchableWithoutFeedback, View, Image } from "react-native";
-import { charging } from "./CardStyle";
-import useTime from "../../helpers/useTime";
-import { chargeDate, chargeLastUsed } from "../../helpers/formatFunctions";
+import {
+  Text,
+  TouchableWithoutFeedback,
+  View,
+  Image,
+  Pressable,
+} from 'react-native';
+import { charging } from './CardStyle';
+import useTime from '../../helpers/useTime';
+import { chargeDate, chargeLastUsed } from '../../helpers/formatFunctions';
+import {
+  getBGColorByStatus,
+  getTextColorByStatus,
+  headerTextColor,
+  circleColor,
+  getLightingImageByStatus,
+} from './getCardColorsByStatus';
 
-const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
+const ChargerCard = ({
+  name,
+  price,
+  kwh,
+  time,
+  charger,
+  onClick,
+  isDetails = false,
+}) => {
   const [timer, setStartTimer] = useTime();
   const chargingState = useRef(null);
-  const getBGColorByStatus = (statusName) => {
-    switch (statusName) {
-      case "Charging":
-        return "#FFFFFF";
-      case "Not Used":
-        return "#FFFFFF";
-      case "Disconnected/Error":
-        return "#FFFFFF";
-      case "In use":
-        return "#FFFFFF";
-      default:
-        return "#FFFFFF";
-    }
-  };
-  const getTextColorByStatus = (statusName) => {
-    switch (statusName) {
-      case "Charging":
-        return "#44CD54";
-      case "Disconnected/Error":
-        return "#FF6400";
-      case "In use":
-        return "#B1AAA0";
-      case "Not Used":
-        return "#B1AAA0";
-      default:
-        return "#B1AAA0";
-    }
-  };
-
-  const getLightingImageByStatus = (statusName) => {
-    switch (statusName) {
-      case "Charging":
-        return require("../../assets/greenLighting.png");
-      case "Disconnected/Error":
-        return require("../../assets/orangeLighting.png");
-      case "In use":
-        return require("../../assets/greenLighting.png");
-      case "Not Used":
-        return require("../../assets/greyLighting.png");
-      default:
-        return require("../../assets/greyLighting.png");
-    }
-  };
 
   useEffect(() => {
     if (
@@ -64,34 +42,42 @@ const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
 
   return (
     <>
-      <TouchableWithoutFeedback onPress={() => onClick()}>
+      <TouchableWithoutFeedback onPress={() => onClick && onClick()}>
         <View
           style={{
             ...charging.wrapper,
-            backgroundColor: getBGColorByStatus(charger.appStateName),
+            backgroundColor: getBGColorByStatus(charger.appState),
+            ...(isDetails && {
+              backgroundColor: 'rgba(255,255,255,0.30)',
+              borderWidth: 1,
+              borderColor: 'white',
+            }),
+            ...(charger.isAdmin && charger.appState === 5 && { height: 170 }),
           }}
         >
           <View style={charging.upperTextContainer}>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Image
                 style={charging.image}
-                source={getLightingImageByStatus(charger.appStateName)}
+                source={getLightingImageByStatus(charger.appState)}
               />
 
               <Text
                 style={[
                   charging.locationText,
-                  { color: getTextColorByStatus(charger.appStateName) },
+                  {
+                    color: headerTextColor(charger, isDetails),
+                  },
                 ]}
               >
                 {name}
               </Text>
             </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text
                 style={{
                   ...charging.chargingStatusText,
-                  color: getTextColorByStatus(charger.appStateName),
+                  color: headerTextColor(charger, isDetails),
                 }}
               >
                 {charger.appStateName}
@@ -100,25 +86,25 @@ const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
                 style={{
                   ...charging.circle,
                   marginLeft: 10,
-                  backgroundColor: getTextColorByStatus(charger.appStateName),
+                  backgroundColor: circleColor(charger, 1),
                 }}
               />
             </View>
           </View>
           <View style={charging.lastUsedWrapper}>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <View
                 style={{
                   ...charging.circle,
                   marginRight: 10,
-                  backgroundColor: getTextColorByStatus(charger.appStateName),
+                  backgroundColor: circleColor(charger, 0),
                 }}
               />
 
               <Text
                 style={[
                   charging.locationText,
-                  { color: getTextColorByStatus(charger.appStateName) },
+                  { color: getTextColorByStatus(charger.appState, isDetails) },
                   { fontSize: 12 },
                 ]}
               >
@@ -129,7 +115,7 @@ const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
             <Text
               style={{
                 ...charging.chargingStatusText,
-                color: getTextColorByStatus(charger.appStateName),
+                color: getTextColorByStatus(charger.appState, isDetails),
                 fontSize: 10,
               }}
             >
@@ -139,44 +125,73 @@ const ChargerCard = ({ name, price, kwh, time, charger, onClick }) => {
           <View
             style={{
               flex: 1,
-              flexDirection: "row",
+              flexDirection: 'row',
             }}
           >
-            <View style={{ flex: 1, marginTop: "auto" }}>
-              <Text style={charging.smallText}>Energy Delivered</Text>
+            <View style={{ flex: 1, marginTop: 'auto' }}>
+              <Text
+                style={{
+                  ...charging.smallText,
+                  ...(isDetails && { color: 'white' }),
+                }}
+              >
+                Energy Delivered
+              </Text>
 
               <Text
                 style={{
-                  ...charging.chargingStatusText,
-                  color: getTextColorByStatus(charger.appStateName),
+                  ...charging.chargingValuesText,
+                  color: getTextColorByStatus(charger.appState, isDetails),
                 }}
               >
                 {kwh}
               </Text>
             </View>
-            <View style={{ flex: 1, marginTop: "auto" }}>
-              <Text style={charging.smallText}>Charge Duration</Text>
+            <View style={{ flex: 1, marginTop: 'auto' }}>
               <Text
                 style={{
-                  ...charging.chargingStatusText,
-                  color: getTextColorByStatus(charger.appStateName),
+                  ...charging.smallText,
+                  ...(isDetails && { color: 'white' }),
+                }}
+              >
+                Charge Duration
+              </Text>
+              <Text
+                style={{
+                  ...charging.chargingValuesText,
+                  color: getTextColorByStatus(charger.appState, isDetails),
                 }}
               >
                 {charger.isInCharge ? timer : time}
               </Text>
             </View>
-            <View style={{ flex: 1, marginTop: "auto" }}>
-              <Text style={charging.smallText}>Amount Paid</Text>
+            <View style={{ flex: 1, marginTop: 'auto' }}>
               <Text
                 style={{
-                  ...charging.chargingStatusText,
-                  color: getTextColorByStatus(charger.appStateName),
+                  ...charging.smallText,
+                  ...(isDetails && { color: 'white' }),
+                }}
+              >
+                Amount Paid
+              </Text>
+              <Text
+                style={{
+                  ...charging.chargingValuesText,
+                  color: getTextColorByStatus(charger.appState, isDetails),
                 }}
               >
                 {price}
               </Text>
             </View>
           </View>
+          {charger.isAdmin && charger.appState === 5 ? (
+            <Pressable
+              style={charging.pairButtonWrapper}
+              onPress={() => console.log('Pressed')}
+            >
+              <Text style={charging.pairButtonText}>PAIR AGAIN</Text>
+            </Pressable>
+          ) : null}
         </View>
       </TouchableWithoutFeedback>
     </>

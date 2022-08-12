@@ -12,6 +12,8 @@ import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavi
 import routes from "../../routes";
 import { style } from "./DeviceDetails.style";
 import moment from "moment";
+import DetailsBackground from "../../assets/chargingScreen.jpg";
+import { getUniqueKey } from "../../helpers/checkers";
 
 import Layout from "../../general_components/Layout";
 import {
@@ -19,20 +21,30 @@ import {
   getFullMonthName,
   getStartMonthDate,
 } from "../../helpers/dateFormatFunctions";
-import { formatMs } from "../../helpers/formatFunctions";
+import {
+  formatMs,
+  hourMinutesRenderer,
+  kwhRenderer,
+  priceRenderer,
+} from "../../helpers/formatFunctions";
 import useTime from "../../helpers/useTime";
+import ChargerCard from "../../components/Card/ChargerCard";
+import DetailsCard from "../../components/Card/DetailsCard";
 
 const DeviceDetails = (props) => {
-  const { navigation } = props;
+  const { navigation, route } = props;
   const {
     route: {
       params: { serialNumber },
     },
   } = props;
 
+  const {
+    ChargerSettings: { name: chargerSettingsRoute },
+  } = routes;
+
   const [charger, setCharger] = useState(null);
   const [totalCharge, setTotalCharge] = useState(null);
-  const [timer, setStartTimer] = useTime();
 
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [date, setDate] = useState(getStartMonthDate(new Date()));
@@ -114,10 +126,6 @@ const DeviceDetails = (props) => {
       .data.device()
       .getChargerData(serialNumber, token);
     setCharger(chargerData);
-    if (chargerData.isInCharge) {
-      setStartTimer(new Date(chargerData.lastCharge[0].startDate));
-    }
-
     getChargerTotalData(chargerData.id);
   };
 
@@ -126,34 +134,16 @@ const DeviceDetails = (props) => {
     setIsCalendarOpen(!isCalendarOpen);
   };
 
-  console.log(charger);
-
   return (
     <>
       {!triggerRefresh && charger && !isLoading ? (
         <>
-          <Layout diffuseBG>
+          <Layout customBackgroundUrl={DetailsBackground}>
             <Layout.Header>
-              <HeaderNavigator navigation={navigation} />
+              <HeaderNavigator navigation={navigation} route={route} />
             </Layout.Header>
             <Layout.Body>
-              {/* <View style={style.tittleButtonWrapper}>
-                <View style={{ flex: 2 }}>
-                  <Text style={style.title}> {charger.name}</Text>
-                </View>
-                <View
-                  style={{
-                    flex: 1,
-                  }}
-                >
-                  <PillButton
-                    text={'Settings'}
-                    isSecondary
-                    onPressAction={navigateToChargerSettings}
-                  />
-                </View>
-              </View> */}
-              {!charger.isInCharge ? (
+              {!charger.isInCharge && (
                 <View style={style.table_container}>
                   <PillButton
                     text={getFullMonthName(date)}
@@ -166,55 +156,56 @@ const DeviceDetails = (props) => {
                     price={charger.price}
                   />
                 </View>
-              ) : (
-                <View>
-                  <Text style={style.chargingTitle}>Charging</Text>
-                  <MaterialCommunityIcons
-                    name="battery-medium"
-                    size={250}
-                    color="green"
-                    style={{
-                      marginLeft: "auto",
-                      marginRight: "auto",
-                      marginTop: 30,
-                    }}
-                  />
-                </View>
               )}
             </Layout.Body>
             <Layout.Footer style={{ flex: 2, backgroundColor: "red" }}>
               {totalCharge && !charger.isInCharge ? (
-                <Card
-                  isCharging={false}
-                  details={true}
-                  price={totalCharge.ammountSpent.toFixed(2)}
+                <DetailsCard
+                  name={charger.name}
                   kwh={totalCharge.energyDelivered.toFixed(2)}
-                  name={"Total"}
-                  hourMinutes={formatMs(totalCharge.chargeDuration)}
+                  price={totalCharge.ammountSpent.toFixed(2)}
+                  time={formatMs(totalCharge.chargeDuration)}
+                  charger={charger}
                 />
               ) : (
-                <Card
-                  isCharging={true}
-                  details={true}
-                  price={"--"}
-                  kwh={"--kwh"}
-                  name={"Charging"}
-                  hourMinutes={timer}
-                />
+                // <Card
+                //   isCharging={false}
+                //   details={true}
+                //   price={totalCharge.ammountSpent.toFixed(2)}
+                //   kwh={totalCharge.energyDelivered.toFixed(2)}
+                //   name={'Total'}
+                //   hourMinutes={formatMs(totalCharge.chargeDuration)}
+                // />
+                <ChargerCard
+                  name={charger.name}
+                  kwh={kwhRenderer(charger.lastCharge[0])}
+                  time={hourMinutesRenderer(charger.lastCharge[0])}
+                  price={priceRenderer(
+                    charger.lastCharge[0],
+                    charger.price,
+                    charger.currency
+                  )}
+                  key={getUniqueKey(charger)}
+                  charger={charger}
+                  isDetails
+                ></ChargerCard>
               )}
               <View style={style.tittleButtonWrapper}>
                 <View style={{ flex: 1 }}>
                   <ChargerButton
-                    text={"Schedule"}
                     marginRight={10}
                     isSecondary={true}
+                    onPressAction={() =>
+                      navigation.navigate(chargerSettingsRoute, {
+                        serialNumber: serialNumber,
+                      })
+                    }
                   />
                 </View>
                 <View style={{ flex: 1 }}>
                   <ChargerButton
-                    text={charger.isInCharge ? "Stop" : "Start"}
                     marginLeft={10}
-                    isDanger={charger.isInCharge}
+                    isCharging={charger.isInCharge}
                     onPressAction={() => StartStopCharging()}
                   />
                 </View>

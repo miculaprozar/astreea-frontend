@@ -10,6 +10,7 @@ import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavi
 import Layout from "../../general_components/Layout";
 import routes from "../../routes";
 import Label from "../../components/Input/Label";
+import { getUniqueKey } from "../../helpers/checkers";
 
 import {
   hourMinutesRenderer,
@@ -18,7 +19,8 @@ import {
 } from "../../helpers/formatFunctions";
 
 const Home = (props) => {
-  const { navigation } = props;
+  const { navigation, route } = props;
+
   const { ConnectQR, DeviceDetails } = routes;
 
   const [token, setToken] = useState(null);
@@ -137,7 +139,11 @@ const Home = (props) => {
   return (
     <Layout diffuseBG={true}>
       <Layout.Header>
-        <HeaderNavigator navigation={navigation} hideBack={true} />
+        <HeaderNavigator
+          navigation={navigation}
+          hideBack={true}
+          route={route}
+        />
       </Layout.Header>
       <Layout.Body>
         <Label white text="Search" />
@@ -145,16 +151,23 @@ const Home = (props) => {
         <Label white text="Chargers" />
         <View style={{ flexDirection: "row", marginBottom: 15 }}>
           <PillButton
-            isSecondary={filterChargers && true}
+            isSecondary={filterChargers !== 0}
             text={"Public"}
             onPressAction={() => setFilterChargers(0)}
           />
           <PillButton
-            isSecondary={!filterChargers && true}
+            isSecondary={filterChargers !== 1}
             text={"My chargers"}
             marginLeft={15}
             onPressAction={() => setFilterChargers(1)}
           />
+          <PillButton
+            isSecondary={filterChargers !== 2}
+            text={"Private"}
+            marginLeft={15}
+            onPressAction={() => setFilterChargers(1)}
+          />
+
           <View style={{ flex: 2 }}></View>
         </View>
         <ScrollView>
@@ -178,7 +191,7 @@ const Home = (props) => {
                     item.price,
                     item.currency
                   )}
-                  key={"charger_" + index}
+                  key={getUniqueKey(item)}
                   charger={item}
                   onClick={() => navigateToDeviceAction(item)}
                 />
