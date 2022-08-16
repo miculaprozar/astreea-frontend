@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Modal, StyleSheet, View, ActivityIndicator } from "react-native";
+import { Modal, View, ActivityIndicator } from "react-native";
+import { styles } from "./Loader.style";
 
 const Loader = ({ isLoading }) => {
   const [modalVisible, setModalVisible] = useState(true);
@@ -10,10 +11,10 @@ const Loader = ({ isLoading }) => {
   }, [isLoading]);
 
   return (
-    <View style={styles.centeredView}>
+    <View>
       <Modal transparent={true} visible={modalVisible}>
         <View style={styles.modalView}>
-          <View style={{ flex: 1, justifyContent: "center" }}>
+          <View style={styles.centerWrapper}>
             <ActivityIndicator size="large" color="#FF6400" />
           </View>
         </View>
@@ -23,12 +24,3 @@ const Loader = ({ isLoading }) => {
 };
 
 export default Loader;
-
-const styles = StyleSheet.create({
-  modalView: {
-    backgroundColor: "white",
-    width: "100%",
-    height: "100%",
-    alignItems: "center",
-  },
-});
