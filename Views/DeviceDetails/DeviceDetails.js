@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Text, View } from "react-native";
+import { ActivityIndicator, Text, View, Image } from "react-native";
 import { apiFactory } from "../../api/index";
 import Card from "../../components/Card/Card";
 import ChargerButton from "../../components/ChargerButton/ChargerButton";
@@ -59,7 +59,7 @@ const DeviceDetails = (props) => {
   };
 
   const StartStopCharging = async () => {
-    setIsLoading(true);
+    loader(true);
     try {
       const token = await AsyncStorage.getItem("token");
       setTriggerRefresh(true);
@@ -92,7 +92,7 @@ const DeviceDetails = (props) => {
 
       getChargerInfo();
       setTriggerRefresh(false);
-      setIsLoading(false);
+      loader(false);
     } catch (e) {
       console.log("ERROR IN START STOP CHARGING", e.response.data);
     }
@@ -107,9 +107,9 @@ const DeviceDetails = (props) => {
   };
 
   useEffect(() => {
-    setIsLoading(true);
+    loader(true);
     getChargerInfo();
-    setIsLoading(false);
+    loader(false);
   }, []);
 
   useEffect(() => {
@@ -132,6 +132,12 @@ const DeviceDetails = (props) => {
   const onSubmitDate = (date) => {
     setDate(date);
     setIsCalendarOpen(!isCalendarOpen);
+  };
+
+  const loader = (boolean) => {
+    if (!boolean) {
+      setTimeout(() => setIsLoading(false), 300);
+    } else setIsLoading(true);
   };
 
   return (
@@ -219,7 +225,14 @@ const DeviceDetails = (props) => {
           </Layout>
         </>
       ) : (
-        <ActivityIndicator size={"large"} color={"#ffffff"}></ActivityIndicator>
+        <View
+          style={{ alignItems: "center", flex: 1, justifyContent: "center" }}
+        >
+          <Image
+            style={style.titleWhite}
+            source={require("../../assets/loader.png")}
+          />
+        </View>
       )}
     </>
   );
