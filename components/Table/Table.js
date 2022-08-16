@@ -15,7 +15,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TableComponent = ({ chargerId, startDate, endDate, price }) => {
   const [chargerHistory, setChargerHistory] = useState([]);
-  const [tableData, setTableData] = useState(null);
+  const [tableData, setTableData] = useState([]);
   const [tableDimension, setTableDimension] = React.useState(null);
   const [tableItems, setTableItems] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
@@ -28,6 +28,7 @@ const TableComponent = ({ chargerId, startDate, endDate, price }) => {
   const getChargerDatesHistory = async (dates) => {
     try {
       setIsLoading(true);
+
       const tokenValue = await AsyncStorage.getItem("token");
       const { data: theChargerHistory } = await apiFactory()
         .data.device()
@@ -39,6 +40,7 @@ const TableComponent = ({ chargerId, startDate, endDate, price }) => {
           dates.splitStartDate ? dates : null
         );
       setChargerHistory(theChargerHistory);
+      setIsLoading(false);
     } catch (e) {}
   };
 
@@ -48,14 +50,6 @@ const TableComponent = ({ chargerId, startDate, endDate, price }) => {
     var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
 
     return `${diffHrs} H, ${diffMins} M`;
-  };
-
-  useEffect(() => {
-    tableData && loader();
-  }, [tableData]);
-
-  const loader = () => {
-    setTimeout(() => setIsLoading(false), 500);
   };
 
   useEffect(() => {

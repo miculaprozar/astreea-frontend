@@ -30,6 +30,7 @@ import {
 import useTime from "../../helpers/useTime";
 import ChargerCard from "../../components/Card/ChargerCard";
 import DetailsCard from "../../components/Card/DetailsCard";
+import Loader from "../../general_components/Loader/Loader";
 
 const DeviceDetails = (props) => {
   const { navigation, route } = props;
@@ -59,7 +60,8 @@ const DeviceDetails = (props) => {
   };
 
   const StartStopCharging = async () => {
-    loader(true);
+    changeLoader(true);
+
     try {
       const token = await AsyncStorage.getItem("token");
       setTriggerRefresh(true);
@@ -92,7 +94,7 @@ const DeviceDetails = (props) => {
 
       getChargerInfo();
       setTriggerRefresh(false);
-      loader(false);
+      changeLoader(false);
     } catch (e) {
       console.log("ERROR IN START STOP CHARGING", e.response.data);
     }
@@ -107,9 +109,9 @@ const DeviceDetails = (props) => {
   };
 
   useEffect(() => {
-    loader(true);
+    changeLoader(true);
     getChargerInfo();
-    loader(false);
+    changeLoader(false);
   }, []);
 
   useEffect(() => {
@@ -134,15 +136,16 @@ const DeviceDetails = (props) => {
     setIsCalendarOpen(!isCalendarOpen);
   };
 
-  const loader = (boolean) => {
+  const changeLoader = (boolean) => {
     if (!boolean) {
-      setTimeout(() => setIsLoading(false), 300);
+      setIsLoading(false);
     } else setIsLoading(true);
   };
 
   return (
     <>
-      {!triggerRefresh && charger && !isLoading ? (
+      <Loader isLoading={isLoading} />
+      {!triggerRefresh && charger && !isLoading && (
         <>
           <Layout customBackgroundUrl={DetailsBackground}>
             <Layout.Header>
@@ -224,15 +227,6 @@ const DeviceDetails = (props) => {
             </Layout.Footer>
           </Layout>
         </>
-      ) : (
-        <View
-          style={{ alignItems: "center", flex: 1, justifyContent: "center" }}
-        >
-          <Image
-            style={style.titleWhite}
-            source={require("../../assets/loader.png")}
-          />
-        </View>
       )}
     </>
   );
