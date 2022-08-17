@@ -13,8 +13,8 @@ const validationSchema = yup.object().shape({
         } else return true;
       }
     )
-    .required("Email-ul este obligatoriu")
-    .email("Email incomplet"),
+    .required("The email is required")
+    .email("Incomplete email"),
 });
 
 export default validationSchema;

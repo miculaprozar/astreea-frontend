@@ -13,13 +13,13 @@ const validationSchema = yup.object().shape({
         } else return true;
       }
     )
-    .required("Email-ul este obligatoriu")
-    .email("Email incomplet"),
+    .required("The email is required")
+    .email("The email is incomplete"),
 
   password: yup
     .string()
-    .required("Parolă obligatorie")
-    .min(6, "Minim 6 caractere"),
+    .required("The password is required")
+    .min(6, "Password must be at least 6 characters"),
 });
 
 export default validationSchema;

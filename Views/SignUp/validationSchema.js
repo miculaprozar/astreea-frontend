@@ -14,21 +14,16 @@ const validationSchema = yup.object().shape({
       }
     )
     .required("The email is required")
-    .email("Incomplete email"),
+    .email("The email is incomplete"),
   firstName: yup.string().required("The first name is required"),
-
   lastName: yup.string().required("The last name is required"),
-
   passwordControlled: yup
     .string()
-    .required("Parolă obligatorie")
-    .min(6, "Minim 6 caractere"),
+    .required("The password is required")
+    .min(6, "Password must be at least 6 characters"),
   seccondPasswordControlled: yup
     .string()
-    .oneOf(
-      [yup.ref("passwordControlled")],
-      "Cele doua parole nu se potrivesc!"
-    ),
+    .oneOf([yup.ref("passwordControlled")], "The two passwords must match"),
 });
 
 export default validationSchema;
