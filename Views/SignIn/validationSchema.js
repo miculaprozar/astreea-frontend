@@ -7,8 +7,10 @@ const validationSchema = yup.object().shape({
       "firstLetterToLower",
       "First email letter must be lower case",
       function (value) {
-        const firstLetter = value[0];
-        return firstLetter[0].toLowerCase() === firstLetter[0];
+        if (value) {
+          const firstLetter = value[0];
+          return firstLetter[0].toLowerCase() === firstLetter[0];
+        } else return true;
       }
     )
     .required("Email-ul este obligatoriu")

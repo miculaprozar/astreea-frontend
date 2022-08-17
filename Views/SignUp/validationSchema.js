@@ -5,10 +5,12 @@ const validationSchema = yup.object().shape({
     .string()
     .test(
       "firstLetterToLower",
-      "First letter must be lower case",
+      "First email letter must be lower case",
       function (value) {
-        const firstLetter = value[0];
-        return firstLetter[0].toLowerCase() === firstLetter[0];
+        if (value) {
+          const firstLetter = value[0];
+          return firstLetter[0].toLowerCase() === firstLetter[0];
+        } else return true;
       }
     )
     .required("The email is required")
