@@ -13,7 +13,7 @@ import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavi
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SnackBar from "../../general_components/SnackBar";
 
-const SignUp = () => {
+const SignUp = (props) => {
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -61,6 +61,7 @@ const SignUp = () => {
           navigation={navigation}
           hideLogo={true}
           hideAccountSettings={true}
+          route={props.route}
         />
       </Layout.Header>
       <Layout.Body>
