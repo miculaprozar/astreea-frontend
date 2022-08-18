@@ -136,7 +136,14 @@ const Home = (props) => {
     });
   };
 
-  const filterChargersHandler = (isAdmin, isPrivate) => {};
+  const filterChargersHandler = (isAdmin, isPrivate, isSearched) => {
+    const isAdminFiltered = isAdmin === filterChargers;
+    const isPrivateFiltered = isPrivate + 2 === filterChargers;
+
+    if (filterChargers === 0 || filterChargers === 1) {
+      return isSearched && isAdminFiltered;
+    } else return isSearched && isPrivateFiltered;
+  };
 
   return (
     <Layout diffuseBG={true}>
@@ -181,15 +188,13 @@ const Home = (props) => {
                   .toLowerCase()
                   .includes(searchfield.toLowerCase());
 
-                // const filterHandler = filterChargersHandler (charger.isAdmin, charger.isPrivate, isSearched);
+                const filterHandler = filterChargersHandler(
+                  charger.isAdmin,
+                  charger.isPrivate,
+                  isSearched
+                );
 
-                const isAdminFiltered = charger.isAdmin === filterChargers;
-                const isPrivateFiltered =
-                  charger.isPrivate + 2 === filterChargers;
-
-                if (filterChargers === 0 || filterChargers === 1) {
-                  return isSearched && isAdminFiltered;
-                } else return isSearched && isPrivateFiltered;
+                return filterHandler;
               })
               .map((item, index) => (
                 <ChargerCard
