@@ -87,9 +87,13 @@ const ChargerSettings = ({ navigation, route }) => {
         </View>
 
         <Label text={"Wifi name"} white={true} />
-        <Input marginBottom={10} disabled={true} value={"Jhon Does"} />
+        <Input marginBottom={10} disabled={true} value={charger?.WiFiName} />
         <Label text={"Wifi strength"} white={true} />
-        <Input marginBottom={25} disabled={true} value={"Medium"} />
+        <Input
+          marginBottom={25}
+          disabled={true}
+          value={charger?.WiFiStrength.toString()}
+        />
       </Layout.Body>
       <Layout.Footer>
         <View style={style.buttonsWrapper}>
