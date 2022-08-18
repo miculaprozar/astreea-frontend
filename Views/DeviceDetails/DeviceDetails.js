@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 import { apiFactory } from "../../api/index";
 import Card from "../../components/Card/Card";
@@ -14,6 +14,7 @@ import { style } from "./DeviceDetails.style";
 import moment from "moment";
 import DetailsBackground from "../../assets/chargingScreen.jpg";
 import { getUniqueKey } from "../../helpers/checkers";
+import { useFocusEffect } from "@react-navigation/native";
 
 import Layout from "../../general_components/Layout";
 import {
@@ -106,11 +107,13 @@ const DeviceDetails = (props) => {
     setTotalCharge(totalCharge);
   };
 
-  useEffect(() => {
-    setIsLoading(true);
-    getChargerInfo();
-    setIsLoading(false);
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      setIsLoading(true);
+      getChargerInfo();
+      setIsLoading(false);
+    }, [])
+  );
 
   useEffect(() => {
     if (date && charger) {
