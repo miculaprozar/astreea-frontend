@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal, View, ActivityIndicator } from "react-native";
+import { Modal, View, Image } from "react-native";
 import { styles } from "./Loader.style";
 
 const Loader = ({ isLoading }) => {
@@ -15,7 +15,10 @@ const Loader = ({ isLoading }) => {
       <Modal transparent={true} visible={modalVisible}>
         <View style={styles.modalView}>
           <View style={styles.centerWrapper}>
-            <ActivityIndicator size="large" color="#FF6400" />
+            <Image
+              source={require("../../assets/loader.png")}
+              style={{ width: 100, height: 300, resizeMode: "contain" }}
+            />
           </View>
         </View>
       </Modal>
