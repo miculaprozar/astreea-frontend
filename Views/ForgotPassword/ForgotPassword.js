@@ -68,6 +68,8 @@ const ForgotPassword = (props) => {
             validateInput={true}
             control={control}
             errors={errors.email?.message}
+            autoCapitalize={"none"}
+            keyboardType={"email-address"}
           />
         </Layout.Header>
 

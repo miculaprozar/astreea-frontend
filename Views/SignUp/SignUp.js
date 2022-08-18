@@ -75,6 +75,8 @@ const SignUp = (props) => {
             errors={errors.email?.message}
             name={"email"}
             secureTextEntry={false}
+            autoCapitalize={"none"}
+            keyboardType={"email-address"}
           />
           <Input
             label={"First name"}
