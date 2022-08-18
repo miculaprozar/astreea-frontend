@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Text, View } from "react-native";
+import { ActivityIndicator, Text, View, Image } from "react-native";
 import { apiFactory } from "../../api/index";
 import Card from "../../components/Card/Card";
 import ChargerButton from "../../components/ChargerButton/ChargerButton";
@@ -30,6 +30,7 @@ import {
 import useTime from "../../helpers/useTime";
 import ChargerCard from "../../components/Card/ChargerCard";
 import DetailsCard from "../../components/Card/DetailsCard";
+import Loader from "../../general_components/Loader/Loader";
 
 const DeviceDetails = (props) => {
   const { navigation, route } = props;
@@ -59,7 +60,8 @@ const DeviceDetails = (props) => {
   };
 
   const StartStopCharging = async () => {
-    setIsLoading(true);
+    changeLoader(true);
+
     try {
       const token = await AsyncStorage.getItem("token");
       setTriggerRefresh(true);
@@ -92,7 +94,7 @@ const DeviceDetails = (props) => {
 
       getChargerInfo();
       setTriggerRefresh(false);
-      setIsLoading(false);
+      changeLoader(false);
     } catch (e) {
       console.log("ERROR IN START STOP CHARGING", e.response.data);
     }
@@ -107,9 +109,9 @@ const DeviceDetails = (props) => {
   };
 
   useEffect(() => {
-    setIsLoading(true);
+    changeLoader(true);
     getChargerInfo();
-    setIsLoading(false);
+    changeLoader(false);
   }, []);
 
   useEffect(() => {
@@ -134,9 +136,16 @@ const DeviceDetails = (props) => {
     setIsCalendarOpen(!isCalendarOpen);
   };
 
+  const changeLoader = (boolean) => {
+    if (!boolean) {
+      setIsLoading(false);
+    } else setIsLoading(true);
+  };
+
   return (
     <>
-      {!triggerRefresh && charger && !isLoading ? (
+      <Loader isLoading={isLoading} />
+      {!triggerRefresh && charger && !isLoading && (
         <>
           <Layout customBackgroundUrl={DetailsBackground}>
             <Layout.Header>
@@ -218,8 +227,6 @@ const DeviceDetails = (props) => {
             </Layout.Footer>
           </Layout>
         </>
-      ) : (
-        <ActivityIndicator size={"large"} color={"#ffffff"}></ActivityIndicator>
       )}
     </>
   );
