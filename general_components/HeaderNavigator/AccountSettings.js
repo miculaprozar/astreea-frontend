@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Text, Pressable, Image, View } from "react-native";
 import { style } from "./HeaderNavigator.style";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 
 const AccountSettings = ({ navigation, route }) => {
   const [name, setName] = useState({
@@ -9,7 +10,11 @@ const AccountSettings = ({ navigation, route }) => {
     lastName: "",
   });
 
-  const { name: routeName } = route;
+  useFocusEffect(
+    useCallback(() => {
+      getName();
+    }, [])
+  );
 
   const getName = async () => {
     try {
@@ -22,10 +27,6 @@ const AccountSettings = ({ navigation, route }) => {
       // error reading value
     }
   };
-
-  useEffect(() => {
-    getName();
-  }, [routeName]);
 
   return (
     <>

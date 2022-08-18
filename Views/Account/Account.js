@@ -78,13 +78,10 @@ const Account = (props) => {
 
   const onSubmit = async (data) => {
     try {
-      console.log(data);
-      console.log(token);
       const resp = await apiFactory().data.account().changePassword(token, {
         firstName: data.firstName,
         lastName: data.lastName,
       });
-      console.log(resp);
       AsyncStorage.setItem("firstName", resp[0].firstName);
       AsyncStorage.setItem("lastName", resp[0].lastName);
       setLogType("info");
