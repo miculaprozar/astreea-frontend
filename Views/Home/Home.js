@@ -136,6 +136,8 @@ const Home = (props) => {
     });
   };
 
+  const filterChargersHandler = (isAdmin, isPrivate) => {};
+
   return (
     <Layout diffuseBG={true}>
       <Layout.Header>
@@ -162,10 +164,10 @@ const Home = (props) => {
             onPressAction={() => setFilterChargers(1)}
           />
           <PillButton
-            isSecondary={filterChargers !== 2}
+            isSecondary={filterChargers !== 3}
             text={"Private"}
             marginLeft={15}
-            onPressAction={() => setFilterChargers(1)}
+            onPressAction={() => setFilterChargers(3)}
           />
 
           <View style={{ flex: 2 }}></View>
@@ -178,8 +180,16 @@ const Home = (props) => {
                 const isSearched = charger.name
                   .toLowerCase()
                   .includes(searchfield.toLowerCase());
-                const isFiltered = charger.isAdmin === filterChargers;
-                return isSearched && isFiltered;
+
+                // const filterHandler = filterChargersHandler (charger.isAdmin, charger.isPrivate, isSearched);
+
+                const isAdminFiltered = charger.isAdmin === filterChargers;
+                const isPrivateFiltered =
+                  charger.isPrivate + 2 === filterChargers;
+
+                if (filterChargers === 0 || filterChargers === 1) {
+                  return isSearched && isAdminFiltered;
+                } else return isSearched && isPrivateFiltered;
               })
               .map((item, index) => (
                 <ChargerCard
