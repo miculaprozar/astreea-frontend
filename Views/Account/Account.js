@@ -116,6 +116,8 @@ const Account = (props) => {
           name={"firstName"}
           secureTextEntry={false}
           value={email}
+          autoCapitalize={"none"}
+          keyboardType={"email-address"}
         />
         <Input
           label={"First name"}

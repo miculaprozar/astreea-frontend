@@ -19,6 +19,8 @@ const Input = ({
   secureTextEntry,
   value,
   controledChange,
+  autoCapitalize = "sentences",
+  keyboardType = "default",
 }) => {
   const [borderColor, setBorderColor] = useState(input);
 
@@ -33,6 +35,8 @@ const Input = ({
           style={inputDisabled.input}
           editable={false}
           value={value}
+          autoCapitalize={autoCapitalize}
+          keyboardType={keyboardType}
         />
       ) : validateInput ? (
         <>
@@ -50,6 +54,8 @@ const Input = ({
                   onBlur={() => setBorderColor(input)}
                   value={value}
                   secureTextEntry={secureTextEntry}
+                  autoCapitalize={autoCapitalize}
+                  keyboardType={keyboardType}
                 />
               );
             }}
@@ -70,6 +76,8 @@ const Input = ({
             onChangeText={onChange}
             secureTextEntry={type === "password" ? true : false}
             value={value}
+            autoCapitalize={autoCapitalize}
+            keyboardType={keyboardType}
           />
           {errors && <Text style={textStyle.errorText}>{errors}</Text>}
         </>
