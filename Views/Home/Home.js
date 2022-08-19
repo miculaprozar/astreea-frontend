@@ -11,6 +11,7 @@ import Layout from "../../general_components/Layout";
 import routes from "../../routes";
 import Label from "../../components/Input/Label";
 import { getUniqueKey } from "../../helpers/checkers";
+import differenceInMinutes from "date-fns/differenceInMinutes";
 
 import {
   hourMinutesRenderer,
@@ -117,6 +118,36 @@ const Home = (props) => {
     getToken();
   }, []);
 
+  const chargerVerification = (charger) => {
+    const actualDate = new Date();
+
+    if (charger.lastCharge.length > 0) {
+      if (charger.lastCharge[0].endDate) {
+        const endDate = new Date(charger.lastCharge[0].endDate);
+        const diferenceInMinutes = differenceInMinutes(actualDate, endDate);
+        // if (diferenceInMinutes > 60) {
+        //   console.log("api call");
+        // }
+      }
+    } else if (charger.connectionDate) {
+      const connectionDate = new Date(charger.connectionDate);
+      const diferenceInMinutes = differenceInMinutes(
+        actualDate,
+        connectionDate
+      );
+      // if (diferenceInMinutes > 60) {
+      //   console.log("api call");
+      // }
+      // console.log("Endate new date si dif", diferenceInMinutes);
+    }
+  };
+
+  useEffect(() => {
+    if (chargers) {
+      chargers.forEach((charger) => chargerVerification(charger));
+    }
+  }, [chargers]);
+
   const navigateToAddDevice = () => {
     navigation.navigate(ConnectQR.name);
   };
@@ -137,12 +168,14 @@ const Home = (props) => {
   };
 
   const filterChargersHandler = (isAdmin, isPrivate, isSearched) => {
-    const isAdminFiltered = isAdmin === filterChargers;
-    const isPrivateFiltered = isPrivate + 2 === filterChargers;
+    const isPublic = isAdmin === 0 && filterChargers === 0;
+    const isAdminFiltered = isAdmin && filterChargers === 1;
+    const isPrivateFiltered = isPrivate && filterChargers === 2;
 
-    if (filterChargers === 0 || filterChargers === 1) {
-      return isSearched && isAdminFiltered;
-    } else return isSearched && isPrivateFiltered;
+    if (filterChargers === 0) {
+      return isSearched && isPublic;
+    } else if (filterChargers === 1) return isSearched && isAdminFiltered;
+    else return isSearched && isPrivateFiltered;
   };
 
   return (
@@ -171,10 +204,10 @@ const Home = (props) => {
             onPressAction={() => setFilterChargers(1)}
           />
           <PillButton
-            isSecondary={filterChargers !== 3}
+            isSecondary={filterChargers !== 2}
             text={"Private"}
             marginLeft={15}
-            onPressAction={() => setFilterChargers(3)}
+            onPressAction={() => setFilterChargers(2)}
           />
 
           <View style={{ flex: 2 }}></View>
