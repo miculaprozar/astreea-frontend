@@ -11,6 +11,8 @@ import Layout from "../../general_components/Layout";
 import routes from "../../routes";
 import Label from "../../components/Input/Label";
 import { getUniqueKey } from "../../helpers/checkers";
+import differenceInMinutes from "date-fns/differenceInMinutes";
+import { apiFactory } from "../../api";
 
 import {
   hourMinutesRenderer,
@@ -117,6 +119,60 @@ const Home = (props) => {
     getToken();
   }, []);
 
+  const disableChargerChecker = (
+    lastCharge,
+    isPrivate,
+    isAdmin,
+    connectionDate
+  ) => {
+    const actualDate = new Date();
+    if (lastCharge.length > 0) {
+      if (lastCharge[0].endDate) {
+        const endDate = new Date(lastCharge[0].endDate);
+        const diferenceInMinutes = differenceInMinutes(actualDate, endDate);
+        if (diferenceInMinutes > 60 && isPrivate === 0 && isAdmin === 0) {
+          return true;
+        } else return false;
+      }
+    } else if (connectionDate) {
+      const connectionDate = new Date(connectionDate);
+      const diferenceInMinutes = differenceInMinutes(
+        actualDate,
+        connectionDate
+      );
+      if (diferenceInMinutes > 60 && isPrivate === 0 && isAdmin === 0) {
+        return true;
+      } else return false;
+    } else return false;
+  };
+
+  const disableTimedOutChargers = async (charger) => {
+    const {
+      lastCharge,
+      isPrivate,
+      isAdmin,
+      id: chargerId,
+      connectionDate,
+    } = charger;
+
+    const disableCharger = disableChargerChecker(
+      lastCharge,
+      isPrivate,
+      isAdmin,
+      connectionDate
+    );
+    disableCharger &&
+      (await apiFactory()
+        .data.device()
+        .updateChargerData({ isDisabled: 1 }, chargerId, token));
+  };
+
+  useEffect(() => {
+    if (chargers && token) {
+      chargers.forEach((charger) => disableTimedOutChargers(charger));
+    }
+  }, [chargers]);
+
   const navigateToAddDevice = () => {
     navigation.navigate(ConnectQR.name);
   };
@@ -134,6 +190,17 @@ const Home = (props) => {
       price: priceRenderer(charger.lastCharge[0]),
       serialNumber: charger.serialNumber,
     });
+  };
+
+  const filterChargersHandler = (isAdmin, isPrivate, isSearched) => {
+    const isPublic = isAdmin === 0 && filterChargers === 0;
+    const isAdminFiltered = isAdmin && filterChargers === 1;
+    const isPrivateFiltered = isPrivate && filterChargers === 2;
+
+    if (filterChargers === 0) {
+      return isSearched && isPublic;
+    } else if (filterChargers === 1) return isSearched && isAdminFiltered;
+    else return isSearched && isPrivateFiltered;
   };
 
   return (
@@ -165,7 +232,7 @@ const Home = (props) => {
             isSecondary={filterChargers !== 2}
             text={"Private"}
             marginLeft={15}
-            onPressAction={() => setFilterChargers(1)}
+            onPressAction={() => setFilterChargers(2)}
           />
 
           <View style={{ flex: 2 }}></View>
@@ -178,8 +245,14 @@ const Home = (props) => {
                 const isSearched = charger.name
                   .toLowerCase()
                   .includes(searchfield.toLowerCase());
-                const isFiltered = charger.isAdmin === filterChargers;
-                return isSearched && isFiltered;
+
+                const filterHandler = filterChargersHandler(
+                  charger.isAdmin,
+                  charger.isPrivate,
+                  isSearched
+                );
+
+                return filterHandler;
               })
               .map((item, index) => (
                 <ChargerCard
