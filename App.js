@@ -13,6 +13,14 @@ import RessetPassword from "./Views/RessetPassword/RessetPassword";
 import SignIn from "./Views/SignIn/SignIn";
 import SignUp from "./Views/SignUp/SignUp";
 import Permision from "./Views/Permision/Permision";
+import {
+  JsonHubProtocol,
+  HubConnectionState,
+  HubConnectionBuilder,
+  LogLevel,
+  HttpTransportType,
+} from "@microsoft/signalr";
+import axios from "axios";
 
 import routes from "./routes";
 Text.defaultProps = {
@@ -33,6 +41,7 @@ import {
 import Websocket from "./Views/WebSocket/Websocket";
 
 import { Provider } from "./provider/Provider";
+import { useEffect } from "react/cjs/react.production.min";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -42,6 +51,41 @@ export default function App() {
     Inter_700Bold,
     Inter_600SemiBold,
   });
+
+  const perfomConnection = (access_info) => {
+    let connection = new HubConnectionBuilder()
+      .configureLogging(LogLevel.Debug)
+      .withUrl("http://127.0.0.1:8099/csmsgateway", {
+        // accessTokenFactory: () => access_info.accessToken,
+        skipNegotiation: true,
+        transport: HttpTransportType.WebSockets,
+      })
+      .build();
+
+    console.log("THe conection is:", connection);
+
+    global.connection = connection;
+  };
+
+  perfomConnection();
+
+  // useEffect(() => {
+  // }, []);
+
+  // const authenticationFunctionUrl =
+  //   "https://csmsgatewayauthorization.azurewebsites.net/api/negotiate?key=SMI_8CPajAfaxRYD0sB0PV-VQA_A5-76OHYZbD955tbxAzFuTwklsg==";
+  // axios
+  //   .get(authenticationFunctionUrl)
+  //   .then((response) => {
+  //     console.log(response.data.url);
+  //     console.log(response.data.accessToken);
+
+  //     perfomConnection(response.data);
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   });
+
   return (
     <Provider>
       <NavigationContainer>

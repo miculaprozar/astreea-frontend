@@ -13,12 +13,23 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { apiFactory } from "../../api/index.js";
 import SnackBar from "../../general_components/SnackBar";
 
+import axios from "axios";
+import {
+  JsonHubProtocol,
+  HubConnectionState,
+  HubConnectionBuilder,
+  LogLevel,
+  HttpTransportType,
+} from "@microsoft/signalr";
+
 const Account = (props) => {
   const [token, setToken] = useState(null);
   const [error, setError] = useState(false);
   const [logType, setLogType] = useState("error");
 
   const [email, setEmail] = useState("");
+
+  const [razvanConnection, setRazvanConnection] = useState("");
 
   const { navigation, route } = props;
 
@@ -92,6 +103,53 @@ const Account = (props) => {
       setError("Error in user details!");
     }
   };
+
+  function performSignalRTest() {
+    // let connection = new HubConnectionBuilder()
+    //   .configureLogging(signalR.LogLevel.Debug)
+    //   .withUrl(access_info.url, {
+    //     accessTokenFactory: () => access_info.accessToken,
+    //     skipNegotiation: true,
+    //     transport: HttpTransportType.WebSockets,
+    //   })
+    //   .build();
+
+    const connection = global.connection;
+
+    connection.on("echo", (data1, data2) => {
+      console.log(data1 + ":" + data2);
+    });
+
+    connection
+      .start()
+      .then(() => connection.invoke("echo", "Param1", "Param2"))
+      .then(() =>
+        connection.invoke("GetChargers").then((resp) => {
+          // console.log("Chargere:" + resp);
+          setRazvanConnection(resp);
+        })
+      )
+      .then(() => connection.stop());
+  }
+
+  //perform authorization
+  // var authenticationFunctionUrl =
+  //   "https://csmsgatewayauthorization.azurewebsites.net/api/negotiate?key=SMI_8CPajAfaxRYD0sB0PV-VQA_A5-76OHYZbD955tbxAzFuTwklsg==";
+  // axios
+  //   .get(authenticationFunctionUrl)
+  //   .then((response) => {
+  //     console.log(response.data.url);
+  //     console.log(response.data.accessToken);
+
+  //     performSignalRTest(response.data);
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   });
+
+  useEffect(() => {
+    performSignalRTest();
+  }, [global.connection]);
 
   return (
     <Layout scrollView={true}>
