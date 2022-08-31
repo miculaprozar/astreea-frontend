@@ -104,53 +104,6 @@ const Account = (props) => {
     }
   };
 
-  function performSignalRTest() {
-    // let connection = new HubConnectionBuilder()
-    //   .configureLogging(signalR.LogLevel.Debug)
-    //   .withUrl(access_info.url, {
-    //     accessTokenFactory: () => access_info.accessToken,
-    //     skipNegotiation: true,
-    //     transport: HttpTransportType.WebSockets,
-    //   })
-    //   .build();
-
-    const connection = global.connection;
-
-    connection.on("echo", (data1, data2) => {
-      console.log(data1 + ":" + data2);
-    });
-
-    connection
-      .start()
-      .then(() => connection.invoke("echo", "Param1", "Param2"))
-      .then(() =>
-        connection.invoke("GetChargers").then((resp) => {
-          // console.log("Chargere:" + resp);
-          setRazvanConnection(resp);
-        })
-      )
-      .then(() => connection.stop());
-  }
-
-  //perform authorization
-  // var authenticationFunctionUrl =
-  //   "https://csmsgatewayauthorization.azurewebsites.net/api/negotiate?key=SMI_8CPajAfaxRYD0sB0PV-VQA_A5-76OHYZbD955tbxAzFuTwklsg==";
-  // axios
-  //   .get(authenticationFunctionUrl)
-  //   .then((response) => {
-  //     console.log(response.data.url);
-  //     console.log(response.data.accessToken);
-
-  //     performSignalRTest(response.data);
-  //   })
-  //   .catch((error) => {
-  //     console.log(error);
-  //   });
-
-  useEffect(() => {
-    performSignalRTest();
-  }, [global.connection]);
-
   return (
     <Layout scrollView={true}>
       <Layout.Header>
