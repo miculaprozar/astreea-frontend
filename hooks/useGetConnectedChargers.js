@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { HubConnectionState } from "@microsoft/signalr";
 import getUnixTime from "date-fns/getUnixTime";
+import produce from "immer";
 
 export function useGetConnectedChargers() {
   const [chargers, setChargers] = useState(null);
@@ -14,19 +15,31 @@ export function useGetConnectedChargers() {
   function registerListener() {
     //register for events
     connection.on("ChargerDetailsChanged", (charger) => {
-      const timeStamp2 = getUnixTime(Date.now());
-      if (timeStamp2 - timeStamp > 5) {
-        const newArr = chargers.map((object) => {
-          if (object.id === charger.id) {
-            return charger;
-          }
-          return object;
-        });
-
-        setChargers(newArr);
-      }
+      // const timeStamp2 = getUnixTime(Date.now());
+      // if (timeStamp2 - timeStamp > 5) {
+      //   const newArr = chargers.map((object) => {
+      //     if (object.id === charger.id) {
+      //       return charger;
+      //     }
+      //     return object;
+      //   });
+      //   setChargers(newArr);
+      // }
+      // console.log("Timestamp1", timeStamp);
+      // console.log("TImestamp222222", timeStamp2);
+      handleChangeCharger(charger);
     });
   }
+  const handleChangeCharger = useCallback((changedCharger) => {
+    setChargers(
+      produce((draft) => {
+        const indexCharger = draft.findIndex(
+          (charger) => charger.id === changedCharger.id
+        );
+        draft[indexCharger] = { ...draft[indexCharger], ...changedCharger };
+      })
+    );
+  }, []);
 
   useEffect(() => {
     if (connection.state == HubConnectionState.Connected) {
@@ -45,11 +58,11 @@ export function useGetConnectedChargers() {
     }
   }, [connection]);
 
-  // const memoChargers = useMemo(() => chargers, [chargers]);
+  const memoChargers = useMemo(() => chargers, [chargers]);
 
   return [
     {
-      data: chargers || [],
+      data: memoChargers || [],
     },
     // handler,
   ];
