@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Text, Pressable, Image, View } from "react-native";
 import { style } from "./HeaderNavigator.style";
 import AsyncStorage from "@react-native-async-storage/async-storage";

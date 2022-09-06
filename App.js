@@ -15,15 +15,6 @@ import SignUp from "./Views/SignUp/SignUp";
 import Permision from "./Views/Permision/Permision";
 import React, { useEffect, useState } from "react";
 
-import {
-  JsonHubProtocol,
-  HubConnectionState,
-  HubConnectionBuilder,
-  LogLevel,
-  HttpTransportType,
-} from "@microsoft/signalr";
-import axios from "axios";
-
 import startSignalRConnection from "./startSignalRConnection";
 
 import routes from "./routes";

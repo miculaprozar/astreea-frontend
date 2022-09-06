@@ -12,87 +12,163 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { style } from "./ChargerSettings.style";
 import Layout from "../../general_components/Layout";
 import SnackBar from "../../general_components/SnackBar";
+import { HubConnectionState } from "@microsoft/signalr";
+import { useForm } from "react-hook-form";
+import validationSchema from "./validationSchema";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const ChargerSettings = ({ navigation, route }) => {
   const {
-    params: { serialNumber },
+    params: { chargerId },
   } = route;
+
+  const connection = global.connection;
 
   const [charger, setCharger] = useState(null);
 
-  const [chargerName, setChargerName] = useState("");
   const [error, setError] = useState(false);
   const [succes, setSucces] = useState(false);
-  const [inputError, setInputError] = useState(false);
 
-  const getChargerInfo = async () => {
-    const token = await AsyncStorage.getItem("token");
-    const chargerData = await apiFactory()
-      .data.device()
-      .getChargerData(serialNumber, token);
-    setCharger(chargerData);
-    setChargerName(chargerData.name);
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
+
+  const setInputValues = (charger) => {
+    const { address, name, price, currency } = charger;
+    setValue("name", name);
+    setValue("address", address);
+    setValue("price", price.toString());
+    setValue("currency", currency);
   };
 
-  const updateChargerName = async () => {
+  useEffect(() => {
+    console.log("THE ERRORS ARE :", errors);
+  }, [errors]);
+
+  const getChargerInfo = async () => {
+    if (connection.state == HubConnectionState.Connected) {
+      await connection
+        .invoke("GetChargerDetails", chargerId)
+        .then((charger) => {
+          setCharger(charger);
+          setInputValues(charger);
+        })
+        .catch((err) => {
+          console.log("THE ERROR IS", err);
+        });
+    }
+  };
+
+  // useEffect(() => {
+  //   console.log("THE CHARGER DATA IS:", charger);
+  // }, [charger]);
+
+  const updateChargerName = async (data) => {
+    const chargerDetails = {
+      name: data.name,
+      chargerId: chargerId,
+      address: data.address,
+      price: Number(data.price),
+      currency: data.currency,
+    };
+
     try {
-      const token = await AsyncStorage.getItem("token");
-      await apiFactory()
-        .data.device()
-        .updateChargerData({ name: chargerName }, charger.id, token);
+      await connection
+        .invoke("UpdateChargerDetails", chargerDetails)
+        .then(() => {
+          console.log("UpdateChargerDetails performed");
+        });
       setSucces(true);
     } catch (e) {
       setError(e.response.data.message);
     }
   };
 
-  const handleChargerNameChange = (event) => {
-    event.length > 0 ? setInputError(false) : setInputError(true);
-    setChargerName(event);
-  };
-
   useEffect(() => {
     getChargerInfo();
-  }, []);
+  }, [connection]);
 
   const removeDEMOCharger = async () => {
     const token = await getToken();
     await apiFactory().data.account().removeExistingChargerFromUser(token);
     navigation.navigate("Home");
   };
+
+  const onSubmit = (data) => updateChargerName(data);
   return (
     <Layout scrollView={true}>
       <Layout.Header>
         <HeaderNavigator navigation={navigation} route={route} />
       </Layout.Header>
       <Layout.Body>
-        <Label text={"Charger name"} white={true} />
+        <Label text={"Name"} white={true} />
         <Input
-          marginBottom={25}
-          placeholder={"Enter charger name"}
-          value={chargerName}
-          onChange={(event) => handleChargerNameChange(event)}
-          errors={inputError ? "Name is required" : false}
+          label={"Name"}
+          marginBottom={12}
+          validateInput={true}
+          control={control}
+          errors={errors.name?.message}
+          name={"name"}
+          secureTextEntry={false}
+          disabled={!charger?.isAdmin ? true : false}
+          value={charger?.name}
+        />
+        <Label text={"Address"} white={true} />
+        <Input
+          label={"Address"}
+          marginBottom={12}
+          validateInput={true}
+          control={control}
+          errors={errors.address?.message}
+          name={"address"}
+          secureTextEntry={false}
+          disabled={!charger?.isAdmin ? true : false}
+          value={charger?.address}
         />
 
         <View style={{ flexDirection: "row" }}>
-          <View style={{ flex: 1 }}>
-            <Text style={style.pillsLabel}>Curency</Text>
-            <PillButton text={charger?.currency} isSecondary={true} />
+          <View style={{ flex: 1, marginRight: 7 }}>
+            <Label text={"Currency"} white={true} />
+            <Input
+              label={"Currency"}
+              marginBottom={12}
+              validateInput={true}
+              control={control}
+              errors={errors.currency?.message}
+              name={"currency"}
+              secureTextEntry={false}
+              disabled={!charger?.isAdmin ? true : false}
+              value={charger?.currency}
+            />
           </View>
-          <View style={{ flex: 1, marginBottom: 25 }}>
-            <Text style={style.pillsLabel}>kWh Cost</Text>
-            <PillButton text={charger?.price} isSecondary={true} />
+          <View style={{ flex: 1, marginLeft: 7 }}>
+            <Label text={"Price"} white={true} />
+            <Input
+              label={"Price"}
+              marginBottom={12}
+              validateInput={true}
+              control={control}
+              errors={errors.price?.message}
+              name={"price"}
+              secureTextEntry={false}
+              disabled={!charger?.isAdmin ? true : false}
+              value={charger?.price.toString()}
+            />
           </View>
         </View>
-
         <Label text={"Wifi name"} white={true} />
-        <Input marginBottom={10} disabled={true} value={charger?.WiFiName} />
+        <Input marginBottom={10} disabled={true} value={charger?.wiFiName} />
         <Label text={"Wifi strength"} white={true} />
+
         <Input
           marginBottom={25}
           disabled={true}
-          value={charger?.WiFiStrength.toString()}
+          value={charger?.wiFiStrength.toString()}
         />
       </Layout.Body>
       <Layout.Footer>
@@ -101,20 +177,21 @@ const ChargerSettings = ({ navigation, route }) => {
             <Button
               text={"Remove"}
               isDanger={true}
-              onPressAction={() => {
-                removeDEMOCharger();
-              }}
+              // onPressAction={() => {
+              //   removeDEMOCharger();
+              // }}
               half={true}
             />
           </View>
           <View style={{ flex: 0.4 }}></View>
           <View style={{ flex: 2 }}>
             <Button
-              disabled={inputError ? true : false}
+              disabled={!charger?.isAdmin ? true : false}
               text={"Save settings"}
               isSecondary={true}
               half={true}
-              onPressAction={() => updateChargerName()}
+              // onPressAction={() => updateChargerName()}
+              onPressAction={handleSubmit(onSubmit)}
             />
           </View>
         </View>

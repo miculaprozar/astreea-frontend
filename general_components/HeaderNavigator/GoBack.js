@@ -10,7 +10,11 @@ const GoBack = ({ navigation, navProps, route }) => {
         if (navProps && navProps.onBack) {
           navProps.onBack();
         }
-        navigation.goBack();
+        if (route && route.name === "Home") {
+          return;
+        } else {
+          navigation.goBack();
+        }
       }}
     >
       {route && route.name !== "SignIn" && route.name !== "Home" && (

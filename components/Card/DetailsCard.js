@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
-import { Image, Text, View } from 'react-native';
-import { chargeDate, chargeLastUsed } from '../../helpers/formatFunctions';
-import { style } from './DetailsCard.style';
+import { Image, Text, View } from "react-native";
+import { chargeDate, chargeLastUsed } from "../../helpers/formatFunctions";
+import { style } from "./DetailsCard.style";
 
 const DetailsCard = ({ name, price, kwh, time, charger }) => {
   return (
@@ -13,21 +13,21 @@ const DetailsCard = ({ name, price, kwh, time, charger }) => {
         }}
       >
         <View style={style.upperTextContainer}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Image
               style={style.image}
-              source={require('../../assets/greenLighting.png')}
+              source={require("../../assets/greenLighting.png")}
             />
 
             <Text style={[style.locationText]}>{name}</Text>
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Text
               style={{
                 ...style.chargingStatusText,
               }}
             >
-              {charger.appStateName}
+              {charger.state}
             </Text>
             <View
               style={{
@@ -38,7 +38,7 @@ const DetailsCard = ({ name, price, kwh, time, charger }) => {
           </View>
         </View>
         <View style={style.lastUsedWrapper}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View
               style={{
                 ...style.circle,
@@ -60,10 +60,10 @@ const DetailsCard = ({ name, price, kwh, time, charger }) => {
         <View
           style={{
             flex: 1,
-            flexDirection: 'row',
+            flexDirection: "row",
           }}
         >
-          <View style={{ flex: 1, marginTop: 'auto' }}>
+          <View style={{ flex: 1, marginTop: "auto" }}>
             <Text
               style={{
                 ...style.smallText,
@@ -80,7 +80,7 @@ const DetailsCard = ({ name, price, kwh, time, charger }) => {
               {kwh}
             </Text>
           </View>
-          <View style={{ flex: 1, marginTop: 'auto' }}>
+          <View style={{ flex: 1, marginTop: "auto" }}>
             <Text
               style={{
                 ...style.smallText,
@@ -96,7 +96,7 @@ const DetailsCard = ({ name, price, kwh, time, charger }) => {
               {time}
             </Text>
           </View>
-          <View style={{ flex: 1, marginTop: 'auto' }}>
+          <View style={{ flex: 1, marginTop: "auto" }}>
             <Text
               style={{
                 ...style.smallText,

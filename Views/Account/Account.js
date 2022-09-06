@@ -12,6 +12,7 @@ import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavi
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { apiFactory } from "../../api/index.js";
 import SnackBar from "../../general_components/SnackBar";
+import { useGetConnectedChargers } from "../../hooks/useGetConnectedChargers";
 
 import axios from "axios";
 import {
@@ -29,11 +30,13 @@ const Account = (props) => {
 
   const [email, setEmail] = useState("");
 
-  const [razvanConnection, setRazvanConnection] = useState("");
-
   const { navigation, route } = props;
 
   const { SignIn } = routes;
+
+  const [{ data: connectedChargers }] = useGetConnectedChargers();
+
+  console.log("the data from the hook is:", connectedChargers);
 
   const {
     control,

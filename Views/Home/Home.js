@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { ScrollView, View } from "react-native";
 import useWebSocket, { ReadyState } from "react-native-use-websocket";
 import Button from "../../components/Button/Button";
@@ -13,13 +13,19 @@ import Label from "../../components/Input/Label";
 import { getUniqueKey } from "../../helpers/checkers";
 import differenceInMinutes from "date-fns/differenceInMinutes";
 import { apiFactory } from "../../api";
+import { useFocusEffect } from "@react-navigation/native";
 
 import {
   hourMinutesRenderer,
   kwhRenderer,
   priceRenderer,
 } from "../../helpers/formatFunctions";
-
+import {
+  HttpTransportType,
+  HubConnectionBuilder,
+  HubConnectionState,
+  LogLevel,
+} from "@microsoft/signalr";
 const Home = (props) => {
   const { navigation, route } = props;
 
@@ -31,6 +37,7 @@ const Home = (props) => {
   const [getDevices, setGetDevices] = useState(null);
   const [filterChargers, setFilterChargers] = useState(0);
   const [searchfield, setSearchfield] = useState("");
+  const [chargerList, setChargerList] = useState(null);
 
   // WEBSOCKET CONNECTION
   const [socketUrl] = React.useState("ws://164.92.234.83:6003");
@@ -167,41 +174,60 @@ const Home = (props) => {
         .updateChargerData({ isDisabled: 1 }, chargerId, token));
   };
 
-  useEffect(() => {
-    if (chargers && token) {
-      chargers.forEach((charger) => disableTimedOutChargers(charger));
-    }
-  }, [chargers]);
+  // useEffect(() => {
+  //   if (chargers && token) {
+  //     chargers.forEach((charger) => disableTimedOutChargers(charger));
+  //   }
+  // }, [chargers]);
 
   const navigateToAddDevice = () => {
     navigation.navigate(ConnectQR.name);
   };
 
-  const navigateToDeviceAction = (charger) => {
+  const navigateToDeviceAction = (chargerId) => {
     navigation.navigate(DeviceDetails.name, {
-      chargerId: charger.id,
-      isCharging:
-        charger.lastCharge.length > 0 && charger.lastCharge[0].endKwh === null
-          ? true
-          : false,
-      name: charger.name,
-      hourMinutes: hourMinutesRenderer(charger.lastCharge[0]),
-      startStopData: charger.lastCharge[0],
-      price: priceRenderer(charger.lastCharge[0]),
-      serialNumber: charger.serialNumber,
+      chargerId: chargerId,
     });
   };
 
   const filterChargersHandler = (isAdmin, isPrivate, isSearched) => {
-    const isPublic = isAdmin === 0 && filterChargers === 0;
+    const isPublic = isAdmin === false && filterChargers === 0;
     const isAdminFiltered = isAdmin && filterChargers === 1;
     const isPrivateFiltered = isPrivate && filterChargers === 2;
 
     if (filterChargers === 0) {
       return isSearched && isPublic;
-    } else if (filterChargers === 1) return isSearched && isAdminFiltered;
-    else return isSearched && isPrivateFiltered;
+    } else if (filterChargers === 1) {
+      return isSearched && isAdminFiltered;
+    } else return isSearched && isPrivateFiltered;
   };
+
+  const connection = global.connection;
+
+  const GetConnectedCharges = async () => {
+    if (connection.state == HubConnectionState.Connected) {
+      //connection started
+
+      await connection
+        .invoke("GetConnectedCharges", false, null)
+        .then((chargerList) => {
+          console.log("GetConnectedCharges:");
+          setChargerList(chargerList);
+        })
+        .catch((err) => {
+          console.log("THE ERROR IS", err);
+        });
+    }
+  };
+  useFocusEffect(
+    useCallback(() => {
+      GetConnectedCharges();
+    }, [connection])
+  );
+
+  // useEffect(() => {
+  //   GetConnectedCharges();
+  // }, [connection]);
 
   return (
     <Layout diffuseBG={true}>
@@ -238,9 +264,9 @@ const Home = (props) => {
           <View style={{ flex: 2 }}></View>
         </View>
         <ScrollView>
-          {chargers &&
-            chargers.length > 0 &&
-            chargers
+          {chargerList &&
+            chargerList.length > 0 &&
+            chargerList
               .filter((charger) => {
                 const isSearched = charger.name
                   .toLowerCase()
@@ -248,7 +274,8 @@ const Home = (props) => {
 
                 const filterHandler = filterChargersHandler(
                   charger.isAdmin,
-                  charger.isPrivate,
+                  // charger.isPrivate,
+                  undefined,
                   isSearched
                 );
 
@@ -257,16 +284,12 @@ const Home = (props) => {
               .map((item, index) => (
                 <ChargerCard
                   name={item.name}
-                  kwh={kwhRenderer(item.lastCharge[0])}
-                  time={hourMinutesRenderer(item.lastCharge[0])}
-                  price={priceRenderer(
-                    item.lastCharge[0],
-                    item.price,
-                    item.currency
-                  )}
+                  kwh={kwhRenderer(item.lastChargingSession)}
+                  time={hourMinutesRenderer(item.lastChargingSession)}
+                  price={priceRenderer(item.lastChargingSession)}
                   key={getUniqueKey(item)}
                   charger={item}
-                  onClick={() => navigateToDeviceAction(item)}
+                  onClick={() => navigateToDeviceAction(item.chargerId)}
                 />
               ))}
         </ScrollView>
