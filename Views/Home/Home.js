@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import { useFocusEffect } from '@react-navigation/native';
 import { ScrollView, View } from "react-native";
 import useWebSocket, { ReadyState } from "react-native-use-websocket";
 import Button from "../../components/Button/Button";
@@ -13,6 +14,8 @@ import Label from "../../components/Input/Label";
 import { getUniqueKey } from "../../helpers/checkers";
 import differenceInMinutes from "date-fns/differenceInMinutes";
 import { apiFactory } from "../../api";
+import { useAuth, useToken } from 'ad-b2c-react-native';
+
 
 import {
   hourMinutesRenderer,
@@ -21,6 +24,8 @@ import {
 } from "../../helpers/formatFunctions";
 
 const Home = (props) => {
+  const { getTokensAsync, isLoading, error, isAuthentic } = useToken();
+  const { logOutAsync, editProfileAsync, resetPasswordAsync, handleRedirectAsync } = useAuth();
   const { navigation, route } = props;
 
   const { ConnectQR, DeviceDetails } = routes;
@@ -56,6 +61,14 @@ const Home = (props) => {
   socketMessageHistory.current = React.useMemo(
     () => socketMessageHistory.current.concat(lastMessage),
     [lastMessage]
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      getTokensAsync().then((x) => {
+        console.log(x);
+      });
+    }, [])
   );
 
   useEffect(() => {

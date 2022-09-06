@@ -14,6 +14,8 @@ import SignIn from "./Views/SignIn/SignIn";
 import SignUp from "./Views/SignUp/SignUp";
 import Permision from "./Views/Permision/Permision";
 import React, { useEffect, useState } from "react";
+import * as Linking from "expo-linking";
+import { AuthProvider } from 'ad-b2c-react-native';
 
 import {
   JsonHubProtocol,
@@ -48,6 +50,7 @@ import { Provider } from "./provider/Provider";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
+
   let [fontsLoaded] = useFonts({
     Inter_400Regular,
     Inter_500Medium,
@@ -57,152 +60,164 @@ export default function App() {
 
   startSignalRConnection();
 
+  const prefix = Linking.createURL("/");
+  const linking = {
+    prefixes: [prefix],
+  };
+
   return (
     <Provider>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Permissions">
-          <Stack.Screen
-            name={routes.SignIn.name}
-            options={routes.SignIn.navigationOptions}
-          >
-            {(props) =>
-              fontsLoaded ? (
-                <SignIn {...props} extraData={"bla"} />
-              ) : (
-                <Text>Loading...</Text>
-              )
-            }
-          </Stack.Screen>
-          <Stack.Screen
-            name={routes.ForgotPassword.name}
-            options={routes.ForgotPassword.navigationOptions}
-          >
-            {(props) =>
-              fontsLoaded ? (
-                <ForgotPassword {...props} extraData={"bla"} />
-              ) : (
-                <Text>Loading...</Text>
-              )
-            }
-          </Stack.Screen>
-          <Stack.Screen
-            name={routes.RessetPassword.name}
-            options={routes.RessetPassword.navigationOptions}
-          >
-            {(props) =>
-              fontsLoaded ? (
-                <RessetPassword {...props} extraData={"bla"} />
-              ) : (
-                <Text>Loading...</Text>
-              )
-            }
-          </Stack.Screen>
-          <Stack.Screen
-            name={routes.SignUp.name}
-            options={routes.SignUp.navigationOptions}
-          >
-            {(props) =>
-              fontsLoaded ? (
-                <SignUp {...props} extraData={"bla"} />
-              ) : (
-                <Text>Loading...</Text>
-              )
-            }
-          </Stack.Screen>
-          <Stack.Screen
-            name={routes.Home.name}
-            options={routes.Home.navigationOptions}
-          >
-            {(props) =>
-              fontsLoaded ? (
-                <Home {...props} extraData={"bla"} />
-              ) : (
-                <Text>Loading...</Text>
-              )
-            }
-          </Stack.Screen>
-          <Stack.Screen
-            name={routes.Account.name}
-            options={routes.Account.navigationOptions}
-          >
-            {(props) =>
-              fontsLoaded ? (
-                <Account {...props} extraData={"bla"} />
-              ) : (
-                <Text>Loading...</Text>
-              )
-            }
-          </Stack.Screen>
-          <Stack.Screen
-            name={routes.ConnectQR.name}
-            options={routes.ConnectQR.navigationOptions}
-          >
-            {(props) =>
-              fontsLoaded ? (
-                <ConnectQR {...props} extraData={"bla"} />
-              ) : (
-                <Text>Loading...</Text>
-              )
-            }
-          </Stack.Screen>
-          <Stack.Screen
-            name={routes.ConnectDevice.name}
-            options={routes.ConnectDevice.navigationOptions}
-          >
-            {(props) =>
-              fontsLoaded ? (
-                <ConnectDevice {...props} extraData={"bla"} />
-              ) : (
-                <Text>Loading...</Text>
-              )
-            }
-          </Stack.Screen>
-          <Stack.Screen
-            name={routes.SetupDevice.name}
-            options={routes.SetupDevice.navigationOptions}
-          >
-            {(props) =>
-              fontsLoaded ? (
-                <SetupDevice {...props} extraData={"bla"} />
-              ) : (
-                <Text>Loading...</Text>
-              )
-            }
-          </Stack.Screen>
-          <Stack.Screen
-            name={routes.DeviceDetails.name}
-            options={routes.DeviceDetails.navigationOptions}
-          >
-            {(props) =>
-              fontsLoaded ? (
-                <DeviceDetails {...props} extraData={"bla"} />
-              ) : (
-                <Text>Loading...</Text>
-              )
-            }
-          </Stack.Screen>
-          <Stack.Screen
-            name={routes.ChargerSettings.name}
-            options={routes.ChargerSettings.navigationOptions}
-          >
-            {(props) =>
-              fontsLoaded ? (
-                <ChargerSettings {...props} extraData={"bla"} />
-              ) : (
-                <Text>Loading...</Text>
-              )
-            }
-          </Stack.Screen>
-          <Stack.Screen
-            name={routes.Permision.name}
-            options={routes.Permision.navigationOptions}
-          >
-            {(props) =>
-              fontsLoaded ? <Permision {...props} /> : <Text>Loading...</Text>
-            }
-          </Stack.Screen>
-        </Stack.Navigator>
+      <NavigationContainer linking={linking} >
+        <AuthProvider
+          tenant="testdigitalgarden.onmicrosoft.com"
+          appId="68c8731f-e491-4151-a9d8-10e8dd2ecdba"
+          loginPolicy="B2C_1_TestDigitalGarden"
+          redirectURI={Linking.createURL("redirect")} //redirect uri
+        >
+          <Stack.Navigator initialRouteName="Permissions">
+            <Stack.Screen
+              name={routes.SignIn.name}
+              options={routes.SignIn.navigationOptions}
+            >
+              {(props) =>
+                fontsLoaded ? (
+                  <SignIn {...props} extraData={"bla"} />
+                ) : (
+                  <Text>Loading...</Text>
+                )
+              }
+            </Stack.Screen>
+            <Stack.Screen
+              name={routes.ForgotPassword.name}
+              options={routes.ForgotPassword.navigationOptions}
+            >
+              {(props) =>
+                fontsLoaded ? (
+                  <ForgotPassword {...props} extraData={"bla"} />
+                ) : (
+                  <Text>Loading...</Text>
+                )
+              }
+            </Stack.Screen>
+            <Stack.Screen
+              name={routes.RessetPassword.name}
+              options={routes.RessetPassword.navigationOptions}
+            >
+              {(props) =>
+                fontsLoaded ? (
+                  <RessetPassword {...props} extraData={"bla"} />
+                ) : (
+                  <Text>Loading...</Text>
+                )
+              }
+            </Stack.Screen>
+            <Stack.Screen
+              name={routes.SignUp.name}
+              options={routes.SignUp.navigationOptions}
+            >
+              {(props) =>
+                fontsLoaded ? (
+                  <SignUp {...props} extraData={"bla"} />
+                ) : (
+                  <Text>Loading...</Text>
+                )
+              }
+            </Stack.Screen>
+            <Stack.Screen
+              name={routes.Home.name}
+              options={routes.Home.navigationOptions}
+            >
+              {(props) =>
+                fontsLoaded ? (
+                  <Home {...props} extraData={"bla"} />
+                ) : (
+                  <Text>Loading...</Text>
+                )
+              }
+            </Stack.Screen>
+            <Stack.Screen
+              name={routes.Account.name}
+              options={routes.Account.navigationOptions}
+            >
+              {(props) =>
+                fontsLoaded ? (
+                  <Account {...props} extraData={"bla"} />
+                ) : (
+                  <Text>Loading...</Text>
+                )
+              }
+            </Stack.Screen>
+            <Stack.Screen
+              name={routes.ConnectQR.name}
+              options={routes.ConnectQR.navigationOptions}
+            >
+              {(props) =>
+                fontsLoaded ? (
+                  <ConnectQR {...props} extraData={"bla"} />
+                ) : (
+                  <Text>Loading...</Text>
+                )
+              }
+            </Stack.Screen>
+            <Stack.Screen
+              name={routes.ConnectDevice.name}
+              options={routes.ConnectDevice.navigationOptions}
+            >
+              {(props) =>
+                fontsLoaded ? (
+                  <ConnectDevice {...props} extraData={"bla"} />
+                ) : (
+                  <Text>Loading...</Text>
+                )
+              }
+            </Stack.Screen>
+            <Stack.Screen
+              name={routes.SetupDevice.name}
+              options={routes.SetupDevice.navigationOptions}
+            >
+              {(props) =>
+                fontsLoaded ? (
+                  <SetupDevice {...props} extraData={"bla"} />
+                ) : (
+                  <Text>Loading...</Text>
+                )
+              }
+            </Stack.Screen>
+            <Stack.Screen
+              name={routes.DeviceDetails.name}
+              options={routes.DeviceDetails.navigationOptions}
+            >
+              {(props) =>
+                fontsLoaded ? (
+                  <DeviceDetails {...props} extraData={"bla"} />
+                ) : (
+                  <Text>Loading...</Text>
+                )
+              }
+            </Stack.Screen>
+            <Stack.Screen
+              name={routes.ChargerSettings.name}
+              options={routes.ChargerSettings.navigationOptions}
+            >
+              {(props) =>
+                fontsLoaded ? (
+                  <ChargerSettings {...props} extraData={"bla"} />
+                ) : (
+                  <Text>Loading...</Text>
+                )
+              }
+            </Stack.Screen>
+            <Stack.Screen
+              name={routes.Permision.name}
+              options={routes.Permision.navigationOptions}
+            >
+              {(props) =>
+                fontsLoaded ? <Permision {...props} /> : <Text>Loading...</Text>
+              }
+            </Stack.Screen>
+          </Stack.Navigator>
+        </AuthProvider>
       </NavigationContainer>
-    </Provider>
+    </Provider >
   );
 }
