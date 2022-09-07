@@ -14,6 +14,10 @@ export function useGetConnectedChargers() {
 
   function registerListener() {
     //register for events
+
+    connection.on("ChargingHistoryChanged", (charger) => {
+      // console.log(util.inspect(charger, false, null, true))
+    });
     connection.on("ChargerDetailsChanged", (charger) => {
       // const timeStamp2 = getUnixTime(Date.now());
       // if (timeStamp2 - timeStamp > 5) {
@@ -27,7 +31,7 @@ export function useGetConnectedChargers() {
       // }
       // console.log("Timestamp1", timeStamp);
       // console.log("TImestamp222222", timeStamp2);
-      handleChangeCharger(charger);
+      // handleChangeCharger(charger);
     });
   }
   const handleChangeCharger = useCallback((changedCharger) => {

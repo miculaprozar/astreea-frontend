@@ -81,10 +81,17 @@ const DeviceDetails = (props) => {
     }
   };
 
-  const getChargingHistory = async () => {
+  const getChargingHistory = async (requestStartDate, requestEndDate) => {
     if (connection.state == HubConnectionState.Connected) {
       await connection
-        .invoke("GetChargingHistory", chargerId, null, null)
+        .invoke(
+          "GetChargingHistory",
+          chargerId,
+          0,
+          1,
+          requestStartDate,
+          requestEndDate
+        )
         .then((chargingHistory) => {
           setChargingHistory(chargingHistory);
         });
@@ -92,7 +99,22 @@ const DeviceDetails = (props) => {
   };
 
   useEffect(() => {
-    getChargingHistory();
+    // console.log("The charger is:", charger);
+    // if (date && charger) {
+    //   const requestStartDate = moment(date).format("YYYY-MM-DD");
+    //   const requestEndDate = moment(getEndMonthDate(date)).format("YYYY-MM-DD");
+    //   getChargerTotalData(charger.id, { requestStartDate, requestEndDate });
+    // }
+  }, [date, charger]);
+
+  useEffect(() => {
+    if (date) {
+      const requestStartDate = moment(date).format("YYYY-MM-DD");
+      const requestEndDate = moment(getEndMonthDate(date)).format("YYYY-MM-DD");
+      // getChargerTotalData(charger.id, { requestStartDate, requestEndDate });
+      getChargingHistory(requestStartDate, requestEndDate);
+    }
+    // getChargingHistory();
   }, [connection]);
 
   useFocusEffect(
@@ -149,15 +171,6 @@ const DeviceDetails = (props) => {
     }, [])
   );
 
-  useEffect(() => {
-    // console.log("The charger is:", charger);
-    // if (date && charger) {
-    //   const requestStartDate = moment(date).format("YYYY-MM-DD");
-    //   const requestEndDate = moment(getEndMonthDate(date)).format("YYYY-MM-DD");
-    //   getChargerTotalData(charger.id, { requestStartDate, requestEndDate });
-    // }
-  }, [date, charger]);
-
   // const getChargerInfo = async () => {
   //   const token = await AsyncStorage.getItem("token");
   //   const chargerData = await apiFactory()
@@ -167,10 +180,10 @@ const DeviceDetails = (props) => {
   //   getChargerTotalData(chargerData.id);
   // };
 
-  // const onSubmitDate = (date) => {
-  //   setDate(date);
-  //   setIsCalendarOpen(!isCalendarOpen);
-  // };
+  const onSubmitDate = (date) => {
+    setDate(date);
+    setIsCalendarOpen(!isCalendarOpen);
+  };
 
   // const changeLoader = (boolean) => {
   //   if (!boolean) {
@@ -208,12 +221,11 @@ const DeviceDetails = (props) => {
                     text={getFullMonthName(date)}
                     onPressAction={() => setIsCalendarOpen(true)}
                   />
-                  {/* <Table
-                    chargerId={charger.id}
+                  <Table
+                    chargerId={chargerId}
                     startDate={date}
                     endDate={getEndMonthDate(date)}
-                    price={charger.price}
-                  /> */}
+                  />
                 </View>
               )}
             </Layout.Body>
@@ -263,7 +275,7 @@ const DeviceDetails = (props) => {
               <Calendar
                 isOpen={isCalendarOpen}
                 selected={date}
-                // handleSubmitDate={onSubmitDate}
+                handleSubmitDate={onSubmitDate}
               ></Calendar>
             </Layout.Footer>
           </Layout>
