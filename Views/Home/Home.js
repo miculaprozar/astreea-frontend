@@ -28,7 +28,7 @@ const Home = (props) => {
   const { logOutAsync, editProfileAsync, resetPasswordAsync, handleRedirectAsync } = useAuth();
   const { navigation, route } = props;
 
-  const { ConnectQR, DeviceDetails } = routes;
+  const { ConnectQR, DeviceDetails, Home } = routes;
 
   const [token, setToken] = useState(null);
   const [canMessage, setCanMessage] = useState(true);
@@ -62,14 +62,32 @@ const Home = (props) => {
     () => socketMessageHistory.current.concat(lastMessage),
     [lastMessage]
   );
+  const [newUrl, setNewUrl] = useState("");
 
   useFocusEffect(
     useCallback(() => {
       getTokensAsync().then((x) => {
-        console.log(x);
+        if (x.error) {
+          console.log(x.error);
+        }
+        if (x.url) {
+          setNewUrl(x.url);
+        }
       });
     }, [])
   );
+
+  const getSearchParamFromURL = (url, param) => {
+    console.log("AICIIII: ", url)
+    const include = url.includes(param)
+
+    if (!include) return null
+
+    const params = url.split(/([?,=])/)
+    const index = params.indexOf(param)
+    const value = params[index + 2]
+    return value
+  }
 
   useEffect(() => {
     if (lastMessage?.data) {
@@ -78,7 +96,28 @@ const Home = (props) => {
         setChargers(messageData);
       }
     }
-  }, [lastMessage]);
+    if (newUrl) {
+      if (newUrl.includes("AADB2C90118")) {
+
+      }
+
+      if (Platform.OS === "android") {
+
+        /* const searchParams = url.searchParams; */
+        const code = getSearchParamFromURL(newUrl, 'code');
+
+        if (code) {
+          console.log("hello")
+          navigation.navigate(Home.name, {
+            code: code,
+            state: getSearchParamFromURL(newUrl, 'state') || "",
+            error: "",
+            error_description: "",
+          });
+        }
+      }
+    }
+  }, [lastMessage, newUrl]);
 
   // // Use in case you need to show connectionStatus in the UI
   // const connectionStatus = {

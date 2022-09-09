@@ -64,15 +64,16 @@ export default function App() {
   const linking = {
     prefixes: [prefix],
   };
+  console.log(prefix)
 
   return (
     <Provider>
-      <NavigationContainer linking={linking} >
+      <NavigationContainer /* linking={linking} */ >
         <AuthProvider
-          tenant="testdigitalgarden.onmicrosoft.com"
+          tenant="testdigitalgarden"
           appId="68c8731f-e491-4151-a9d8-10e8dd2ecdba"
           loginPolicy="B2C_1_TestDigitalGarden"
-          redirectURI={Linking.createURL("redirect")} //redirect uri
+          redirectURI="exp://127.0.0.1:8081" //redirect uri
         >
           <Stack.Navigator initialRouteName="Permissions">
             <Stack.Screen
