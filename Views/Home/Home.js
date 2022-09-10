@@ -63,22 +63,25 @@ const Home = (props) => {
     [lastMessage]
   );
   const [newUrl, setNewUrl] = useState("");
+  const [tokenReceived, setTokenReceived] = useState("");
 
   useFocusEffect(
     useCallback(() => {
       getTokensAsync().then((x) => {
+        console.log(x);
         if (x.error) {
           console.log(x.error);
         }
-        if (x.url) {
+        console.log("=======")
+        setTokenReceived(x);
+        if (x) {
           setNewUrl(x.url);
         }
       });
-    }, [])
+    }, [isAuthentic])
   );
 
   const getSearchParamFromURL = (url, param) => {
-    console.log("AICIIII: ", url)
     const include = url.includes(param)
 
     if (!include) return null
@@ -90,20 +93,19 @@ const Home = (props) => {
   }
 
   useEffect(() => {
+    /* console.log("yoloooooo: ", tokenReceived) */
     if (lastMessage?.data) {
       const messageData = JSON.parse(lastMessage.data.toString());
       if (Array.isArray(messageData)) {
         setChargers(messageData);
       }
     }
-    if (newUrl) {
+    /* if (newUrl) {
       if (newUrl.includes("AADB2C90118")) {
 
       }
 
       if (Platform.OS === "android") {
-
-        /* const searchParams = url.searchParams; */
         const code = getSearchParamFromURL(newUrl, 'code');
 
         if (code) {
@@ -116,8 +118,8 @@ const Home = (props) => {
           });
         }
       }
-    }
-  }, [lastMessage, newUrl]);
+    } */
+  }, [lastMessage]);
 
   // // Use in case you need to show connectionStatus in the UI
   // const connectionStatus = {
