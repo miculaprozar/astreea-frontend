@@ -1,130 +1,58 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useEffect, useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import differenceInMinutes from "date-fns/differenceInMinutes";
+import React, { useCallback, useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
-import useWebSocket, { ReadyState } from "react-native-use-websocket";
+import { apiFactory } from "../../api";
 import Button from "../../components/Button/Button";
 import ChargerCard from "../../components/Card/ChargerCard";
+import Label from "../../components/Input/Label";
 import PillButton from "../../components/PillButton/PillButton";
 import SearchInput from "../../components/SearchInput/SearchInput";
 import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
 import Layout from "../../general_components/Layout";
-import routes from "../../routes";
-import Label from "../../components/Input/Label";
 import { getUniqueKey } from "../../helpers/checkers";
-import differenceInMinutes from "date-fns/differenceInMinutes";
-import { apiFactory } from "../../api";
-import { useFocusEffect } from "@react-navigation/native";
+import routes from "../../routes";
 
+import { HubConnectionState } from "@microsoft/signalr";
 import {
   hourMinutesRenderer,
   kwhRenderer,
   priceRenderer,
 } from "../../helpers/formatFunctions";
-import {
-  HttpTransportType,
-  HubConnectionBuilder,
-  HubConnectionState,
-  LogLevel,
-} from "@microsoft/signalr";
 const Home = (props) => {
   const { navigation, route } = props;
 
   const { ConnectQR, DeviceDetails } = routes;
 
+  const connection = global.connection;
+
   const [token, setToken] = useState(null);
-  const [canMessage, setCanMessage] = useState(true);
-  const [chargers, setChargers] = useState(null);
-  const [getDevices, setGetDevices] = useState(null);
   const [filterChargers, setFilterChargers] = useState(0);
   const [searchfield, setSearchfield] = useState("");
   const [chargerList, setChargerList] = useState(null);
 
-  // WEBSOCKET CONNECTION
-  const [socketUrl] = React.useState("ws://164.92.234.83:6003");
-  const socketMessageHistory = React.useRef([]);
-  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
-    retryOnError: true,
-    shouldReconnect: () => {
-      return true;
-    },
-    reconnectInterval: 10000,
-    reconnectAttempts: Infinity,
-    onClose: () => {
-      console.log("Socket closed");
-    },
-    onError: (error) => {
-      if (!error?.message?.includes("Failed to connect"))
-        console.log("Socket error", error);
-    },
-    onOpen: () => {
-      console.log("Socket opened");
-    },
-  });
-  socketMessageHistory.current = React.useMemo(
-    () => socketMessageHistory.current.concat(lastMessage),
-    [lastMessage]
-  );
-
-  useEffect(() => {
-    if (lastMessage?.data) {
-      const messageData = JSON.parse(lastMessage.data.toString());
-      if (Array.isArray(messageData)) {
-        setChargers(messageData);
-      }
-    }
-  }, [lastMessage]);
-
-  // // Use in case you need to show connectionStatus in the UI
-  // const connectionStatus = {
-  //   [ReadyState.CONNECTING]: 'Connecting',
-  //   [ReadyState.OPEN]: 'Open',
-  //   [ReadyState.CLOSING]: 'Closing',
-  //   [ReadyState.CLOSED]: 'Closed',
-  //   [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
-  // }[readyState];
-  // /////////////////////////////////////////////////////////////////////////
-
-  const getDevicesHandler = () => {
-    if (readyState === ReadyState.OPEN && token && canMessage) {
-      setGetDevices(
-        setInterval(() => {
-          if (readyState === ReadyState.OPEN && token) {
-            sendMessage(
-              JSON.stringify({
-                method: "GetKnownDevices",
-                token: token,
-                user: "Tudor",
-              })
-            );
-          } else {
-            clearInterval(getDevices);
-          }
-        }, 1000)
-      );
-    } else if (readyState === ReadyState.CONNECTING && token && canMessage) {
-      console.log("Connecting Socket...");
-    } else if (readyState === ReadyState.CLOSING && token && canMessage) {
-      console.log("Closing Socket...");
-      clearInterval(getDevices);
-    } else if (readyState === ReadyState.CLOSED && token && canMessage) {
-      console.log("Closed Socket...");
-      clearInterval(getDevices);
-    } else clearInterval(getDevices);
+  const navigateToAddDevice = () => {
+    navigation.navigate(ConnectQR.name);
   };
 
-  useEffect(() => {
-    getDevicesHandler();
-    clearInterval(getDevices);
-  }, [readyState, canMessage]);
-
-  const getToken = async () => {
-    const token = await AsyncStorage.getItem("token");
-    token && setToken(token);
+  const navigateToDeviceAction = (chargerId) => {
+    navigation.navigate(DeviceDetails.name, {
+      chargerId: chargerId,
+    });
   };
 
-  useEffect(() => {
-    getToken();
-  }, []);
+  const filterChargersHandler = (isAdmin, isPrivate, isSearched) => {
+    const isPublic = isAdmin === false && filterChargers === 0;
+    const isAdminFiltered = isAdmin && filterChargers === 1;
+    const isPrivateFiltered = isPrivate && filterChargers === 2;
+
+    if (filterChargers === 0) {
+      return isSearched && isPublic;
+    } else if (filterChargers === 1) {
+      return isSearched && isAdminFiltered;
+    } else return isSearched && isPrivateFiltered;
+  };
 
   const disableChargerChecker = (
     lastCharge,
@@ -153,6 +81,25 @@ const Home = (props) => {
     } else return false;
   };
 
+  const getToken = async () => {
+    const token = await AsyncStorage.getItem("token");
+    token && setToken(token);
+  };
+
+  const GetConnectedCharges = async () => {
+    if (connection.state == HubConnectionState.Connected) {
+      //connection started
+      await connection
+        .invoke("GetConnectedCharges", false, null)
+        .then((chargerList) => {
+          setChargerList(chargerList);
+        })
+        .catch((err) => {
+          console.log("THE ERROR IS", err);
+        });
+    }
+  };
+
   const disableTimedOutChargers = async (charger) => {
     const {
       lastCharge,
@@ -174,51 +121,10 @@ const Home = (props) => {
         .updateChargerData({ isDisabled: 1 }, chargerId, token));
   };
 
-  // useEffect(() => {
-  //   if (chargers && token) {
-  //     chargers.forEach((charger) => disableTimedOutChargers(charger));
-  //   }
-  // }, [chargers]);
+  useEffect(() => {
+    getToken();
+  }, []);
 
-  const navigateToAddDevice = () => {
-    navigation.navigate(ConnectQR.name);
-  };
-
-  const navigateToDeviceAction = (chargerId) => {
-    navigation.navigate(DeviceDetails.name, {
-      chargerId: chargerId,
-    });
-  };
-
-  const filterChargersHandler = (isAdmin, isPrivate, isSearched) => {
-    const isPublic = isAdmin === false && filterChargers === 0;
-    const isAdminFiltered = isAdmin && filterChargers === 1;
-    const isPrivateFiltered = isPrivate && filterChargers === 2;
-
-    if (filterChargers === 0) {
-      return isSearched && isPublic;
-    } else if (filterChargers === 1) {
-      return isSearched && isAdminFiltered;
-    } else return isSearched && isPrivateFiltered;
-  };
-
-  const connection = global.connection;
-
-  const GetConnectedCharges = async () => {
-    if (connection.state == HubConnectionState.Connected) {
-      //connection started
-
-      await connection
-        .invoke("GetConnectedCharges", false, null)
-        .then((chargerList) => {
-          console.log("GetConnectedCharges:");
-          setChargerList(chargerList);
-        })
-        .catch((err) => {
-          console.log("THE ERROR IS", err);
-        });
-    }
-  };
   useFocusEffect(
     useCallback(() => {
       GetConnectedCharges();
@@ -226,8 +132,10 @@ const Home = (props) => {
   );
 
   // useEffect(() => {
-  //   GetConnectedCharges();
-  // }, [connection]);
+  //   if (chargers && token) {
+  //     chargers.forEach((charger) => disableTimedOutChargers(charger));
+  //   }
+  // }, [chargers]);
 
   return (
     <Layout diffuseBG={true}>

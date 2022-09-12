@@ -1,21 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { Text, View } from "react-native";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { HubConnectionState } from "@microsoft/signalr";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { View } from "react-native";
+import { apiFactory } from "../../api";
+import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import Label from "../../components/Input/Label";
-import PillButton from "../../components/PillButton/PillButton";
-import ChargerButton from "../../components/ChargerButton/ChargerButton";
-import Button from "../../components/Button/Button";
-import Card from "../../components/Card/Card";
 import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
-import { apiFactory } from "../../api";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { style } from "./ChargerSettings.style";
 import Layout from "../../general_components/Layout";
 import SnackBar from "../../general_components/SnackBar";
-import { HubConnectionState } from "@microsoft/signalr";
-import { useForm } from "react-hook-form";
+import { style } from "./ChargerSettings.style";
 import validationSchema from "./validationSchema";
-import { yupResolver } from "@hookform/resolvers/yup";
 
 const ChargerSettings = ({ navigation, route }) => {
   const {
@@ -46,10 +42,6 @@ const ChargerSettings = ({ navigation, route }) => {
     setValue("currency", currency);
   };
 
-  useEffect(() => {
-    console.log("THE ERRORS ARE :", errors);
-  }, [errors]);
-
   const getChargerInfo = async () => {
     if (connection.state == HubConnectionState.Connected) {
       await connection
@@ -64,11 +56,7 @@ const ChargerSettings = ({ navigation, route }) => {
     }
   };
 
-  // useEffect(() => {
-  //   console.log("THE CHARGER DATA IS:", charger);
-  // }, [charger]);
-
-  const updateChargerName = async (data) => {
+  const updateChargerData = async (data) => {
     const chargerDetails = {
       name: data.name,
       chargerId: chargerId,
@@ -89,17 +77,18 @@ const ChargerSettings = ({ navigation, route }) => {
     }
   };
 
-  useEffect(() => {
-    getChargerInfo();
-  }, [connection]);
-
   const removeDEMOCharger = async () => {
     const token = await getToken();
     await apiFactory().data.account().removeExistingChargerFromUser(token);
     navigation.navigate("Home");
   };
 
-  const onSubmit = (data) => updateChargerName(data);
+  useEffect(() => {
+    getChargerInfo();
+  }, [connection]);
+
+  const onSubmit = (data) => updateChargerData(data);
+
   return (
     <Layout scrollView={true}>
       <Layout.Header>
@@ -190,7 +179,6 @@ const ChargerSettings = ({ navigation, route }) => {
               text={"Save settings"}
               isSecondary={true}
               half={true}
-              // onPressAction={() => updateChargerName()}
               onPressAction={handleSubmit(onSubmit)}
             />
           </View>
