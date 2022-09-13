@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import {
   Text,
@@ -18,6 +18,8 @@ import {
   getLightingImageByStatus,
 } from "./getCardColorsByStatus";
 
+import _ from "lodash";
+
 const ChargerCard = ({
   name,
   price,
@@ -30,15 +32,44 @@ const ChargerCard = ({
   const [timer, setStartTimer] = useTime();
   const chargingState = useRef(null);
 
-  useEffect(() => {
-    if (
-      charger.isInCharge &&
-      (chargingState.current === null || chargingState.current === false)
-    ) {
-      setStartTimer(new Date(charger.lastCharge[0].startDate));
-      chargingState.current = true;
+  const [chargerState, setChargerState] = useState(charger);
+
+  const connection = global.connection;
+  const cert = global.cert;
+
+  connection.on("ChargerDetailsChanged", (changedCharger) => {
+    // console.log("changed Chargers Are :", changedCharger);
+
+    if (changedCharger.chargerId === charger.chargerId) {
+      _.debounce(() => {
+        setChargerState(changedCharger);
+      }, 50);
     }
+  });
+
+  useEffect(() => {
+    if (chargerState.chargerId == 2) {
+      console.log(
+        "THe chargerStateIS",
+        chargerState?.wiFiStrength,
+        chargerState.chargerId
+      );
+    }
+  }, [chargerState]);
+
+  useEffect(() => {
+    setChargerState(charger);
   }, [charger]);
+
+  // useEffect(() => {
+  //   if (
+  //     charger.isInCharge &&
+  //     (chargingState.current === null || chargingState.current === false)
+  //   ) {
+  //     setStartTimer(new Date(charger.lastCharge[0].startDate));
+  //     chargingState.current = true;
+  //   }
+  // }, [charger]);
 
   return (
     <>
@@ -71,7 +102,8 @@ const ChargerCard = ({
                   },
                 ]}
               >
-                {name}
+                {chargerState ? chargerState.wiFiStrength : "--"}
+                {/* {chargerState.name + "Tudor"} */}
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
