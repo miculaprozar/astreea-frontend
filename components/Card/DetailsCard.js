@@ -16,14 +16,6 @@ const DetailsCard = ({ price, kwh, time, charger }) => {
   });
 
   useEffect(() => {
-    console.log(
-      "The carger state is:",
-      chargerState.wiFiStrength,
-      charger.chargerId
-    );
-  }, [chargerState]);
-
-  useEffect(() => {
     setChargerState(charger);
   }, [charger]);
 
