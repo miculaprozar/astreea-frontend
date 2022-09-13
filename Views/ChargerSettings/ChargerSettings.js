@@ -19,6 +19,7 @@ const ChargerSettings = ({ navigation, route }) => {
   } = route;
 
   const connection = global.connection;
+  const cert = global.cert;
 
   const [charger, setCharger] = useState(null);
 
@@ -67,7 +68,7 @@ const ChargerSettings = ({ navigation, route }) => {
 
     try {
       await connection
-        .invoke("UpdateChargerDetails", chargerDetails)
+        .invoke("UpdateChargerDetails", chargerDetails, cert)
         .then(() => {
           console.log("UpdateChargerDetails performed");
         });

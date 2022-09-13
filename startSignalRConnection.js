@@ -4,6 +4,7 @@ import {
   HubConnectionState,
   LogLevel,
 } from "@microsoft/signalr";
+import axios from "axios";
 
 const startSignalRConnection = () => {
   const connection = new HubConnectionBuilder()
@@ -14,6 +15,13 @@ const startSignalRConnection = () => {
       transport: HttpTransportType.WebSockets,
     })
     .build();
+
+  var certSerialNumber = "CERTSN143212FEWFWIUTHRIH8757678JOIJOOIH987";
+  var certUrl = `https://csmsdevstorage.blob.core.windows.net/clientcertificates/${certSerialNumber}`;
+
+  axios.get(certUrl).then((response) => {
+    global.cert = response.data;
+  });
 
   global.connection = connection;
 

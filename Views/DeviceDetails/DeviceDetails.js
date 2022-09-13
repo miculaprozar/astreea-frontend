@@ -43,6 +43,7 @@ const DeviceDetails = (props) => {
   } = routes;
 
   const connection = global.connection;
+  const cert = global.cert;
 
   const [charger, setCharger] = useState(null);
   const [chargingHistory, setChargingHistory] = useState(null);
@@ -90,13 +91,13 @@ const DeviceDetails = (props) => {
       setTriggerRefresh(true);
       if (charger && chargerIsCharging(charger)) {
         if (connection.state == HubConnectionState.Connected) {
-          await connection.invoke("StopCharging", chargerId).then(() => {
+          await connection.invoke("StopCharging", chargerId, cert).then(() => {
             console.log("StopCharging performed");
           });
         }
       } else {
         if (connection.state == HubConnectionState.Connected) {
-          await connection.invoke("StartCharging", chargerId).then(() => {
+          await connection.invoke("StartCharging", chargerId, cert).then(() => {
             console.log("StartCharging performed");
           });
         }
