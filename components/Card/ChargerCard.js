@@ -21,7 +21,6 @@ import {
 import _ from "lodash";
 
 const ChargerCard = ({
-  name,
   price,
   kwh,
   time,
@@ -35,27 +34,12 @@ const ChargerCard = ({
   const [chargerState, setChargerState] = useState(charger);
 
   const connection = global.connection;
-  const cert = global.cert;
 
   connection.on("ChargerDetailsChanged", (changedCharger) => {
-    // console.log("changed Chargers Are :", changedCharger);
-
     if (changedCharger.chargerId === charger.chargerId) {
-      _.debounce(() => {
-        setChargerState(changedCharger);
-      }, 50);
+      setChargerState(changedCharger);
     }
   });
-
-  useEffect(() => {
-    if (chargerState.chargerId == 2) {
-      console.log(
-        "THe chargerStateIS",
-        chargerState?.wiFiStrength,
-        chargerState.chargerId
-      );
-    }
-  }, [chargerState]);
 
   useEffect(() => {
     setChargerState(charger);
@@ -77,49 +61,48 @@ const ChargerCard = ({
         <View
           style={{
             ...charging.wrapper,
-            backgroundColor: getBGColorByStatus(charger.state),
+            backgroundColor: getBGColorByStatus(chargerState.state),
             ...(isDetails && {
               backgroundColor: "rgba(255,255,255,0.30)",
               borderWidth: 1,
               borderColor: "white",
             }),
-            ...(charger.isAdmin &&
-              charger.state === "Disconnected/Error" && { height: 180 }),
+            ...(chargerState.isAdmin &&
+              chargerState.state === "Disconnected/Error" && { height: 180 }),
           }}
         >
           <View style={charging.upperTextContainer}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Image
                 style={charging.image}
-                source={getLightingImageByStatus(charger.state)}
+                source={getLightingImageByStatus(chargerState.state)}
               />
 
               <Text
                 style={[
                   charging.locationText,
                   {
-                    color: headerTextColor(charger, isDetails),
+                    color: headerTextColor(chargerState, isDetails),
                   },
                 ]}
               >
-                {chargerState ? chargerState.wiFiStrength : "--"}
-                {/* {chargerState.name + "Tudor"} */}
+                {chargerState.name}
               </Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text
                 style={{
                   ...charging.chargingStatusText,
-                  color: headerTextColor(charger, isDetails),
+                  color: headerTextColor(chargerState, isDetails),
                 }}
               >
-                {charger.state}
+                {chargerState.state}
               </Text>
               <View
                 style={{
                   ...charging.circle,
                   marginLeft: 10,
-                  backgroundColor: circleColor(charger, 1),
+                  backgroundColor: circleColor(chargerState, 1),
                 }}
               />
             </View>
@@ -130,29 +113,31 @@ const ChargerCard = ({
                 style={{
                   ...charging.circle,
                   marginRight: 10,
-                  backgroundColor: circleColor(charger, 0),
+                  backgroundColor: circleColor(chargerState, 0),
                 }}
               />
 
               <Text
                 style={[
                   charging.locationText,
-                  { color: getTextColorByStatus(charger.state, isDetails) },
+                  {
+                    color: getTextColorByStatus(chargerState.state, isDetails),
+                  },
                   { fontSize: 12 },
                 ]}
               >
-                {chargeLastUsed(charger)}
+                {chargeLastUsed(chargerState)}
               </Text>
             </View>
 
             <Text
               style={{
                 ...charging.chargingStatusText,
-                color: getTextColorByStatus(charger.state, isDetails),
+                color: getTextColorByStatus(chargerState.state, isDetails),
                 fontSize: 10,
               }}
             >
-              {chargeDate(charger)}
+              {chargeDate(chargerState)}
 
               {/* {"chargedatefct"} */}
             </Text>
@@ -176,7 +161,7 @@ const ChargerCard = ({
               <Text
                 style={{
                   ...charging.chargingValuesText,
-                  color: getTextColorByStatus(charger.state, isDetails),
+                  color: getTextColorByStatus(chargerState.state, isDetails),
                 }}
               >
                 {kwh}
@@ -197,7 +182,7 @@ const ChargerCard = ({
                   color: getTextColorByStatus(charger.state, isDetails),
                 }}
               >
-                {charger.isInCharge ? timer : time}
+                {chargerState.isInCharge ? timer : time}
               </Text>
             </View>
             <View style={{ flex: 1, marginTop: "auto" }}>
@@ -212,14 +197,15 @@ const ChargerCard = ({
               <Text
                 style={{
                   ...charging.chargingValuesText,
-                  color: getTextColorByStatus(charger.state, isDetails),
+                  color: getTextColorByStatus(chargerState.state, isDetails),
                 }}
               >
                 {price}
               </Text>
             </View>
           </View>
-          {charger.isAdmin && charger.state === "Disconnected/Error" ? (
+          {chargerState.isAdmin &&
+          chargerState.state === "Disconnected/Error" ? (
             <Pressable
               style={charging.pairButtonWrapper}
               onPress={() => console.log("Pressed")}

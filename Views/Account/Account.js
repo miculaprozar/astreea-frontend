@@ -34,10 +34,6 @@ const Account = (props) => {
 
   const { SignIn } = routes;
 
-  const [{ data: connectedChargers }] = useGetConnectedChargers();
-
-  // console.log("the data from the hook is:", connectedChargers);
-
   const {
     control,
     handleSubmit,
@@ -122,16 +118,8 @@ const Account = (props) => {
           source={require("../../assets/myAccount.png")}
         />
         <Text style={style.changeText}>Change</Text>
-        {/* <Text style={style.title}>My account</Text> */}
-        {connectedChargers.map((item) => (
-          <Text
-            key={item.id}
-            style={{ color: "red", backgroundColor: "yellow" }}
-          >
-            {item.id}
-          </Text>
-        ))}
-        <Text style={{ color: "red" }}>asd</Text>
+        <Text style={style.title}>My account</Text>
+
         <Input
           disabled={true}
           label={"Email"}

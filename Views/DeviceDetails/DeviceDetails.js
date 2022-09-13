@@ -177,7 +177,6 @@ const DeviceDetails = (props) => {
             <Layout.Footer style={{ flex: 2, backgroundColor: "red" }}>
               {!chargerIsCharging(charger) ? (
                 <DetailsCard
-                  name={charger.name}
                   kwh={chargingHistory.totalKWh}
                   price={chargingHistory.totalCost}
                   time={secondsInHoursAndMinutes(
@@ -187,7 +186,6 @@ const DeviceDetails = (props) => {
                 />
               ) : (
                 <ChargerCard
-                  name={charger.name}
                   kwh={kwhRenderer(charger.lastChargingSession)}
                   time={hourMinutesRenderer(charger.lastChargingSession)}
                   price={priceRenderer(charger.lastChargingSession)}

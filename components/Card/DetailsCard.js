@@ -1,10 +1,32 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import { Image, Text, View } from "react-native";
 import { chargeDate, chargeLastUsed } from "../../helpers/formatFunctions";
 import { style } from "./DetailsCard.style";
 
-const DetailsCard = ({ name, price, kwh, time, charger }) => {
+const DetailsCard = ({ price, kwh, time, charger }) => {
+  const [chargerState, setChargerState] = useState(charger);
+
+  const connection = global.connection;
+
+  connection.on("ChargerDetailsChanged", (changedCharger) => {
+    if (changedCharger.chargerId === charger.chargerId) {
+      setChargerState(changedCharger);
+    }
+  });
+
+  useEffect(() => {
+    console.log(
+      "The carger state is:",
+      chargerState.wiFiStrength,
+      charger.chargerId
+    );
+  }, [chargerState]);
+
+  useEffect(() => {
+    setChargerState(charger);
+  }, [charger]);
+
   return (
     <>
       <View
@@ -19,7 +41,7 @@ const DetailsCard = ({ name, price, kwh, time, charger }) => {
               source={require("../../assets/greenLighting.png")}
             />
 
-            <Text style={[style.locationText]}>{name}</Text>
+            <Text style={[style.locationText]}>{chargerState.name}</Text>
           </View>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Text
@@ -27,7 +49,7 @@ const DetailsCard = ({ name, price, kwh, time, charger }) => {
                 ...style.chargingStatusText,
               }}
             >
-              {charger.state}
+              {chargerState.state}
             </Text>
             <View
               style={{
@@ -46,7 +68,9 @@ const DetailsCard = ({ name, price, kwh, time, charger }) => {
               }}
             />
 
-            <Text style={[style.locationText]}>{chargeLastUsed(charger)}</Text>
+            <Text style={[style.locationText]}>
+              {chargeLastUsed(chargerState)}
+            </Text>
           </View>
 
           <Text
@@ -54,7 +78,7 @@ const DetailsCard = ({ name, price, kwh, time, charger }) => {
               ...style.chargingStatusText,
             }}
           >
-            {chargeDate(charger)}
+            {chargeDate(chargerState)}
           </Text>
         </View>
         <View
