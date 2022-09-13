@@ -4,8 +4,10 @@ import { Image, Text, View } from "react-native";
 import { chargeDate, chargeLastUsed } from "../../helpers/formatFunctions";
 import { style } from "./DetailsCard.style";
 
-const DetailsCard = ({ price, kwh, time, charger }) => {
+const DetailsCard = ({ price, kwh, time, charger, chargingHistory }) => {
   const [chargerState, setChargerState] = useState(charger);
+  const [chargingHistoryState, setChargingHistoryState] =
+    useState(chargingHistory);
 
   const connection = global.connection;
 
@@ -14,6 +16,21 @@ const DetailsCard = ({ price, kwh, time, charger }) => {
       setChargerState(changedCharger);
     }
   });
+
+  connection.on("ChargingHistoryChanged", (changedChargingHistory) => {
+    console.log("ASD");
+    if (changedChargingHistory.userId === chargingHistory.userId) {
+      setChargingHistoryState(chargingHistory);
+    }
+  });
+
+  useEffect(() => {
+    console.log("THE HISTORY STATE:", chargingHistoryState.userId);
+  }, [chargingHistoryState]);
+
+  useEffect(() => {
+    setChargingHistoryState(chargingHistory);
+  }, [chargingHistory]);
 
   useEffect(() => {
     setChargerState(charger);

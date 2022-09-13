@@ -183,6 +183,7 @@ const DeviceDetails = (props) => {
                     chargingHistory.totalChargedTimeInSec
                   )}
                   charger={charger}
+                  chargingHistory={chargingHistory}
                 />
               ) : (
                 <ChargerCard
