@@ -14,11 +14,9 @@ import SignIn from "./Views/SignIn/SignIn";
 import SignUp from "./Views/SignUp/SignUp";
 import Permision from "./Views/Permision/Permision";
 import React, { useEffect, useState } from "react";
-import * as Linking from "expo-linking";
-import { AuthProvider } from 'ad-b2c-react-native';
 import * as WebBrowser from 'expo-web-browser';
 import base64 from 'react-native-base64'
-
+import { ADB2C_TENANT, ADB2C_POLICY, ADB2C_CLIENT, ADB2C_REDIRECT_URI } from "./api/utils/consts.js";
 import {
   JsonHubProtocol,
   HubConnectionState,
@@ -26,6 +24,7 @@ import {
   LogLevel,
   HttpTransportType,
 } from "@microsoft/signalr";
+
 import axios from "axios";
 
 import startSignalRConnection from "./startSignalRConnection";
@@ -62,11 +61,6 @@ export default function App() {
 
   startSignalRConnection();
 
-  const prefix = Linking.createURL("/");
-  const linking = {
-    prefixes: [prefix],
-  };
-  console.log(prefix)
   const getSearchParamFromURL = (url, param) => {
     const include = url.includes(param)
 
@@ -83,42 +77,21 @@ export default function App() {
       "Content-Type": "application/json",
     },
   };
-  const tenant = 'testdigitalgarden';
-  const policy = 'B2C_1_TestDigitalGarden';
-  const client = '68c8731f-e491-4151-a9d8-10e8dd2ecdba';
-  const redirectUri = 'exp://localhost:8081';
   const getCodeAuth = async () => {
-    /*  Linking.openURL(`https://${tenant}.b2clogin.com/${tenant}.onmicrosoft.com/${policy}/oauth2/v2.0/authorize?client_id=${client}&response_type=code+id_token&redirect_uri=${redirectUri}&response_mode=query&scope=openid`).then(x => console.log("GEREEE: ", x)); */
-    /* await axios.get(`https://${tenant}.b2clogin.com/${tenant}.onmicrosoft.com/${policy}/oauth2/v2.0/authorize?
-      client_id=${client}
-      &response_type=code+id_token
-      &redirect_uri=${redirectUri}
-      &response_mode=query
-      &scope=openid`, conf).then(x => console.log(x.data)); */
-    let codeResponse = await WebBrowser.openAuthSessionAsync(`https://${tenant}.b2clogin.com/${tenant}.onmicrosoft.com/${policy}/oauth2/v2.0/authorize?client_id=${client}&response_type=code+id_token&redirect_uri=${redirectUri}&response_mode=query&scope=openid`, redirectUri);
-    console.log("HEEEEREEEE: ", codeResponse);
+    let codeResponse = await WebBrowser.openAuthSessionAsync(`https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY}/oauth2/v2.0/authorize?client_id=${ADB2C_CLIENT}&response_type=code+id_token&redirect_uri=${ADB2C_REDIRECT_URI}&response_mode=query&scope=openid`, redirectUri);
     let code = getSearchParamFromURL(codeResponse.url, 'code')
-
-    let tokenResponse = await axios.post(`https://${tenant}.b2clogin.com/${tenant}.onmicrosoft.com/${policy}/oauth2/v2.0/token?grant_type=authorization_code&client_id=${client}&code=${code}&claim=given_name`);
-    console.log(tokenResponse.data);
+    let tokenResponse = await axios.post(`https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY}/oauth2/v2.0/token?grant_type=authorization_code&client_id=${ADB2C_CLIENT}&code=${code}&claim=given_name`);
     let tokenId = tokenResponse.data.id_token;
     let decoded = base64.decode(tokenResponse.data.profile_info);
-    console.log(decoded)
   }
 
   useEffect(() => {
-    getCodeAuth();
+    // getCodeAuth();
   })
 
   return (
     <Provider>
-      <NavigationContainer /* linking={linking} */ >
-        {/*  <AuthProvider
-          tenant="testdigitalgarden"
-          appId="68c8731f-e491-4151-a9d8-10e8dd2ecdba"
-          loginPolicy="B2C_1_TestDigitalGarden"
-          redirectURI="exp://localhost:8081" //redirect uri
-        > */}
+      <NavigationContainer>
         <Stack.Navigator initialRouteName="Permissions">
           <Stack.Screen
             name={routes.SignIn.name}
@@ -261,7 +234,6 @@ export default function App() {
             }
           </Stack.Screen>
         </Stack.Navigator>
-        {/*  </AuthProvider> */}
       </NavigationContainer>
     </Provider >
   );

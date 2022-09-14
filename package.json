@@ -17,7 +17,6 @@
     "@react-native-picker/picker": "^2.4.2",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/native-stack": "^6.6.2",
-    "ad-b2c-react-native": "^2.0.1",
     "axios": "^0.27.2",
     "date-fns": "^2.28.0",
     "expo": "~45.0.0",

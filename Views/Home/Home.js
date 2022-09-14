@@ -14,9 +14,6 @@ import Label from "../../components/Input/Label";
 import { getUniqueKey } from "../../helpers/checkers";
 import differenceInMinutes from "date-fns/differenceInMinutes";
 import { apiFactory } from "../../api";
-import { useAuth, useToken } from 'ad-b2c-react-native';
-
-
 import {
   hourMinutesRenderer,
   kwhRenderer,
@@ -24,8 +21,6 @@ import {
 } from "../../helpers/formatFunctions";
 
 const Home = (props) => {
-  const { getTokensAsync, isLoading, error, isAuthentic } = useToken();
-  const { logOutAsync, editProfileAsync, resetPasswordAsync, handleRedirectAsync } = useAuth();
   const { navigation, route } = props;
 
   const { ConnectQR, DeviceDetails, Home } = routes;
@@ -62,63 +57,14 @@ const Home = (props) => {
     () => socketMessageHistory.current.concat(lastMessage),
     [lastMessage]
   );
-  const [newUrl, setNewUrl] = useState("");
-  const [tokenReceived, setTokenReceived] = useState("");
-
-  useFocusEffect(
-    useCallback(() => {
-      getTokensAsync().then((x) => {
-        console.log(x);
-        if (x.error) {
-          console.log(x.error);
-        }
-        console.log("=======")
-        setTokenReceived(x);
-        if (x) {
-          setNewUrl(x.url);
-        }
-      });
-    }, [isAuthentic])
-  );
-
-  const getSearchParamFromURL = (url, param) => {
-    const include = url.includes(param)
-
-    if (!include) return null
-
-    const params = url.split(/([?,=])/)
-    const index = params.indexOf(param)
-    const value = params[index + 2]
-    return value
-  }
 
   useEffect(() => {
-    /* console.log("yoloooooo: ", tokenReceived) */
     if (lastMessage?.data) {
       const messageData = JSON.parse(lastMessage.data.toString());
       if (Array.isArray(messageData)) {
         setChargers(messageData);
       }
     }
-    /* if (newUrl) {
-      if (newUrl.includes("AADB2C90118")) {
-
-      }
-
-      if (Platform.OS === "android") {
-        const code = getSearchParamFromURL(newUrl, 'code');
-
-        if (code) {
-          console.log("hello")
-          navigation.navigate(Home.name, {
-            code: code,
-            state: getSearchParamFromURL(newUrl, 'state') || "",
-            error: "",
-            error_description: "",
-          });
-        }
-      }
-    } */
   }, [lastMessage]);
 
   // // Use in case you need to show connectionStatus in the UI
