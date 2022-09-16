@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
-import { HubConnectionState } from "@microsoft/signalr";
-import getUnixTime from "date-fns/getUnixTime";
-import produce from "immer";
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import { HubConnectionState } from '@microsoft/signalr';
+import getUnixTime from 'date-fns/getUnixTime';
+import produce from 'immer';
 
 export function useGetConnectedChargers() {
   const [chargers, setChargers] = useState(null);
@@ -15,10 +15,11 @@ export function useGetConnectedChargers() {
   function registerListener() {
     //register for events
 
-    connection.on("ChargingHistoryChanged", (charger) => {
+    connection.on('ChargingHistoryChanged', (charger) => {
       // console.log(util.inspect(charger, false, null, true))
     });
-    connection.on("ChargerDetailsChanged", (charger) => {
+    connection.on('ChargerDetailsChanged', (charger) => {
+      console.log('charger', charger);
       // const timeStamp2 = getUnixTime(Date.now());
       // if (timeStamp2 - timeStamp > 5) {
       //   const newArr = chargers.map((object) => {
@@ -49,12 +50,12 @@ export function useGetConnectedChargers() {
     if (connection.state == HubConnectionState.Connected) {
       const getConnectedChargers = async () => {
         await connection
-          .invoke("GetConnectedCharges", false, null)
+          .invoke('GetConnectedCharges', false, null)
           .then((chargerList) => {
             setChargers(chargerList);
           })
           .catch((err) => {
-            console.log("THE ERROR IS", err);
+            console.log('THE ERROR IS', err);
           });
       };
 

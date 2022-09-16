@@ -1,48 +1,48 @@
 export const getBGColorByStatus = (statusId) => {
   switch (statusId) {
-    case "Charging":
-      return "#FFFFFF";
-    case "Disconnected/Error":
-      return "#FFFFFF";
-    case "In use":
-      return "#AEAEAE";
-    case "Not Used":
-      return "#FFFFFF";
+    case 'Charging':
+      return '#FFFFFF';
+    case 'Disconnected/Error':
+      return '#FFFFFF';
+    case 'In Use':
+      return '#AEAEAE';
+    case 'Not Used':
+      return '#FFFFFF';
     default:
-      return "#FFFFFF";
+      return '#FFFFFF';
   }
 };
 
 export const getTextColorByStatus = (statusId, isDetails) => {
-  if (isDetails) return "#FFFFFF";
+  if (isDetails) return '#FFFFFF';
   switch (statusId) {
-    case "Charging":
-      return "#44CD54";
-    case "Disconnected/Error":
-      return "#FF6400";
-    case "In use": //4
-      return "#54565A";
-    case "Not Used":
-      return "#54565A";
+    case 'Charging':
+      return '#44CD54';
+    case 'Disconnected/Error':
+      return '#FF6400';
+    case 'In Use': //4
+      return '#54565A';
+    case 'Not Used':
+      return '#54565A';
     default:
-      return "#54565A";
+      return '#54565A';
   }
 };
 
 const getHeaderTextByStatus = (statusId, isDetails) => {
-  if (isDetails) return ["#FFFFFF", "#FFFFFF"];
+  if (isDetails) return ['#FFFFFF', '#FFFFFF'];
 
   switch (statusId) {
-    case "Charging":
-      return ["#44CD54"];
-    case "Disconnected/Error":
-      return ["#FF6400"];
-    case "In use":
-      return ["#54565A"];
-    case "Not Used":
-      return ["#54565A"];
+    case 'Charging':
+      return ['#44CD54'];
+    case 'Disconnected/Error':
+      return ['#FF6400'];
+    case 'In Use':
+      return ['#54565A'];
+    case 'Not Used':
+      return ['#54565A'];
     default:
-      return ["#B1AAA0", "#44CD54"];
+      return ['#B1AAA0', '#44CD54'];
   }
 };
 
@@ -53,16 +53,16 @@ export const headerTextColor = (charger, isDetails) =>
 
 const getCircleColorByStatus = (statusId) => {
   switch (statusId) {
-    case "Charging":
-      return ["#44CD54"];
-    case "Disconnected/Error":
-      return ["#FF6400"];
-    case "In use":
-      return ["#54565A"];
-    case "Not Used":
-      return ["#54565A"];
+    case 'Charging':
+      return ['#44CD54'];
+    case 'Disconnected/Error':
+      return ['#FF6400'];
+    case 'In Use':
+      return ['#54565A'];
+    case 'Not Used':
+      return ['#54565A'];
     default:
-      return ["#54565A", "#44CD54"];
+      return ['#54565A', '#44CD54'];
   }
 };
 
@@ -73,15 +73,15 @@ export const circleColor = (charger, number) =>
 
 export const getLightingImageByStatus = (statusName) => {
   switch (statusName) {
-    case "Charging":
-      return require("../../assets/greenLighting.png");
-    case "Disconnected/Error":
-      return require("../../assets/orangeLighting.png");
-    case "In use":
-      return require("../../assets/greyLighting.png");
-    case "Not Used":
-      return require("../../assets/greyLighting.png");
+    case 'Charging':
+      return require('../../assets/greenLighting.png');
+    case 'Disconnected/Error':
+      return require('../../assets/orangeLighting.png');
+    case 'In Use':
+      return require('../../assets/greyLighting.png');
+    case 'Not Used':
+      return require('../../assets/greyLighting.png');
     default:
-      return require("../../assets/greenLighting.png");
+      return require('../../assets/greenLighting.png');
   }
 };

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-import { Image, Text, View } from "react-native";
-import { chargeDate, chargeLastUsed } from "../../helpers/formatFunctions";
-import { style } from "./DetailsCard.style";
+import { Image, Text, View } from 'react-native';
+import { chargeDate, chargeLastUsed } from '../../helpers/formatFunctions';
+import { style } from './DetailsCard.style';
 
 const DetailsCard = ({ price, kwh, time, charger, chargingHistory }) => {
   const [chargerState, setChargerState] = useState(charger);
@@ -11,21 +11,20 @@ const DetailsCard = ({ price, kwh, time, charger, chargingHistory }) => {
 
   const connection = global.connection;
 
-  connection.on("ChargerDetailsChanged", (changedCharger) => {
+  connection.on('ChargerDetailsChanged', (changedCharger) => {
     if (changedCharger.chargerId === charger.chargerId) {
       setChargerState(changedCharger);
     }
   });
 
-  connection.on("ChargingHistoryChanged", (changedChargingHistory) => {
-    console.log("ASD");
+  connection.on('ChargingHistoryChanged', (changedChargingHistory) => {
     if (changedChargingHistory.userId === chargingHistory.userId) {
       setChargingHistoryState(chargingHistory);
     }
   });
 
   useEffect(() => {
-    console.log("THE HISTORY STATE:", chargingHistoryState.userId);
+    console.log('THE HISTORY STATE:', chargingHistoryState.userId);
   }, [chargingHistoryState]);
 
   useEffect(() => {
@@ -44,15 +43,15 @@ const DetailsCard = ({ price, kwh, time, charger, chargingHistory }) => {
         }}
       >
         <View style={style.upperTextContainer}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Image
               style={style.image}
-              source={require("../../assets/greenLighting.png")}
+              source={require('../../assets/greenLighting.png')}
             />
 
             <Text style={[style.locationText]}>{chargerState.name}</Text>
           </View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text
               style={{
                 ...style.chargingStatusText,
@@ -69,7 +68,7 @@ const DetailsCard = ({ price, kwh, time, charger, chargingHistory }) => {
           </View>
         </View>
         <View style={style.lastUsedWrapper}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <View
               style={{
                 ...style.circle,
@@ -93,10 +92,10 @@ const DetailsCard = ({ price, kwh, time, charger, chargingHistory }) => {
         <View
           style={{
             flex: 1,
-            flexDirection: "row",
+            flexDirection: 'row',
           }}
         >
-          <View style={{ flex: 1, marginTop: "auto" }}>
+          <View style={{ flex: 1, marginTop: 'auto' }}>
             <Text
               style={{
                 ...style.smallText,
@@ -113,7 +112,7 @@ const DetailsCard = ({ price, kwh, time, charger, chargingHistory }) => {
               {kwh}
             </Text>
           </View>
-          <View style={{ flex: 1, marginTop: "auto" }}>
+          <View style={{ flex: 1, marginTop: 'auto' }}>
             <Text
               style={{
                 ...style.smallText,
@@ -129,7 +128,7 @@ const DetailsCard = ({ price, kwh, time, charger, chargingHistory }) => {
               {time}
             </Text>
           </View>
-          <View style={{ flex: 1, marginTop: "auto" }}>
+          <View style={{ flex: 1, marginTop: 'auto' }}>
             <Text
               style={{
                 ...style.smallText,

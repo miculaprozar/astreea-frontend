@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format } from 'date-fns';
 
 export const kwhRenderer = (lastChargingSession) => {
   // return !charge || charge?.length === 0 || charge?.endKwh === null
@@ -6,15 +6,15 @@ export const kwhRenderer = (lastChargingSession) => {
   //   : (charge.endKwh - charge.startKwh).toFixed(2) + " kWh";
 
   return lastChargingSession
-    ? lastChargingSession.chargedKWh + " kWh"
-    : "-- kWh";
+    ? lastChargingSession.chargedKWh + ' kWh'
+    : '-- kWh';
 };
 
 export const priceRenderer = (lastChargingSession) =>
   // !charge || charge?.length === 0 || charge?.endKwh === null
   //   ? "-- "
   //   : (price * (charge.endKwh - charge.startKwh)).toFixed(2) + " " + curency;
-  lastChargingSession ? lastChargingSession.price : "-- ";
+  lastChargingSession ? lastChargingSession.price : '-- ';
 
 const differenceDates = (startDate, endDate) => {
   var diffMs = endDate - startDate; // milliseconds between now & Christmas
@@ -24,7 +24,7 @@ const differenceDates = (startDate, endDate) => {
   return `${diffHrs}h ${diffMins}m`;
 };
 export const realTimeDifference = (startDate, endDate) => {
-  if (startDate === null || endDate === null) return "--";
+  if (startDate === null || endDate === null) return '--';
 
   var diffMs = endDate - startDate; // milliseconds between now & Christmas
   const secs = Math.floor(Math.abs(diffMs) / 1000);
@@ -43,7 +43,7 @@ export const formatMs = (diffMs) => {
 const secondsInHoursAndMinutes = (seconds) => {
   const hoursAndMinutes = new Date(seconds * 1000).toISOString().slice(11, 16);
   const hoursAndMinutesRenderer =
-    hoursAndMinutes.slice(0, 2) + "h " + hoursAndMinutes.slice(3, 5) + "s";
+    hoursAndMinutes.slice(0, 2) + 'h ' + hoursAndMinutes.slice(3, 5) + 's';
   return hoursAndMinutesRenderer;
 };
 
@@ -53,7 +53,7 @@ export const hourMinutesRenderer = (lastChargingSession) =>
   //   : differenceDates(new Date(charge.startDate), new Date(charge.endDate));
   lastChargingSession
     ? secondsInHoursAndMinutes(lastChargingSession.chargedTimeInSec)
-    : "-h -m";
+    : '-h -m';
 
 export const isCharging = (charger) => {
   return charger.stateId === 1;
@@ -61,11 +61,12 @@ export const isCharging = (charger) => {
 
 export const chargeLastUsed = (charge) => {
   const { pluggedIn, lastChargingSession } = charge;
-  let lastUsed = "Last Pair";
-  pluggedIn && (lastUsed = "Today");
+  console.log(lastChargingSession);
+  let lastUsed = 'Last Pair';
+  pluggedIn && (lastUsed = 'Today');
 
   if (lastChargingSession && lastChargingSession.endDate !== null) {
-    lastUsed = "Last Use";
+    lastUsed = 'Last Use';
   }
 
   return lastUsed;
@@ -73,13 +74,13 @@ export const chargeLastUsed = (charge) => {
 
 export const chargeDate = (charge) => {
   const { lastChargingSession, pluggedIn } = charge;
-  let chargeText = "Your charger running normal";
+  let chargeText = 'Your charger running normal';
 
   if (lastChargingSession && lastChargingSession.endDate !== null) {
-    chargeText = format(new Date(lastChargingSession.endDate), "MM LLLL  p");
+    chargeText = format(new Date(lastChargingSession.endDate), 'MM LLLL  p');
   }
 
-  // if (pluggedIn) chargeText = "Your charger running normal";
+  if (pluggedIn) chargeText = 'Your charger running normal';
 
   return chargeText;
 };
