@@ -9,56 +9,57 @@ import routes from "../../routes";
 import Layout from "../../general_components/Layout";
 
 const Permision = () => {
-  const navigation = useNavigation();
+	const navigation = useNavigation();
 
-  const {
-    SignIn: { name: SignInRoute },
-  } = routes;
+	const {
+		AuthWrapper: { name: AuthWrapper },
+	} = routes;
 
-  const navigateToSignIn = () => navigation.navigate(SignInRoute);
+	const navigateToAuth = () => navigation.navigate(AuthWrapper);
 
-  const storePermisionAndNavigate = async () => {
-    try {
-      await AsyncStorage.setItem("hasPermision", "Granted");
-      navigateToSignIn();
-    } catch (e) {
-      console.log("THE TOKEN ERROR", e);
-    }
-  };
+	const storePermisionAndNavigate = async () => {
+		try {
+			await AsyncStorage.setItem("hasPermision", "Granted");
+			navigateToAuth();
+		} catch (e) {
+			console.log("THE TOKEN ERROR", e);
+		}
+	};
 
-  const getHasPermision = async () => {
-    const permision = await AsyncStorage.getItem("hasPermision");
-    permision && navigateToSignIn();
-  };
+	const getHasPermision = async () => {
+		const permision = await AsyncStorage.getItem("hasPermision");
+		console.log("redirect");
+		permision && navigateToAuth();
+	};
 
-  useEffect(() => {
-    getHasPermision();
-  }, []);
+	useEffect(() => {
+		getHasPermision();
+	}, []);
 
-  return (
-    <Layout>
-      <Layout.Header></Layout.Header>
-      <Layout.Body></Layout.Body>
-      <Layout.Footer>
-        <Image
-          style={style.image}
-          source={require("../../assets/permisionInfo.png")}
-        />
-        <Text style={style.textDescription}>
-          Get to know our privacy practices, how we collect and process data,
-          and your choices about how information is used, in a format that is
-          easy to read and navigate.
-        </Text>
-        <Text style={style.textNotes}>Read Privacy Notice</Text>
-        <Button
-          isSecondary={true}
-          text={"CONTINUE"}
-          marginBottom={60}
-          onPressAction={() => storePermisionAndNavigate()}
-        />
-      </Layout.Footer>
-    </Layout>
-  );
+	return (
+		<Layout>
+			<Layout.Header></Layout.Header>
+			<Layout.Body></Layout.Body>
+			<Layout.Footer>
+				<Image
+					style={style.image}
+					source={require("../../assets/permisionInfo.png")}
+				/>
+				<Text style={style.textDescription}>
+					Get to know our privacy practices, how we collect and process data,
+					and your choices about how information is used, in a format that is
+					easy to read and navigate.
+				</Text>
+				<Text style={style.textNotes}>Read Privacy Notice</Text>
+				<Button
+					isSecondary={true}
+					text={"CONTINUE"}
+					marginBottom={60}
+					onPressAction={() => storePermisionAndNavigate()}
+				/>
+			</Layout.Footer>
+		</Layout>
+	);
 };
 
 export default Permision;
