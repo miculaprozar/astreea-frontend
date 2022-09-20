@@ -1,10 +1,19 @@
-import React, { useState, useContext, useEffect } from "react";
-import { AuthContext } from "./AuthProvider";
-import AuthWrapper from "./AuthWrapper";
-import Loader from "../../general_components/Loader/Loader";
+import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
+import React, { useContext } from 'react';
+import Loader from '../../general_components/Loader/Loader';
+import { AuthContext } from './AuthProvider';
 
 export const RouteGuard = (props) => {
-	const { token, initAuth, isLoading } = useContext(AuthContext);
+  const { token, connectionStatus } = useContext(AuthContext);
+  console.log(connectionStatus);
 
-	return <>{!token ? <Loader isLoading={true} /> : <>{props.children}</>}</>;
+  return (
+    <>
+      {!token && !connectionStatus ? (
+        <Loader isLoading={true} />
+      ) : (
+        <>{props.children}</>
+      )}
+    </>
+  );
 };

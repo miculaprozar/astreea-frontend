@@ -1,42 +1,44 @@
-import React, { useState } from "react";
-import { Text, View } from "react-native";
-import Button from "../../components/Button/Button";
-import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
+import React, { useState } from 'react';
+import { Text, View } from 'react-native';
+import Button from '../../components/Button/Button';
+import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavigator';
 
-import Input from "../../components/Input/Input";
-import Layout from "../../general_components/Layout";
-import { style } from "./ConnectDevice.style";
-import routes from "../../routes";
-import { apiFactory } from "../../api";
+import Input from '../../components/Input/Input';
+import Layout from '../../general_components/Layout';
+import { style } from './ConnectDevice.style';
+import routes from '../../routes';
+import { apiFactory } from '../../api';
 import {
   PermissionsAndroid,
   ActivityIndicator,
   StyleSheet,
-} from "react-native";
-import WifiManager from "react-native-wifi-reborn";
-import HeaderBackButton from "../../general_components/HeaderBackButton";
-import SnackBar from "../../general_components/SnackBar";
+} from 'react-native';
+import WifiManager from 'react-native-wifi-reborn';
+import HeaderBackButton from '../../general_components/HeaderBackButton';
+import SnackBar from '../../general_components/SnackBar';
 
 const ConnectDevice = (props) => {
   const { navigation, route } = props;
-  const { ConnectQR, SetupDevice } = routes;
+  const { QRScannerStep, SetupDevice } = routes;
   const [deviceHotspotName, setDeviceHotspotName] = useState(
-    props.route.params ? props.route.params.qrData.wifiName : ""
+    props.route.params ? props.route.params.qrData.wifiName : ''
   );
   const [deviceHotspotPass, setDeviceHotspotPass] = useState(
-    props.route.params ? props.route.params.qrData.wifiPass : ""
+    props.route.params ? props.route.params.qrData.wifiPass : ''
   );
 
-  const [logText, setLogText] = useState("");
+  const [logText, setLogText] = useState('');
   const [waitingForData, setWaitingForData] = useState(false);
 
   const [error, setError] = useState(null);
-  const [logType, setLogType] = useState("error");
+  const [logType, setLogType] = useState('error');
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
-        <HeaderBackButton onPress={() => navigation.navigate(ConnectQR.name)} />
+        <HeaderBackButton
+          onPress={() => navigation.navigate(QRScannerStep.name)}
+        />
       ),
     });
   }, [navigation]);
@@ -45,25 +47,25 @@ const ConnectDevice = (props) => {
     const currentDate = new Date();
     return (
       currentDate.getHours() +
-      ":" +
+      ':' +
       currentDate.getMinutes() +
-      ":" +
+      ':' +
       currentDate.getSeconds() +
-      " "
+      ' '
     );
   };
 
   const connectToWifi = async () => {
     WifiManager.getCurrentWifiSSID().then(
       async (ssid) => {
-        console.log("Your current connected wifi SSID is " + ssid);
+        console.log('Your current connected wifi SSID is ' + ssid);
         if (ssid === deviceHotspotName) {
           setWaitingForData(true);
           const connectionStatus = await apiFactory()
             .data.device()
             .checkConnection();
           setLogText(logTime() + connectionStatus);
-          if (connectionStatus === "Connection OK.") {
+          if (connectionStatus === 'Connection OK.') {
             const wifiNetworks = await apiFactory()
               .data.device()
               .availableWifiNetowrks();
@@ -75,21 +77,21 @@ const ConnectDevice = (props) => {
             }
           }
         } else {
-          console.log("Not Device SSID!");
+          console.log('Not Device SSID!');
           WifiManager.connectToProtectedSSID(
             deviceHotspotName,
             deviceHotspotPass,
             false
           ).then(
             async () => {
-              console.log("Connected successfully!");
+              console.log('Connected successfully!');
               try {
                 setWaitingForData(true);
                 const connectionStatus = await apiFactory()
                   .data.device()
                   .checkConnection();
                 setLogText(logTime() + connectionStatus);
-                if (connectionStatus === "Connection OK.") {
+                if (connectionStatus === 'Connection OK.') {
                   const wifiNetworks = await apiFactory()
                     .data.device()
                     .availableWifiNetowrks();
@@ -108,14 +110,14 @@ const ConnectDevice = (props) => {
             },
             () => {
               setWaitingForData(false);
-              console.log("Connection failed!");
+              console.log('Connection failed!');
             }
           );
         }
       },
       () => {
-        setLogType("info");
-        setError("Please start your device WiFi!");
+        setLogType('info');
+        setError('Please start your device WiFi!');
       }
     );
   };
@@ -129,12 +131,12 @@ const ConnectDevice = (props) => {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         {
-          title: "Location permission is required for WiFi connections",
+          title: 'Location permission is required for WiFi connections',
           message:
-            "This app needs location permission as this is required  " +
-            "to scan for wifi networks.",
-          buttonNegative: "DENY",
-          buttonPositive: "ALLOW",
+            'This app needs location permission as this is required  ' +
+            'to scan for wifi networks.',
+          buttonNegative: 'DENY',
+          buttonPositive: 'ALLOW',
         }
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
@@ -161,7 +163,7 @@ const ConnectDevice = (props) => {
         <Text style={style.title}>Connect to Device</Text>
         <Input
           showLabel={true}
-          label={"Hotspot name"}
+          label={'Hotspot name'}
           marginBottom={15}
           marginTop={15}
           value={deviceHotspotName}
@@ -171,7 +173,7 @@ const ConnectDevice = (props) => {
         />
         <Input
           showLabel={true}
-          label={"Password"}
+          label={'Password'}
           marginBottom={15}
           value={deviceHotspotPass}
           onChange={(inputValue) => {
@@ -194,8 +196,8 @@ const ConnectDevice = (props) => {
             <>
               {waitingForData ? (
                 <ActivityIndicator
-                  size={"large"}
-                  color={"#ff6400"}
+                  size={'large'}
+                  color={'#ff6400'}
                 ></ActivityIndicator>
               ) : (
                 <Text>Test Connection</Text>

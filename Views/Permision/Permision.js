@@ -1,65 +1,64 @@
-import React, { useEffect } from "react";
-import { Text, Image } from "react-native";
-import Button from "../../components/Button/Button";
-import { style } from "./Permision.style";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/native";
-import routes from "../../routes";
+import React, { useEffect } from 'react';
+import { Text, Image } from 'react-native';
+import Button from '../../components/Button/Button';
+import { style } from './Permision.style';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import routes from '../../routes';
 
-import Layout from "../../general_components/Layout";
+import Layout from '../../general_components/Layout';
 
 const Permision = () => {
-	const navigation = useNavigation();
+  const navigation = useNavigation();
 
-	const {
-		AuthWrapper: { name: AuthWrapper },
-	} = routes;
+  const {
+    AuthWrapper: { name: AuthWrapper },
+  } = routes;
 
-	const navigateToAuth = () => navigation.navigate(AuthWrapper);
+  const navigateToAuth = () => navigation.navigate(AuthWrapper);
 
-	const storePermisionAndNavigate = async () => {
-		try {
-			await AsyncStorage.setItem("hasPermision", "Granted");
-			navigateToAuth();
-		} catch (e) {
-			console.log("THE TOKEN ERROR", e);
-		}
-	};
+  const storePermisionAndNavigate = async () => {
+    try {
+      await AsyncStorage.setItem('hasPermision', 'Granted');
+      navigateToAuth();
+    } catch (e) {
+      console.log('THE TOKEN ERROR', e);
+    }
+  };
 
-	const getHasPermision = async () => {
-		const permision = await AsyncStorage.getItem("hasPermision");
-		console.log("redirect");
-		permision && navigateToAuth();
-	};
+  const getHasPermision = async () => {
+    const permision = await AsyncStorage.getItem('hasPermision');
+    permision && navigateToAuth();
+  };
 
-	useEffect(() => {
-		getHasPermision();
-	}, []);
+  useEffect(() => {
+    getHasPermision();
+  }, []);
 
-	return (
-		<Layout>
-			<Layout.Header></Layout.Header>
-			<Layout.Body></Layout.Body>
-			<Layout.Footer>
-				<Image
-					style={style.image}
-					source={require("../../assets/permisionInfo.png")}
-				/>
-				<Text style={style.textDescription}>
-					Get to know our privacy practices, how we collect and process data,
-					and your choices about how information is used, in a format that is
-					easy to read and navigate.
-				</Text>
-				<Text style={style.textNotes}>Read Privacy Notice</Text>
-				<Button
-					isSecondary={true}
-					text={"CONTINUE"}
-					marginBottom={60}
-					onPressAction={() => storePermisionAndNavigate()}
-				/>
-			</Layout.Footer>
-		</Layout>
-	);
+  return (
+    <Layout>
+      <Layout.Header></Layout.Header>
+      <Layout.Body></Layout.Body>
+      <Layout.Footer>
+        <Image
+          style={style.image}
+          source={require('../../assets/permisionInfo.png')}
+        />
+        <Text style={style.textDescription}>
+          Get to know our privacy practices, how we collect and process data,
+          and your choices about how information is used, in a format that is
+          easy to read and navigate.
+        </Text>
+        <Text style={style.textNotes}>Read Privacy Notice</Text>
+        <Button
+          isSecondary={true}
+          text={'CONTINUE'}
+          marginBottom={60}
+          onPressAction={() => storePermisionAndNavigate()}
+        />
+      </Layout.Footer>
+    </Layout>
+  );
 };
 
 export default Permision;

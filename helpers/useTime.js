@@ -7,7 +7,6 @@ function useTime() {
 
   useEffect(() => {
     if (startTimer) {
-      console.log(startTimer, endDate);
       const setNewTime = setInterval(() => {
         setEndTime(new Date());
       }, 1000);

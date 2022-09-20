@@ -19,7 +19,7 @@ export function useGetConnectedChargers() {
       // console.log(util.inspect(charger, false, null, true))
     });
     connection.on('ChargerDetailsChanged', (charger) => {
-      console.log('charger', charger);
+      // console.log('charger', charger);
       // const timeStamp2 = getUnixTime(Date.now());
       // if (timeStamp2 - timeStamp > 5) {
       //   const newArr = chargers.map((object) => {

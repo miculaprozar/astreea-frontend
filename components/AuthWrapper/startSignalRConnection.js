@@ -5,12 +5,14 @@ import {
   LogLevel,
 } from '@microsoft/signalr';
 import axios from 'axios';
+import { GATEWAY_URL } from '../../api/utils/consts';
 
-const startSignalRConnection = () => {
+const startSignalRConnection = (authInfo, setConnectionStatus) => {
+  global.connection = null;
   const connection = new HubConnectionBuilder()
     .configureLogging(LogLevel.Critical)
-    .withUrl('http://192.168.1.102:8099/csmsgateway', {
-      // accessTokenFactory: () => access_info.accessToken,
+    .withUrl(GATEWAY_URL, {
+      accessTokenFactory: () => authInfo.accessToken,
       skipNegotiation: true,
       transport: HttpTransportType.WebSockets,
     })
@@ -23,19 +25,22 @@ const startSignalRConnection = () => {
     global.cert = response.data;
   });
 
-  global.connection = connection;
-
   async function start() {
     try {
       if (connection.state != HubConnectionState.Connected) {
-        console.log('We are in the try if block');
+        console.log('Connection is not started');
+        setConnectionStatus(false);
+
+        global.connection = connection;
         await connection.start();
         console.log('SignalR Connected.');
+        setConnectionStatus(true);
       }
 
       // await appConected();
     } catch (err) {
-      console.log('The error is:', err);
+      console.log('GatewayConnection error:', err);
+      setConnectionStatus(false);
 
       setTimeout(start, 5000);
     }

@@ -6,8 +6,7 @@ import { style } from './DetailsCard.style';
 
 const DetailsCard = ({ price, kwh, time, charger, chargingStats }) => {
   const [chargerState, setChargerState] = useState(charger);
-  const [chargingStatsState, setChargingStatsState] =
-    useState(chargingStats);
+  const [chargingStatsState, setChargingStatsState] = useState(chargingStats);
 
   const connection = global.connection;
 
@@ -23,9 +22,9 @@ const DetailsCard = ({ price, kwh, time, charger, chargingStats }) => {
     }
   });
 
-  useEffect(() => {
-    console.log('THE HISTORY STATE:', chargingStatsState.userId);
-  }, [chargingStatsState]);
+  // useEffect(() => {
+  //   console.log('THE HISTORY STATE:', chargingStatsState.userId);
+  // }, [chargingStatsState]);
 
   useEffect(() => {
     setChargingStatsState(chargingStats);

@@ -1,84 +1,90 @@
 const defaultNavigationOptions = {
-	headerShown: false,
-	//   title: "",
-	//   headerStyle: {
-	//     backgroundColor: "#F2F6F7",
-	//   },
-	//   headerShadowVisible: false,
-	//   headerTintColor: "#FF6400",
+  headerShown: false,
+  //   title: "",
+  //   headerStyle: {
+  //     backgroundColor: "#F2F6F7",
+  //   },
+  //   headerShadowVisible: false,
+  //   headerTintColor: "#FF6400",
 };
 
 export default routes = {
-	Home: {
-		name: "Home",
-		navigationOptions: {
-			...defaultNavigationOptions,
-		},
-	},
-	SignIn: {
-		name: "SignIn",
-		navigationOptions: {
-			headerShown: false,
-		},
-	},
-	Permision: {
-		name: "Permision",
-		navigationOptions: {
-			...defaultNavigationOptions,
-		},
-	},
-	ForgotPassword: {
-		name: "ForgotPassword",
-		navigationOptions: {
-			...defaultNavigationOptions,
-		},
-	},
-	RessetPassword: {
-		name: "RessetPassword",
-		navigationOptions: {
-			...defaultNavigationOptions,
-		},
-	},
-	SignUp: {
-		name: "SignUp",
-		navigationOptions: {
-			...defaultNavigationOptions,
-		},
-	},
-	Account: {
-		name: "Account",
-		navigationOptions: {
-			...defaultNavigationOptions,
-		},
-	},
-	ConnectQR: {
-		name: "ConnectQR",
-		navigationOptions: {
-			...defaultNavigationOptions,
-		},
-	},
-	ConnectDevice: {
-		name: "ConnectDevice",
-		navigationOptions: {
-			...defaultNavigationOptions,
-		},
-	},
-	SetupDevice: {
-		name: "SetupDevice",
-		navigationOptions: {
-			...defaultNavigationOptions,
-		},
-	},
-	DeviceDetails: {
-		name: "DeviceDetails",
-		navigationOptions: {
-			...defaultNavigationOptions,
-		},
-	},
-	ChargerSettings: {
-		name: "ChargerSettings",
-		navigationOptions: {
-			...defaultNavigationOptions,
-		},
-	},
+  Home: {
+    name: 'Home',
+    navigationOptions: {
+      ...defaultNavigationOptions,
+    },
+  },
+  SignIn: {
+    name: 'SignIn',
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+  Permision: {
+    name: 'Permision',
+    navigationOptions: {
+      ...defaultNavigationOptions,
+    },
+  },
+  ForgotPassword: {
+    name: 'ForgotPassword',
+    navigationOptions: {
+      ...defaultNavigationOptions,
+    },
+  },
+  RessetPassword: {
+    name: 'RessetPassword',
+    navigationOptions: {
+      ...defaultNavigationOptions,
+    },
+  },
+  SignUp: {
+    name: 'SignUp',
+    navigationOptions: {
+      ...defaultNavigationOptions,
+    },
+  },
+  Account: {
+    name: 'Account',
+    navigationOptions: {
+      ...defaultNavigationOptions,
+    },
+  },
+  ConnectQR: {
+    name: 'ConnectQR',
+    navigationOptions: {
+      ...defaultNavigationOptions,
+    },
+  },
+  QRScannerStep: {
+    name: 'QRScannerStep',
+    navigationOptions: {
+      ...defaultNavigationOptions,
+    },
+  },
+  ConnectDevice: {
+    name: 'ConnectDevice',
+    navigationOptions: {
+      ...defaultNavigationOptions,
+    },
+  },
+  SetupDevice: {
+    name: 'SetupDevice',
+    navigationOptions: {
+      ...defaultNavigationOptions,
+    },
+  },
+  DeviceDetails: {
+    name: 'DeviceDetails',
+    navigationOptions: {
+      ...defaultNavigationOptions,
+    },
+  },
+  ChargerSettings: {
+    name: 'ChargerSettings',
+    navigationOptions: {
+      ...defaultNavigationOptions,
+    },
+  },
 };

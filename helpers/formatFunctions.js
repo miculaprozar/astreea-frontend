@@ -61,7 +61,6 @@ export const isCharging = (charger) => {
 
 export const chargeLastUsed = (charge) => {
   const { pluggedIn, lastChargingSession } = charge;
-  console.log(lastChargingSession);
   let lastUsed = 'Last Pair';
   pluggedIn && (lastUsed = 'Today');
 

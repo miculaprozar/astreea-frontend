@@ -1,39 +1,38 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect } from "@react-navigation/native";
-import differenceInMinutes from "date-fns/differenceInMinutes";
-import React, { useCallback, useEffect, useState } from "react";
-import { ScrollView, View } from "react-native";
-import { apiFactory } from "../../api";
-import Button from "../../components/Button/Button";
-import ChargerCard from "../../components/Card/ChargerCard";
-import Label from "../../components/Input/Label";
-import PillButton from "../../components/PillButton/PillButton";
-import SearchInput from "../../components/SearchInput/SearchInput";
-import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
-import Layout from "../../general_components/Layout";
-import { getUniqueKey } from "../../helpers/checkers";
-import routes from "../../routes";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
+import differenceInMinutes from 'date-fns/differenceInMinutes';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { ScrollView, View } from 'react-native';
+import { apiFactory } from '../../api';
+import Button from '../../components/Button/Button';
+import ChargerCard from '../../components/Card/ChargerCard';
+import Label from '../../components/Input/Label';
+import PillButton from '../../components/PillButton/PillButton';
+import SearchInput from '../../components/SearchInput/SearchInput';
+import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavigator';
+import Layout from '../../general_components/Layout';
+import { getUniqueKey } from '../../helpers/checkers';
+import routes from '../../routes';
+import { AuthContext } from '../../components/AuthWrapper/AuthProvider';
 
-import { HubConnectionState } from "@microsoft/signalr";
+import { HubConnectionState } from '@microsoft/signalr';
 import {
   hourMinutesRenderer,
   kwhRenderer,
   priceRenderer,
-} from "../../helpers/formatFunctions";
+} from '../../helpers/formatFunctions';
 const Home = (props) => {
   const { navigation, route } = props;
+  const { token, connectionStatus } = useContext(AuthContext);
 
-  const { ConnectQR, DeviceDetails } = routes;
+  const { QRScannerStep, DeviceDetails } = routes;
 
-  const connection = global.connection;
-
-  const [token, setToken] = useState(null);
-  const [filterChargers, setFilterChargers] = useState(0);
-  const [searchfield, setSearchfield] = useState("");
+  const [filterChargers, setFilterChargers] = useState(1);
+  const [searchfield, setSearchfield] = useState('');
   const [chargerList, setChargerList] = useState(null);
 
   const navigateToAddDevice = () => {
-    navigation.navigate(ConnectQR.name);
+    navigation.navigate(QRScannerStep.name);
   };
 
   const navigateToDeviceAction = (chargerId) => {
@@ -54,88 +53,26 @@ const Home = (props) => {
     } else return isSearched && isPrivateFiltered;
   };
 
-  const disableChargerChecker = (
-    lastCharge,
-    isPrivate,
-    isAdmin,
-    connectionDate
-  ) => {
-    const actualDate = new Date();
-    if (lastCharge.length > 0) {
-      if (lastCharge[0].endDate) {
-        const endDate = new Date(lastCharge[0].endDate);
-        const diferenceInMinutes = differenceInMinutes(actualDate, endDate);
-        if (diferenceInMinutes > 60 && isPrivate === 0 && isAdmin === 0) {
-          return true;
-        } else return false;
-      }
-    } else if (connectionDate) {
-      const connectionDate = new Date(connectionDate);
-      const diferenceInMinutes = differenceInMinutes(
-        actualDate,
-        connectionDate
-      );
-      if (diferenceInMinutes > 60 && isPrivate === 0 && isAdmin === 0) {
-        return true;
-      } else return false;
-    } else return false;
-  };
-
-  const getToken = async () => {
-    const token = await AsyncStorage.getItem("token");
-    token && setToken(token);
-  };
-
-  const GetConnectedCharges = async () => {
+  const GetConnectedCharges = async (connection) => {
     if (connection.state == HubConnectionState.Connected) {
       //connection started
       await connection
-        .invoke("GetConnectedCharges", false, null)
+        .invoke('GetConnectedCharges', false, null)
         .then((chargerList) => {
           setChargerList(chargerList);
         })
         .catch((err) => {
-          console.log("THE ERROR IS", err);
+          console.log('THE ERROR IS', err);
         });
     }
   };
 
-  const disableTimedOutChargers = async (charger) => {
-    const {
-      lastCharge,
-      isPrivate,
-      isAdmin,
-      id: chargerId,
-      connectionDate,
-    } = charger;
-
-    const disableCharger = disableChargerChecker(
-      lastCharge,
-      isPrivate,
-      isAdmin,
-      connectionDate
-    );
-    disableCharger &&
-      (await apiFactory()
-        .data.device()
-        .updateChargerData({ isDisabled: 1 }, chargerId, token));
-  };
-
-  useEffect(() => {
-    getToken();
-  }, []);
-
   useFocusEffect(
     useCallback(() => {
-      GetConnectedCharges();
-    }, [connection])
+      const connection = global.connection;
+      GetConnectedCharges(connection);
+    }, [connectionStatus])
   );
-
-  // useEffect(() => {
-  //   if (chargers && token) {
-  //     chargers.forEach((charger) => disableTimedOutChargers(charger));
-  //   }
-  // }, [chargers]);
 
   return (
     <Layout diffuseBG={true}>
@@ -147,27 +84,27 @@ const Home = (props) => {
         />
       </Layout.Header>
       <Layout.Body>
-        <Label white text="Search" />
+        <Label white text='Search' />
         <SearchInput setSearchfield={setSearchfield} />
-        <Label white text="Chargers" />
-        <View style={{ flexDirection: "row", marginBottom: 15 }}>
+        <Label white text='Chargers' />
+        <View style={{ flexDirection: 'row', marginBottom: 15 }}>
           <PillButton
             isSecondary={filterChargers !== 0}
-            text={"Public"}
+            text={'Public'}
             onPressAction={() => setFilterChargers(0)}
           />
           <PillButton
             isSecondary={filterChargers !== 1}
-            text={"My chargers"}
+            text={'My chargers'}
             marginLeft={15}
             onPressAction={() => setFilterChargers(1)}
           />
-          <PillButton
+          {/* <PillButton
             isSecondary={filterChargers !== 2}
-            text={"Private"}
+            text={'Private'}
             marginLeft={15}
             onPressAction={() => setFilterChargers(2)}
-          />
+          /> */}
 
           <View style={{ flex: 2 }}></View>
         </View>
@@ -204,7 +141,7 @@ const Home = (props) => {
       </Layout.Body>
       <Layout.Footer>
         <Button
-          text={"Start Pairing"}
+          text={'Start Pairing'}
           marginTop={10}
           onPressAction={navigateToAddDevice}
         />
