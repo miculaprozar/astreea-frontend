@@ -14,7 +14,7 @@ const TableComponent = ({ chargerId, startDate, endDate }) => {
   const [page, setPage] = useState(1);
   const [existsNextPage, setExistsNextPage] = useState(true);
 
-  const [chargingHistory, setChargingHistory] = useState(null);
+  const [chargingStats, setChargingStats] = useState(null);
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -29,26 +29,26 @@ const TableComponent = ({ chargerId, startDate, endDate }) => {
     return `${diffHrs} H, ${diffMins} M`;
   };
 
-  const getChargingHistory = async (requestStartDate, requestEndDate) => {
+  const getChargingStats = async (requestStartDate, requestEndDate) => {
     if (connection.state == HubConnectionState.Connected) {
       try {
         setIsLoading(true);
 
         await connection
           .invoke(
-            "GetChargingHistory",
+            "GetChargingStats",
             chargerId,
             page,
             tableItems,
             requestStartDate,
             requestEndDate
           )
-          .then((chargingHistory) => {
-            setChargingHistory(chargingHistory);
+          .then((chargingStats) => {
+            setChargingStats(chargingStats);
           });
         setIsLoading(false);
       } catch (e) {
-        console.log("ERROR IN GetChargingHistory", e.response.data);
+        console.log("ERROR IN GetChargingStats", e.response.data);
       }
     }
   };
@@ -56,17 +56,17 @@ const TableComponent = ({ chargerId, startDate, endDate }) => {
   useEffect(() => {
     const splitStartDate = startDate?.toISOString().split("T")[0];
     const splitEndDate = endDate?.toISOString().split("T")[0];
-    getChargingHistory(splitStartDate, splitEndDate);
+    getChargingStats(splitStartDate, splitEndDate);
   }, [page, startDate, endDate, tableItems]);
 
   useEffect(() => {
-    chargingHistory?.chargingSessions.length === 0 ||
-    chargingHistory?.chargingSessions.length <= tableItems
+    chargingStats?.chargingSessions.length === 0 ||
+      chargingStats?.chargingSessions.length <= tableItems
       ? setExistsNextPage(false)
       : setExistsNextPage(true);
 
-    if (chargingHistory && chargingHistory?.chargingSessions.length !== 0) {
-      const tableData = chargingHistory?.chargingSessions.map((item) => [
+    if (chargingStats && chargingStats?.chargingSessions.length !== 0) {
+      const tableData = chargingStats?.chargingSessions.map((item) => [
         item.startDate.split("T")[0],
         differenceDates(new Date(item.startDate), new Date(item.endDate)),
         item.chargedKWh,
@@ -74,7 +74,7 @@ const TableComponent = ({ chargerId, startDate, endDate }) => {
       ]);
       setTableData(tableData);
     } else setTableData([]);
-  }, [chargingHistory]);
+  }, [chargingStats]);
 
   useEffect(() => {
     if (tableDimension && rowsHeight !== 0) {

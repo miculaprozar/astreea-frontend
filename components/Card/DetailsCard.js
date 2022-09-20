@@ -4,10 +4,10 @@ import { Image, Text, View } from 'react-native';
 import { chargeDate, chargeLastUsed } from '../../helpers/formatFunctions';
 import { style } from './DetailsCard.style';
 
-const DetailsCard = ({ price, kwh, time, charger, chargingHistory }) => {
+const DetailsCard = ({ price, kwh, time, charger, chargingStats }) => {
   const [chargerState, setChargerState] = useState(charger);
-  const [chargingHistoryState, setChargingHistoryState] =
-    useState(chargingHistory);
+  const [chargingStatsState, setChargingStatsState] =
+    useState(chargingStats);
 
   const connection = global.connection;
 
@@ -17,19 +17,19 @@ const DetailsCard = ({ price, kwh, time, charger, chargingHistory }) => {
     }
   });
 
-  connection.on('ChargingHistoryChanged', (changedChargingHistory) => {
-    if (changedChargingHistory.userId === chargingHistory.userId) {
-      setChargingHistoryState(chargingHistory);
+  connection.on('ChargingStatsChanged', (changedChargingStats) => {
+    if (changedChargingStats.userId === chargingStats.userId) {
+      setChargingStatsState(chargingStats);
     }
   });
 
   useEffect(() => {
-    console.log('THE HISTORY STATE:', chargingHistoryState.userId);
-  }, [chargingHistoryState]);
+    console.log('THE HISTORY STATE:', chargingStatsState.userId);
+  }, [chargingStatsState]);
 
   useEffect(() => {
-    setChargingHistoryState(chargingHistory);
-  }, [chargingHistory]);
+    setChargingStatsState(chargingStats);
+  }, [chargingStats]);
 
   useEffect(() => {
     setChargerState(charger);

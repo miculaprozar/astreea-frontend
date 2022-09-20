@@ -79,10 +79,10 @@ const Card = ({
             details && stateId == 1
               ? { ...charging.wrapper, backgroundColor: "#97A6AD" }
               : !isCharging && stateId == 1
-              ? { ...charging.wrapper, backgroundColor: "#393B3B" }
-              : stateId == 3
-              ? { ...charging.wrapper, backgroundColor: "darkred" }
-              : { ...charging.wrapper }
+                ? { ...charging.wrapper, backgroundColor: "#393B3B" }
+                : stateId == 3
+                  ? { ...charging.wrapper, backgroundColor: "darkred" }
+                  : { ...charging.wrapper }
           }
         >
           <View style={{ flex: 1 }}>
@@ -100,7 +100,7 @@ const Card = ({
                 }
               >
                 {!details && isCharging && "Charging"}
-                {lastCharge?.length === 0 && stateId === 1 && "Not used"}
+                {lastCharge?.length === 0 && stateId === 1 && "Available"}
                 {stateId === 3 && "Error"}
               </Text>
               {/* FOR DEMO ONLY */}

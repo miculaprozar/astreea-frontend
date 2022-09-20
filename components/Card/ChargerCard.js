@@ -45,7 +45,7 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
               borderColor: 'white',
             }),
             ...(chargerState.isAdmin &&
-              chargerState.state === 'Disconnected/Error' && { height: 180 }),
+              chargerState.state === 'OutOfOrder' && { height: 180 }),
           }}
         >
           <View style={charging.upperTextContainer}>
@@ -186,7 +186,7 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
             </View>
           </View>
           {chargerState.isAdmin &&
-          chargerState.state === 'Disconnected/Error' ? (
+            chargerState.state === 'OutOfOrder' ? (
             <Pressable
               style={charging.pairButtonWrapper}
               onPress={() => console.log('Pressed')}

@@ -46,7 +46,7 @@ const DeviceDetails = (props) => {
   const cert = global.cert;
 
   const [charger, setCharger] = useState(null);
-  const [chargingHistory, setChargingHistory] = useState(null);
+  const [chargingStats, setChargingStats] = useState(null);
 
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [date, setDate] = useState(getStartMonthDate(new Date()));
@@ -67,19 +67,19 @@ const DeviceDetails = (props) => {
     }
   };
 
-  const getChargingHistory = async (requestStartDate, requestEndDate) => {
+  const getChargingStats = async (requestStartDate, requestEndDate) => {
     if (connection.state == HubConnectionState.Connected) {
       await connection
         .invoke(
-          "GetChargingHistory",
+          "GetChargingStats",
           chargerId,
           0,
           1,
           requestStartDate,
           requestEndDate
         )
-        .then((chargingHistory) => {
-          setChargingHistory(chargingHistory);
+        .then((chargingStats) => {
+          setChargingStats(chargingStats);
         });
     }
   };
@@ -115,7 +115,7 @@ const DeviceDetails = (props) => {
     if (date) {
       const requestStartDate = moment(date).format("YYYY-MM-DD");
       const requestEndDate = moment(getEndMonthDate(date)).format("YYYY-MM-DD");
-      getChargingHistory(requestStartDate, requestEndDate);
+      getChargingStats(requestStartDate, requestEndDate);
     }
   }, [connection]);
 
@@ -153,7 +153,7 @@ const DeviceDetails = (props) => {
   return (
     <>
       <Loader isLoading={isLoading} />
-      {!triggerRefresh && charger && chargingHistory && (
+      {!triggerRefresh && charger && chargingStats && (
         <>
           <Layout customBackgroundUrl={DetailsBackground}>
             <Layout.Header>
@@ -177,13 +177,13 @@ const DeviceDetails = (props) => {
             <Layout.Footer style={{ flex: 2, backgroundColor: "red" }}>
               {!chargerIsCharging(charger) ? (
                 <DetailsCard
-                  kwh={chargingHistory.totalKWh}
-                  price={chargingHistory.totalCost}
+                  kwh={chargingStats.totalKWh}
+                  price={chargingStats.totalCost}
                   time={secondsInHoursAndMinutes(
-                    chargingHistory.totalChargedTimeInSec
+                    chargingStats.totalChargedTimeInSec
                   )}
                   charger={charger}
-                  chargingHistory={chargingHistory}
+                  chargingStats={chargingStats}
                 />
               ) : (
                 <ChargerCard

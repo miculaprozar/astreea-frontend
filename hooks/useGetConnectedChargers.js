@@ -15,7 +15,7 @@ export function useGetConnectedChargers() {
   function registerListener() {
     //register for events
 
-    connection.on('ChargingHistoryChanged', (charger) => {
+    connection.on('ChargingStatsChanged', (charger) => {
       // console.log(util.inspect(charger, false, null, true))
     });
     connection.on('ChargerDetailsChanged', (charger) => {

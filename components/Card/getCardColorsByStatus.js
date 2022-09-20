@@ -2,11 +2,11 @@ export const getBGColorByStatus = (statusId) => {
   switch (statusId) {
     case 'Charging':
       return '#FFFFFF';
-    case 'Disconnected/Error':
+    case 'OutOfOrder':
       return '#FFFFFF';
-    case 'In Use':
+    case 'Occupied':
       return '#AEAEAE';
-    case 'Not Used':
+    case 'Available':
       return '#FFFFFF';
     default:
       return '#FFFFFF';
@@ -18,11 +18,11 @@ export const getTextColorByStatus = (statusId, isDetails) => {
   switch (statusId) {
     case 'Charging':
       return '#44CD54';
-    case 'Disconnected/Error':
+    case 'OutOfOrder':
       return '#FF6400';
-    case 'In Use': //4
+    case 'Occupied': //4
       return '#54565A';
-    case 'Not Used':
+    case 'Available':
       return '#54565A';
     default:
       return '#54565A';
@@ -35,11 +35,11 @@ const getHeaderTextByStatus = (statusId, isDetails) => {
   switch (statusId) {
     case 'Charging':
       return ['#44CD54'];
-    case 'Disconnected/Error':
+    case 'OutOfOrder':
       return ['#FF6400'];
-    case 'In Use':
+    case 'Occupied':
       return ['#54565A'];
-    case 'Not Used':
+    case 'Available':
       return ['#54565A'];
     default:
       return ['#B1AAA0', '#44CD54'];
@@ -55,11 +55,11 @@ const getCircleColorByStatus = (statusId) => {
   switch (statusId) {
     case 'Charging':
       return ['#44CD54'];
-    case 'Disconnected/Error':
+    case 'OutOfOrder':
       return ['#FF6400'];
-    case 'In Use':
+    case 'Occupied':
       return ['#54565A'];
-    case 'Not Used':
+    case 'Available':
       return ['#54565A'];
     default:
       return ['#54565A', '#44CD54'];
@@ -75,11 +75,11 @@ export const getLightingImageByStatus = (statusName) => {
   switch (statusName) {
     case 'Charging':
       return require('../../assets/greenLighting.png');
-    case 'Disconnected/Error':
+    case 'OutOfOrder':
       return require('../../assets/orangeLighting.png');
-    case 'In Use':
+    case 'Occupied':
       return require('../../assets/greyLighting.png');
-    case 'Not Used':
+    case 'Available':
       return require('../../assets/greyLighting.png');
     default:
       return require('../../assets/greenLighting.png');
