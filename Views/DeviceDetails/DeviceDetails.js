@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { View } from "react-native";
 
 import { useFocusEffect } from "@react-navigation/native";
-import moment from "moment";
 import DetailsBackground from "../../assets/chargingScreen.jpg";
 import ChargerButton from "../../components/ChargerButton/ChargerButton";
 import PillButton from "../../components/PillButton/PillButton";
@@ -14,7 +13,7 @@ import routes from "../../routes";
 import { style } from "./DeviceDetails.style";
 
 import ChargerCard from "../../components/Card/ChargerCard";
-import DetailsCard from "../../components/Card/DetailsCard";
+import TotalChargeCard from "../../components/Card/TotalChargeCard";
 import Layout from "../../general_components/Layout";
 import Loader from "../../general_components/Loader/Loader";
 import {
@@ -46,7 +45,6 @@ const DeviceDetails = (props) => {
   const cert = global.cert;
 
   const [charger, setCharger] = useState(null);
-  const [chargingStats, setChargingStats] = useState(null);
 
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [date, setDate] = useState(getStartMonthDate(new Date()));
@@ -63,23 +61,6 @@ const DeviceDetails = (props) => {
         })
         .catch((err) => {
           console.log("THE ERROR IS", err);
-        });
-    }
-  };
-
-  const getChargingStats = async (requestStartDate, requestEndDate) => {
-    if (connection.state == HubConnectionState.Connected) {
-      await connection
-        .invoke(
-          "GetChargingStats",
-          chargerId,
-          0,
-          1,
-          requestStartDate,
-          requestEndDate
-        )
-        .then((chargingStats) => {
-          setChargingStats(chargingStats);
         });
     }
   };
@@ -111,14 +92,6 @@ const DeviceDetails = (props) => {
     }
   };
 
-  useEffect(() => {
-    if (date) {
-      const requestStartDate = moment(date).format("YYYY-MM-DD");
-      const requestEndDate = moment(getEndMonthDate(date)).format("YYYY-MM-DD");
-      getChargingStats(requestStartDate, requestEndDate);
-    }
-  }, [connection]);
-
   useFocusEffect(
     useCallback(() => {
       setIsLoading(true);
@@ -141,19 +114,10 @@ const DeviceDetails = (props) => {
   const chargerIsCharging = (charger) =>
     charger.state === "Charging" ? true : false;
 
-  const secondsInHoursAndMinutes = (seconds) => {
-    const hoursAndMinutes = new Date(seconds * 1000)
-      .toISOString()
-      .slice(11, 16);
-    const hoursAndMinutesRenderer =
-      hoursAndMinutes.slice(0, 2) + "h " + hoursAndMinutes.slice(3, 5) + "s";
-    return hoursAndMinutesRenderer;
-  };
-
   return (
     <>
       <Loader isLoading={isLoading} />
-      {!triggerRefresh && charger && chargingStats && (
+      {!triggerRefresh && charger && (
         <>
           <Layout customBackgroundUrl={DetailsBackground}>
             <Layout.Header>
@@ -176,15 +140,7 @@ const DeviceDetails = (props) => {
             </Layout.Body>
             <Layout.Footer style={{ flex: 2, backgroundColor: "red" }}>
               {!chargerIsCharging(charger) ? (
-                <DetailsCard
-                  kwh={chargingStats.totalKWh}
-                  price={chargingStats.totalCost}
-                  time={secondsInHoursAndMinutes(
-                    chargingStats.totalChargedTimeInSec
-                  )}
-                  charger={charger}
-                  chargingStats={chargingStats}
-                />
+                <TotalChargeCard charger={charger} date={date} />
               ) : (
                 <ChargerCard
                   kwh={kwhRenderer(charger.lastChargingSession)}
