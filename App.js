@@ -4,22 +4,24 @@ import {
   Inter_600SemiBold,
   Inter_700Bold,
   useFonts,
-} from '@expo-google-fonts/inter';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React from 'react';
-import { Text, TextInput } from 'react-native';
-import { AuthProvider } from './components/AuthWrapper/AuthProvider';
-import { RouteGuard } from './components/AuthWrapper/RouteGuarding';
-import routes from './routes';
-import Account from './Views/Account/Account';
-import ChargerSettings from './Views/ChargerSettings/ChargerSettings';
-import ConnectDevice from './Views/ConnectDevice/ConnectDevice';
-import DeviceDetails from './Views/DeviceDetails/DeviceDetails';
-import Home from './Views/Home/Home';
-import Permision from './Views/Permision/Permision';
-import QRScannerStep from './Views/QRScannerStep/QRScannerStep';
-import SetupDevice from './Views/SetupDevice/SetupDevice';
+} from "@expo-google-fonts/inter";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import React from "react";
+import { Text, TextInput } from "react-native";
+import { AuthProvider } from "./components/AuthWrapper/AuthProvider";
+import { RouteGuard } from "./components/AuthWrapper/RouteGuarding";
+import routes from "./routes";
+import Account from "./Views/Account/Account";
+import ChargerSettings from "./Views/ChargerSettings/ChargerSettings";
+import ConnectDevice from "./Views/ConnectDevice/ConnectDevice";
+import DeviceDetails from "./Views/DeviceDetails/DeviceDetails";
+import Schedule from "./Views/Schedule/Schedule";
+
+import Home from "./Views/Home/Home";
+import Permision from "./Views/Permision/Permision";
+import QRScannerStep from "./Views/QRScannerStep/QRScannerStep";
+import SetupDevice from "./Views/SetupDevice/SetupDevice";
 
 Text.defaultProps = {
   ...(Text.defaultProps || {}),
@@ -42,7 +44,7 @@ export default function App() {
   return (
     <AuthProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName='Home'>
+        <Stack.Navigator initialRouteName="Home">
           <Stack.Screen
             name={routes.Home.name}
             options={routes.Home.navigationOptions}
@@ -92,7 +94,7 @@ export default function App() {
           >
             {(props) =>
               fontsLoaded ? (
-                <ConnectDevice {...props} extraData={'bla'} />
+                <ConnectDevice {...props} />
               ) : (
                 <Text>Loading...</Text>
               )
@@ -103,11 +105,7 @@ export default function App() {
             options={routes.SetupDevice.navigationOptions}
           >
             {(props) =>
-              fontsLoaded ? (
-                <SetupDevice {...props} extraData={'bla'} />
-              ) : (
-                <Text>Loading...</Text>
-              )
+              fontsLoaded ? <SetupDevice {...props} /> : <Text>Loading...</Text>
             }
           </Stack.Screen>
           <Stack.Screen
@@ -116,10 +114,18 @@ export default function App() {
           >
             {(props) =>
               fontsLoaded ? (
-                <DeviceDetails {...props} extraData={'bla'} />
+                <DeviceDetails {...props} />
               ) : (
                 <Text>Loading...</Text>
               )
+            }
+          </Stack.Screen>
+          <Stack.Screen
+            name={routes.Schedule.name}
+            options={routes.Schedule.navigationOptions}
+          >
+            {(props) =>
+              fontsLoaded ? <Schedule {...props} /> : <Text>Loading...</Text>
             }
           </Stack.Screen>
           <Stack.Screen
@@ -128,7 +134,7 @@ export default function App() {
           >
             {(props) =>
               fontsLoaded ? (
-                <ChargerSettings {...props} extraData={'bla'} />
+                <ChargerSettings {...props} />
               ) : (
                 <Text>Loading...</Text>
               )

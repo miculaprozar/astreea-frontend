@@ -10,79 +10,85 @@ const defaultNavigationOptions = {
 
 export default routes = {
   Home: {
-    name: 'Home',
+    name: "Home",
     navigationOptions: {
       ...defaultNavigationOptions,
     },
   },
   SignIn: {
-    name: 'SignIn',
+    name: "SignIn",
     navigationOptions: {
       headerShown: false,
     },
   },
   Permision: {
-    name: 'Permision',
+    name: "Permision",
     navigationOptions: {
       ...defaultNavigationOptions,
     },
   },
   ForgotPassword: {
-    name: 'ForgotPassword',
+    name: "ForgotPassword",
     navigationOptions: {
       ...defaultNavigationOptions,
     },
   },
   RessetPassword: {
-    name: 'RessetPassword',
+    name: "RessetPassword",
     navigationOptions: {
       ...defaultNavigationOptions,
     },
   },
   SignUp: {
-    name: 'SignUp',
+    name: "SignUp",
     navigationOptions: {
       ...defaultNavigationOptions,
     },
   },
   Account: {
-    name: 'Account',
+    name: "Account",
     navigationOptions: {
       ...defaultNavigationOptions,
     },
   },
   ConnectQR: {
-    name: 'ConnectQR',
+    name: "ConnectQR",
     navigationOptions: {
       ...defaultNavigationOptions,
     },
   },
   QRScannerStep: {
-    name: 'QRScannerStep',
+    name: "QRScannerStep",
     navigationOptions: {
       ...defaultNavigationOptions,
     },
   },
   ConnectDevice: {
-    name: 'ConnectDevice',
+    name: "ConnectDevice",
     navigationOptions: {
       ...defaultNavigationOptions,
     },
   },
   SetupDevice: {
-    name: 'SetupDevice',
+    name: "SetupDevice",
     navigationOptions: {
       ...defaultNavigationOptions,
     },
   },
   DeviceDetails: {
-    name: 'DeviceDetails',
+    name: "DeviceDetails",
+    navigationOptions: {
+      ...defaultNavigationOptions,
+    },
+  },
+  Schedule: {
+    name: "Schedule",
     navigationOptions: {
       ...defaultNavigationOptions,
     },
   },
   ChargerSettings: {
-    name: 'ChargerSettings',
+    name: "ChargerSettings",
     navigationOptions: {
       ...defaultNavigationOptions,
     },

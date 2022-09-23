@@ -39,6 +39,7 @@ const DeviceDetails = (props) => {
 
   const {
     ChargerSettings: { name: chargerSettingsRoute },
+    Schedule: { name: ScheduleRoute },
   } = routes;
 
   const connection = global.connection;
@@ -126,10 +127,22 @@ const DeviceDetails = (props) => {
             <Layout.Body>
               {!chargerIsCharging(charger) && (
                 <View style={style.table_container}>
-                  <PillButton
-                    text={getFullMonthName(date)}
-                    onPressAction={() => setIsCalendarOpen(true)}
-                  />
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <PillButton
+                      text={"Schedule"}
+                      onPressAction={() => navigation.navigate(ScheduleRoute)}
+                      // onPressAction={() => setIsCalendarOpen(true)}
+                    />
+                    <PillButton
+                      text={getFullMonthName(date)}
+                      onPressAction={() => setIsCalendarOpen(true)}
+                    />
+                  </View>
                   <Table
                     chargerId={chargerId}
                     startDate={date}
