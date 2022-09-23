@@ -20,7 +20,7 @@ import { style } from "./Account.style";
 import validationSchema from "./validationSchema";
 
 const Account = (props) => {
-	const { initLogOut, initEditProfile } = useContext(AuthContext);
+	const { initLogOut, initEditProfile, initResetPassword, userName } = useContext(AuthContext);
 
 	const [error, setError] = useState(false);
 	const [logType, setLogType] = useState("error");
@@ -81,6 +81,10 @@ const Account = (props) => {
 		initEditProfile();
 	};
 
+	const handleResetPassword = () => {
+		initResetPassword();
+	};
+
 	return (
 		<Layout scrollView={true}>
 			<Layout.Header>
@@ -95,10 +99,12 @@ const Account = (props) => {
 					style={style.image}
 					source={require("../../assets/myAccount.png")}
 				/>
-				<Text style={style.changeText}>Change</Text>
-				<Text style={style.title}>My account</Text>
+				<Text style={style.changeText}>My Account</Text>
+				<Text style={style.title}>{userName}</Text>
 
-				<Input
+
+
+				{/* <Input
 					disabled={true}
 					label={"Email"}
 					marginBottom={12}
@@ -129,9 +135,7 @@ const Account = (props) => {
 				/>
 				<Pressable onPress={() => navigation.navigate("RessetPassword")}>
 					<Text style={style.buttonsText}>Change Password</Text>
-				</Pressable>
-			</Layout.Body>
-			<Layout.Footer>
+				</Pressable> */}
 				<Button
 					text={"Edit profile"}
 					marginBottom={20}
@@ -139,9 +143,16 @@ const Account = (props) => {
 					fill={true}
 				/>
 				<Button
+					text={"Reset Password"}
+					marginBottom={20}
+					onPressAction={handleResetPassword}
+					fill={true}
+				/>
+				<Button
 					isSecondary
 					text={"LOG OUT"}
 					marginBottom={15}
+					marginTop={30}
 					onPressAction={triggerLogOutFlow}
 					fill={true}
 				/>
@@ -154,6 +165,9 @@ const Account = (props) => {
 						logType={logType}
 					/>
 				)}
+			</Layout.Body>
+			<Layout.Footer>
+
 			</Layout.Footer>
 		</Layout>
 	);

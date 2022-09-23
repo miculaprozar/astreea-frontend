@@ -9,6 +9,7 @@ import {
   ADB2C_CLIENT,
   ADB2C_REDIRECT_URI,
   ADB2C_POLICY_EDIT_PROFILE,
+  ADB2C_POLICY_PASSWORD_RESET,
 } from '../../api/utils/consts';
 
 import {
@@ -23,6 +24,7 @@ const AuthContext = React.createContext();
 const AuthProvider = (props) => {
   const [token, setToken] = useState(null);
   const [isLoading, setIsloading] = useState(false);
+  const [userName, setUserName] = useState("");
   const [connectionStatus, setConnectionStatus] = useState(false);
 
   const getSearchParamFromURL = (url, param) => {
@@ -61,11 +63,14 @@ const AuthProvider = (props) => {
       initAuth();
     }
     let tokenResponse = await axios.post(
-      `https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY}/oauth2/v2.0/token?grant_type=authorization_code&client_id=${ADB2C_CLIENT}&code=${code}&claim=given_name&claim=family_name&claim=idp_access_token`
+      `https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY}/oauth2/v2.0/token?grant_type=authorization_code&client_id=${ADB2C_CLIENT}&code=${code}&claim=given_name&claim=family_name`
     ); // get token
-    let userInfo;
+    let userInfo = {};
     try {
       userInfo = base64.decode(tokenResponse.data.profile_info);
+      console.log(userInfo)
+      let name = JSON.parse(userInfo).name;
+      setUserName(name);
     }
     catch (e) {
       initAuth();
@@ -99,6 +104,14 @@ const AuthProvider = (props) => {
       ADB2C_REDIRECT_URI
     );
   };
+
+  const initResetPassword = async () => {
+    await WebBrowser.openAuthSessionAsync(
+      `https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY_PASSWORD_RESET}/oauth2/v2.0/authorize?client_id=${ADB2C_CLIENT}&response_type=code+id_token&redirect_uri=${ADB2C_REDIRECT_URI}&response_mode=query&scope=openid`,
+      ADB2C_REDIRECT_URI
+    );
+  };
+
   useEffect(() => {
     if (token === null && !isLoading) {
       setIsloading(true);
@@ -113,9 +126,11 @@ const AuthProvider = (props) => {
       initAuth,
       initLogOut,
       initEditProfile,
+      initResetPassword,
       isLoading,
+      userName
     }),
-    [token, isLoading, connectionStatus]
+    [token, isLoading, connectionStatus, userName]
   );
 
   return (

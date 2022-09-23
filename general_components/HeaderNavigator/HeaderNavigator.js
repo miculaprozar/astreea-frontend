@@ -11,6 +11,7 @@ const HeaderNavigator = ({
   hideBack,
   navProps,
   route,
+  userName
 }) => {
   return (
     <View style={style.headerContainer}>
@@ -21,7 +22,7 @@ const HeaderNavigator = ({
       {/* <View style={{ flex: 1 }}>{!hideLogo && <AstreeaSvg />}</View> */}
 
       <View style={{ flex: 1, alignItems: "flex-end" }}>
-        <AccountSettings navigation={navigation} route={route} />
+        <AccountSettings navigation={navigation} route={route} userName={userName} />
         {/* {!hideAccountSettings && <AccountSettings navigation={navigation} />} */}
       </View>
     </View>

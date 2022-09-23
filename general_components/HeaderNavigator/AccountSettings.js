@@ -4,7 +4,7 @@ import { style } from "./HeaderNavigator.style";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 
-const AccountSettings = ({ navigation, route }) => {
+const AccountSettings = ({ navigation, route, userName }) => {
   const [name, setName] = useState({
     firstName: "",
     lastName: "",
@@ -34,8 +34,9 @@ const AccountSettings = ({ navigation, route }) => {
         <Pressable onPress={() => navigation.navigate("Account")}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View>
-              <Text style={style.nameText}>{name.firstName}</Text>
-              <Text style={style.nameText}>{name.lastName}</Text>
+              {/* <Text style={style.nameText}>{name.firstName}</Text>
+              <Text style={style.nameText}>{name.lastName}</Text> */}
+              <Text style={style.nameText}>{userName}</Text>
             </View>
             <Image
               style={style.titleWhite}
@@ -45,7 +46,7 @@ const AccountSettings = ({ navigation, route }) => {
         </Pressable>
       )}
 
-      {(route?.name !== "Home" || name.firstName === "") && (
+      {(route?.name !== "Home" || userName === "") && (
         <Image
           style={style.titleWhite}
           source={require("../../assets/titleWhite.png")}

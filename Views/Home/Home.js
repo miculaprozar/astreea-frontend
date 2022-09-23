@@ -23,10 +23,8 @@ import {
 } from '../../helpers/formatFunctions';
 const Home = (props) => {
   const { navigation, route } = props;
-  const { token, connectionStatus } = useContext(AuthContext);
-
+  const { token, connectionStatus, userName } = useContext(AuthContext);
   const { QRScannerStep, DeviceDetails } = routes;
-
   const [filterChargers, setFilterChargers] = useState(1);
   const [searchfield, setSearchfield] = useState('');
   const [chargerList, setChargerList] = useState(null);
@@ -81,6 +79,7 @@ const Home = (props) => {
           navigation={navigation}
           hideBack={true}
           route={route}
+          userName={userName}
         />
       </Layout.Header>
       <Layout.Body>
