@@ -51,15 +51,27 @@ const AuthProvider = (props) => {
   const initAuth = async () => {
     let codeResponse = await WebBrowser.openAuthSessionAsync(
       `https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY}/oauth2/v2.0/authorize?client_id=${ADB2C_CLIENT}&response_type=code+id_token&redirect_uri=${ADB2C_REDIRECT_URI}&response_mode=query&scope=openid`,
-      ADB2C_REDIRECT_URI
+      ADB2C_REDIRECT_URI, { showInRecents: true }
     ); // sign-in & sign-up
-    let code = getSearchParamFromURL(codeResponse.url, 'code');
+    let code;
+    try {
+      code = getSearchParamFromURL(codeResponse.url, 'code');
+    }
+    catch (e) {
+      initAuth();
+    }
     let tokenResponse = await axios.post(
       `https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY}/oauth2/v2.0/token?grant_type=authorization_code&client_id=${ADB2C_CLIENT}&code=${code}&claim=given_name&claim=family_name&claim=idp_access_token`
     ); // get token
-    const userInfo = base64.decode(tokenResponse.data.profile_info);
-    var authenticationFunctionUrl =
-      'https://csmsgatewayauthorization.azurewebsites.net/api/negotiate?key=SMI_8CPajAfaxRYD0sB0PV-VQA_A5-76OHYZbD955tbxAzFuTwklsg==';
+    let userInfo;
+    try {
+      userInfo = base64.decode(tokenResponse.data.profile_info);
+    }
+    catch (e) {
+      initAuth();
+    }
+
+    var authenticationFunctionUrl = 'https://csmsgatewayauthorization.azurewebsites.net/api/negotiate?key=SMI_8CPajAfaxRYD0sB0PV-VQA_A5-76OHYZbD955tbxAzFuTwklsg==';
     const authInfo = await axios.get(authenticationFunctionUrl);
     startSignalRConnection(authInfo, setConnectionStatus);
 
