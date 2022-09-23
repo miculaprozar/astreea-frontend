@@ -167,7 +167,10 @@ const DeviceDetails = (props) => {
                   <ChargerButton
                     marginLeft={10}
                     isCharging={chargerIsCharging(charger)}
-                    onPressAction={() => StartStopCharging()}
+                    isDisabled={charger.state === "Occupied" ? true : false}
+                    onPressAction={() =>
+                      charger.state !== "Occupied" && StartStopCharging()
+                    }
                   />
                 </View>
               </View>

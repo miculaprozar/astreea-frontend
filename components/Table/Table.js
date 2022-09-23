@@ -8,7 +8,7 @@ import { style } from "./Table.style";
 const TableComponent = ({ chargerId, startDate, endDate }) => {
   const [tableData, setTableData] = useState([]);
   const [tableDimension, setTableDimension] = React.useState(null);
-  const [tableItems, setTableItems] = useState(0);
+  const [tableItems, setTableItems] = useState(1);
   const [rowsHeight, setRowsHeight] = useState(0);
 
   const [page, setPage] = useState(1);
@@ -38,7 +38,7 @@ const TableComponent = ({ chargerId, startDate, endDate }) => {
           .invoke(
             "GetChargingStats",
             chargerId,
-            page,
+            page - 1,
             tableItems,
             requestStartDate,
             requestEndDate
@@ -61,7 +61,7 @@ const TableComponent = ({ chargerId, startDate, endDate }) => {
 
   useEffect(() => {
     chargingStats?.chargingSessions.length === 0 ||
-      chargingStats?.chargingSessions.length <= tableItems
+    chargingStats?.chargingSessions.length < tableItems
       ? setExistsNextPage(false)
       : setExistsNextPage(true);
 
