@@ -1,6 +1,6 @@
 import React from "react";
 import { Pressable, Text, View } from "react-native";
-import { secondary, primary } from "./PillButtonStyle";
+import { secondary, primary, danger } from "./PillButtonStyle";
 
 const PillButton = ({
   isSecondary,
@@ -10,8 +10,9 @@ const PillButton = ({
   marginLeft,
   marginRight,
   onPressAction,
+  isDanger,
 }) => {
-  let buttonType = isSecondary ? secondary : primary;
+  let buttonType = isSecondary ? secondary : isDanger ? danger : primary;
   return (
     <View
       style={{
