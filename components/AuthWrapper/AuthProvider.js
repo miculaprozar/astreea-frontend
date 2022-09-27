@@ -1,8 +1,8 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import * as WebBrowser from 'expo-web-browser';
-import startSignalRConnection from './startSignalRConnection';
-import axios from 'axios';
-import base64 from 'react-native-base64';
+import React, { useState, useMemo, useEffect, useCallback } from "react";
+import * as WebBrowser from "expo-web-browser";
+import startSignalRConnection from "./startSignalRConnection";
+import axios from "axios";
+import base64 from "react-native-base64";
 import {
   ADB2C_TENANT,
   ADB2C_POLICY,
@@ -10,15 +10,15 @@ import {
   ADB2C_REDIRECT_URI,
   ADB2C_POLICY_EDIT_PROFILE,
   ADB2C_POLICY_PASSWORD_RESET,
-} from '../../api/utils/consts';
+} from "../../api/utils/consts";
 
 import {
   HttpTransportType,
   HubConnectionBuilder,
   HubConnectionState,
   LogLevel,
-} from '@microsoft/signalr';
-import { GATEWAY_URL } from '../../api/utils/consts';
+} from "@microsoft/signalr";
+import { GATEWAY_URL } from "../../api/utils/consts";
 
 const AuthContext = React.createContext();
 const AuthProvider = (props) => {
@@ -53,14 +53,15 @@ const AuthProvider = (props) => {
   const initAuth = async () => {
     let codeResponse = await WebBrowser.openAuthSessionAsync(
       `https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY}/oauth2/v2.0/authorize?client_id=${ADB2C_CLIENT}&response_type=code+id_token&redirect_uri=${ADB2C_REDIRECT_URI}&response_mode=query&scope=openid`,
-      ADB2C_REDIRECT_URI, { showInRecents: true }
+      ADB2C_REDIRECT_URI,
+      { showInRecents: true }
     ); // sign-in & sign-up
     let code;
     try {
-      code = getSearchParamFromURL(codeResponse.url, 'code');
-    }
-    catch (e) {
-      initAuth();
+      code = getSearchParamFromURL(codeResponse.url, "code");
+    } catch (e) {
+      console.log(e);
+      // initAuth();
     }
     let tokenResponse = await axios.post(
       `https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY}/oauth2/v2.0/token?grant_type=authorization_code&client_id=${ADB2C_CLIENT}&code=${code}&claim=given_name&claim=family_name`
@@ -68,15 +69,17 @@ const AuthProvider = (props) => {
     let userInfo = {};
     try {
       userInfo = base64.decode(tokenResponse.data.profile_info);
-      console.log(userInfo)
+      console.log(userInfo);
       let name = JSON.parse(userInfo).name;
       setUserName(name);
-    }
-    catch (e) {
-      initAuth();
+    } catch (e) {
+      console.log(e);
+
+      // initAuth();
     }
 
-    var authenticationFunctionUrl = 'https://csmsgatewayauthorization.azurewebsites.net/api/negotiate?key=SMI_8CPajAfaxRYD0sB0PV-VQA_A5-76OHYZbD955tbxAzFuTwklsg==';
+    var authenticationFunctionUrl =
+      "https://csmsgatewayauthorization.azurewebsites.net/api/negotiate?key=SMI_8CPajAfaxRYD0sB0PV-VQA_A5-76OHYZbD955tbxAzFuTwklsg==";
     const authInfo = await axios.get(authenticationFunctionUrl);
     startSignalRConnection(authInfo, setConnectionStatus);
 
@@ -128,7 +131,7 @@ const AuthProvider = (props) => {
       initEditProfile,
       initResetPassword,
       isLoading,
-      userName
+      userName,
     }),
     [token, isLoading, connectionStatus, userName]
   );
