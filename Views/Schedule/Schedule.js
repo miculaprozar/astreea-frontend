@@ -1,12 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import {
-  Image,
-  Pressable,
-  Text,
-  View,
-  TextInput,
-  ScrollView,
-} from "react-native";
+import { Text, View, TouchableWithoutFeedback, ScrollView } from "react-native";
 import DetailsBackground from "../../assets/chargingScreen.jpg";
 import Layout from "../../general_components/Layout";
 import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
@@ -14,9 +7,8 @@ import { style } from "./Schedule.style";
 import DoubleInput from "../../components/DoubleInput/DoubleInput";
 import SmallInput from "../../components/SmallInput/SmallInput";
 
-import Button from "../../components/Button/Button";
 import PillButton from "../../components/PillButton/PillButton";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import validationSchema from "./validationSchema";
 
@@ -30,8 +22,6 @@ const Schedule = (props) => {
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
-
-  console.log("THE ERRORS ARE:", Object.keys(errors).length === 0);
 
   const onSubmit = (data) => console.log(data);
 
@@ -138,12 +128,62 @@ const Schedule = (props) => {
               <Text>Delete</Text>
             </View>
           </View>
-          <View style={{ flex: 1 }}>
-            <ScrollView style={{ flex: 1 }}>
+          <ScrollView>
+            <TouchableWithoutFeedback>
               <View
                 style={{
                   flexDirection: "row",
-                  marginBottom: 5,
+                  paddingBottom: 5,
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>8 : 48</Text>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>9 : 48</Text>
+                </View>
+
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>1 : 00</Text>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>23</Text>
+                </View>
+                <View style={{ flex: 1, alignItems: "center" }}>
+                  <PillButton
+                    text={"Delete"}
+                    isDanger={true}
+                    onPressAction={() => console.log("presed")}
+                  />
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback>
+              <View
+                style={{
+                  flexDirection: "row",
+                  paddingBottom: 5,
                   alignItems: "center",
                 }}
               >
@@ -184,10 +224,12 @@ const Schedule = (props) => {
                   <PillButton text={"Delete"} isDanger={true} />
                 </View>
               </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback>
               <View
                 style={{
                   flexDirection: "row",
-                  marginBottom: 5,
+                  paddingBottom: 5,
                   alignItems: "center",
                 }}
               >
@@ -228,10 +270,12 @@ const Schedule = (props) => {
                   <PillButton text={"Delete"} isDanger={true} />
                 </View>
               </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback>
               <View
                 style={{
                   flexDirection: "row",
-                  marginBottom: 5,
+                  paddingBottom: 5,
                   alignItems: "center",
                 }}
               >
@@ -272,10 +316,12 @@ const Schedule = (props) => {
                   <PillButton text={"Delete"} isDanger={true} />
                 </View>
               </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback>
               <View
                 style={{
                   flexDirection: "row",
-                  marginBottom: 5,
+                  paddingBottom: 5,
                   alignItems: "center",
                 }}
               >
@@ -316,10 +362,12 @@ const Schedule = (props) => {
                   <PillButton text={"Delete"} isDanger={true} />
                 </View>
               </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback>
               <View
                 style={{
                   flexDirection: "row",
-                  marginBottom: 5,
+                  paddingBottom: 5,
                   alignItems: "center",
                 }}
               >
@@ -360,10 +408,12 @@ const Schedule = (props) => {
                   <PillButton text={"Delete"} isDanger={true} />
                 </View>
               </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback>
               <View
                 style={{
                   flexDirection: "row",
-                  marginBottom: 5,
+                  paddingBottom: 5,
                   alignItems: "center",
                 }}
               >
@@ -404,10 +454,12 @@ const Schedule = (props) => {
                   <PillButton text={"Delete"} isDanger={true} />
                 </View>
               </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback>
               <View
                 style={{
                   flexDirection: "row",
-                  marginBottom: 5,
+                  paddingBottom: 5,
                   alignItems: "center",
                 }}
               >
@@ -448,10 +500,12 @@ const Schedule = (props) => {
                   <PillButton text={"Delete"} isDanger={true} />
                 </View>
               </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback>
               <View
                 style={{
                   flexDirection: "row",
-                  marginBottom: 5,
+                  paddingBottom: 5,
                   alignItems: "center",
                 }}
               >
@@ -492,10 +546,12 @@ const Schedule = (props) => {
                   <PillButton text={"Delete"} isDanger={true} />
                 </View>
               </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback>
               <View
                 style={{
                   flexDirection: "row",
-                  marginBottom: 5,
+                  paddingBottom: 5,
                   alignItems: "center",
                 }}
               >
@@ -536,8 +592,284 @@ const Schedule = (props) => {
                   <PillButton text={"Delete"} isDanger={true} />
                 </View>
               </View>
-            </ScrollView>
-          </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback>
+              <View
+                style={{
+                  flexDirection: "row",
+                  paddingBottom: 5,
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>8 : 48</Text>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>9 : 48</Text>
+                </View>
+
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>1 : 00</Text>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>23</Text>
+                </View>
+                <View style={{ flex: 1, alignItems: "center" }}>
+                  <PillButton text={"Delete"} isDanger={true} />
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback>
+              <View
+                style={{
+                  flexDirection: "row",
+                  paddingBottom: 5,
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>8 : 48</Text>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>9 : 48</Text>
+                </View>
+
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>1 : 00</Text>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>23</Text>
+                </View>
+                <View style={{ flex: 1, alignItems: "center" }}>
+                  <PillButton text={"Delete"} isDanger={true} />
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback>
+              <View
+                style={{
+                  flexDirection: "row",
+                  paddingBottom: 5,
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>8 : 48</Text>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>9 : 48</Text>
+                </View>
+
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>1 : 00</Text>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>23</Text>
+                </View>
+                <View style={{ flex: 1, alignItems: "center" }}>
+                  <PillButton text={"Delete"} isDanger={true} />
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback>
+              <View
+                style={{
+                  flexDirection: "row",
+                  paddingBottom: 5,
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>8 : 48</Text>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>9 : 48</Text>
+                </View>
+
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>1 : 00</Text>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>23</Text>
+                </View>
+                <View style={{ flex: 1, alignItems: "center" }}>
+                  <PillButton text={"Delete"} isDanger={true} />
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback>
+              <View
+                style={{
+                  flexDirection: "row",
+                  paddingBottom: 5,
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>8 : 48</Text>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>9 : 48</Text>
+                </View>
+
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>1 : 00</Text>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>23</Text>
+                </View>
+                <View style={{ flex: 1, alignItems: "center" }}>
+                  <PillButton text={"Delete"} isDanger={true} />
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback>
+              <View
+                style={{
+                  flexDirection: "row",
+                  paddingBottom: 5,
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>8 : 48</Text>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>9 : 48</Text>
+                </View>
+
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>1 : 00</Text>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>23</Text>
+                </View>
+                <View style={{ flex: 1, alignItems: "center" }}>
+                  <PillButton text={"Delete"} isDanger={true} />
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </ScrollView>
         </View>
       </Layout.Body>
     </Layout>
