@@ -127,22 +127,15 @@ const DeviceDetails = (props) => {
             <Layout.Body>
               {!chargerIsCharging(charger) && (
                 <View style={style.table_container}>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <PillButton
+                  {/* <PillButton
                       text={"Schedule"}
                       onPressAction={() => navigation.navigate(ScheduleRoute)}
-                      // onPressAction={() => setIsCalendarOpen(true)}
-                    />
-                    <PillButton
-                      text={getFullMonthName(date)}
-                      onPressAction={() => setIsCalendarOpen(true)}
-                    />
-                  </View>
+                    /> */}
+                  <PillButton
+                    text={getFullMonthName(date)}
+                    onPressAction={() => setIsCalendarOpen(true)}
+                    marginLeft={"auto"}
+                  />
                   <Table
                     chargerId={chargerId}
                     startDate={date}
@@ -167,7 +160,7 @@ const DeviceDetails = (props) => {
               <View style={style.tittleButtonWrapper}>
                 <View style={{ flex: 1 }}>
                   <ChargerButton
-                    marginRight={10}
+                    marginRight={5}
                     isSecondary={true}
                     onPressAction={() =>
                       navigation.navigate(chargerSettingsRoute, {
@@ -178,7 +171,21 @@ const DeviceDetails = (props) => {
                 </View>
                 <View style={{ flex: 1 }}>
                   <ChargerButton
-                    marginLeft={10}
+                    isSchedule={true}
+                    marginLeft={2.5}
+                    marginRight={2.5}
+                    onPressAction={() => navigation.navigate(ScheduleRoute)}
+
+                    // onPressAction={() =>
+                    //   navigation.navigate(chargerSettingsRoute, {
+                    //     chargerId: chargerId,
+                    //   })
+                    // }
+                  />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <ChargerButton
+                    marginLeft={5}
                     isCharging={chargerIsCharging(charger)}
                     isDisabled={charger.state === "Occupied" ? true : false}
                     onPressAction={() =>

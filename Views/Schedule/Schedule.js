@@ -11,7 +11,9 @@ import DetailsBackground from "../../assets/chargingScreen.jpg";
 import Layout from "../../general_components/Layout";
 import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
 import { style } from "./Schedule.style";
-import Input from "../../components/Input/Input";
+import DoubleInput from "../../components/DoubleInput/DoubleInput";
+import SmallInput from "../../components/SmallInput/SmallInput";
+
 import Button from "../../components/Button/Button";
 import PillButton from "../../components/PillButton/PillButton";
 import { useForm, Controller } from "react-hook-form";
@@ -29,7 +31,7 @@ const Schedule = (props) => {
     resolver: yupResolver(validationSchema),
   });
 
-  console.log("THE ERRORS ARE:", errors);
+  console.log("THE ERRORS ARE:", Object.keys(errors).length === 0);
 
   const onSubmit = (data) => console.log(data);
 
@@ -40,137 +42,52 @@ const Schedule = (props) => {
         <Text style={style.title}>Schedule</Text>
       </Layout.Header>
       <Layout.Body>
-        <View style={style.inputsCard}>
+        <View
+          style={{
+            ...style.inputsCard,
+            ...(Object.keys(errors).length === 0 && { height: 150 }),
+          }}
+        >
           <View style={{ flexDirection: "row" }}>
-            <View style={{ alignItems: "center" }}>
-              <Text>Stop</Text>
-              <View style={{ flexDirection: "row" }}>
-                <Controller
-                  control={control}
-                  render={({ field: { value, onChange } }) => {
-                    return (
-                      <TextInput
-                        placeholderTextColor="rgba(255, 255, 255, 0.9)"
-                        placeholder={`Hour`}
-                        keyboardType="number-pad"
-                        onChangeText={onChange}
-                        value={value}
-                        style={{
-                          ...style.input,
-                          borderTopLeftRadius: 20,
-                          borderBottomLeftRadius: 20,
-                          borderRightColor: "rgba(255, 255, 255, 0.9)",
-                        }}
-                      />
-                    );
-                  }}
-                  name={"stopHour"}
-                />
-                <Controller
-                  control={control}
-                  render={({ field: { value, onChange } }) => {
-                    return (
-                      <TextInput
-                        placeholderTextColor="rgba(255, 255, 255, 0.9)"
-                        placeholder={`Minutes`}
-                        keyboardType="number-pad"
-                        onChangeText={onChange}
-                        value={value}
-                        style={{
-                          ...style.input,
-                          borderTopRightRadius: 20,
-                          borderBottomRightRadius: 20,
-                          borderLeftColor: "rgba(255, 255, 255, 0.9)",
-                        }}
-                      />
-                    );
-                  }}
-                  name={"stopMinutes"}
-                />
-              </View>
-            </View>
-            <View style={{ alignItems: "center", marginLeft: "auto" }}>
-              <Text>Duration</Text>
-              <View style={{ flexDirection: "row" }}>
-                <Controller
-                  control={control}
-                  render={({ field: { value, onChange } }) => {
-                    return (
-                      <TextInput
-                        placeholderTextColor="rgba(255, 255, 255, 0.9)"
-                        placeholder={`Hour`}
-                        keyboardType="number-pad"
-                        onChangeText={onChange}
-                        value={value}
-                        style={{
-                          ...style.input,
-                          borderTopLeftRadius: 20,
-                          borderBottomLeftRadius: 20,
-                          borderRightColor: "rgba(255, 255, 255, 0.9)",
-                        }}
-                      />
-                    );
-                  }}
-                  name={"durationHour"}
-                />
-
-                <Controller
-                  control={control}
-                  render={({ field: { value, onChange } }) => {
-                    return (
-                      <TextInput
-                        placeholderTextColor="rgba(255, 255, 255, 0.9)"
-                        placeholder={`Minutes`}
-                        keyboardType="number-pad"
-                        onChangeText={onChange}
-                        value={value}
-                        style={{
-                          ...style.input,
-                          borderTopRightRadius: 20,
-                          borderBottomRightRadius: 20,
-                          borderLeftColor: "rgba(255, 255, 255, 0.9)",
-                        }}
-                      />
-                    );
-                  }}
-                  name={"durationMinutes"}
-                />
-              </View>
-            </View>
+            <DoubleInput
+              control={control}
+              firstInputName={"startHour"}
+              secondInputName={"startMinutes"}
+              label={"Start"}
+              firstInputPlaceholder={`Hour`}
+              secondInputPlaceholder={"Minutes"}
+              firstInputError={errors?.startHour ? errors.startHour : null}
+              secondInputError={
+                errors?.startMinutes ? errors.startMinutes : null
+              }
+            />
+            <DoubleInput
+              control={control}
+              firstInputName={"stopHour"}
+              secondInputName={"stopMinutes"}
+              label={"Stop"}
+              firstInputPlaceholder={`Hour`}
+              secondInputPlaceholder={"Minutes"}
+              marginLeft={"auto"}
+              firstInputError={errors?.stopHour ? errors.stopHour : null}
+              secondInputError={errors?.stopMinutes ? errors.stopMinutes : null}
+            />
           </View>
+
           <View
             style={{
               flexDirection: "row",
-              marginTop: 10,
-              alignItems: "center",
+              marginTop: "auto",
+              marginBottom: "auto",
             }}
           >
-            <View style={{ alignItems: "center" }}>
-              <Text>Watts</Text>
-              <View style={{ flexDirection: "row" }}>
-                <Controller
-                  control={control}
-                  render={({ field: { value, onChange } }) => {
-                    return (
-                      <TextInput
-                        placeholderTextColor="rgba(255, 255, 255, 0.9)"
-                        placeholder={`Watts`}
-                        keyboardType="number-pad"
-                        onChangeText={onChange}
-                        value={value}
-                        style={{
-                          ...style.input,
-                          borderRadius: 20,
-                          borderRightColor: "rgba(255, 255, 255, 0.9)",
-                          width: 140,
-                        }}
-                      />
-                    );
-                  }}
-                  name={"kwh"}
-                />
-              </View>
-            </View>
+            <SmallInput
+              control={control}
+              label={"Watts"}
+              name={"watts"}
+              error={errors?.watts}
+            />
+
             <View
               style={{ marginLeft: "auto", marginTop: 20, marginRight: "auto" }}
             >
@@ -207,7 +124,7 @@ const Schedule = (props) => {
                 alignItems: "center",
               }}
             >
-              <Text>Duration</Text>
+              <Text>Stop</Text>
             </View>
             <View
               style={{
