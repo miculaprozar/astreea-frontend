@@ -60,7 +60,7 @@ const AuthProvider = (props) => {
     try {
       code = getSearchParamFromURL(codeResponse.url, "code");
     } catch (e) {
-      initAuth();
+      // initAuth();
     }
 
     let tokenResponse = await axios.post(
@@ -72,7 +72,7 @@ const AuthProvider = (props) => {
       let name = JSON.parse(userInfo).name;
       setUserName(name);
     } catch (e) {
-      initAuth();
+      // initAuth();
     }
 
     var authenticationFunctionUrl =

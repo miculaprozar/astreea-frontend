@@ -14,7 +14,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "digitalgarden.astreea.app",
@@ -31,6 +33,11 @@
     "sdkVersion": "45.0.0",
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d827e86d-b778-487a-975d-dbaf9a247266"
+      }
     }
   }
 }
