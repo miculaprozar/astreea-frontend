@@ -43,6 +43,16 @@ const AuthProvider = (props) => {
     return value;
   };
 
+  const getSearchParamFromDecoded = (decoded, param) => {
+    const include = decoded.includes(param);
+
+    if (!include) return null;
+
+    const value = decoded.split(param).pop().split(',')[0].slice(1, -1);
+
+    return value;
+  };
+
   // const startSignalRConnection = (authInfo) => {
   //   const connectionSignalR = new HubConnectionBuilder()
   //     .configureLogging(LogLevel.Critical)
@@ -55,58 +65,6 @@ const AuthProvider = (props) => {
   //   setConnection(connectionSignalR);
   // };
 
-  const initAuth = async () => {
-    let codeResponse = await WebBrowser.openAuthSessionAsync(
-      `https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY}/oauth2/v2.0/authorize?client_id=${ADB2C_CLIENT}&response_type=code&redirect_uri=${ADB2C_REDIRECT_URI}&response_mode=query&scope=openid`,
-      ADB2C_REDIRECT_URI,
-      { showInRecents: true }
-    ); // sign-in & sign-up
-    let code;
-    try {
-      code = getSearchParamFromURL(codeResponse.url, "code");
-    } catch (e) {
-      setTestareValentino(e);
-      console.log(e);
-
-      // initAuth();
-    }
-
-    let tokenResponse = await axios
-      .post(
-        `https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY}/oauth2/v2.0/token?grant_type=authorization_code&client_id=${ADB2C_CLIENT}&code=${code}&claim=given_name&claim=family_name`
-      )
-      .catch((e) => {
-        setTestareValentino1(e);
-        console.log("THE ERROR IS123123123 ", e);
-      }); // get token
-    let userInfo = {};
-    try {
-      userInfo = base64.decode(tokenResponse.data.profile_info);
-      console.log("THE TOKEN RESPONSE:", tokenResponse.data);
-      console.log("The user info is:", userInfo);
-
-      let name = JSON.parse(
-        '{"ver":"1.0","tid":"e37b7e4a-f3fd-47c3-bb4e-4d0fc800a3c3","sub":null,"name":"Valentin","preferred_username":null,"idp":null}'
-      );
-
-      console.log("Name is:", typeof name, name);
-
-      setUserName(name.name);
-    } catch (e) {
-      setTestareValentino2(e);
-      console.log(e);
-      // initAuth();
-    }
-
-    var authenticationFunctionUrl =
-      "https://csmsgatewayauthorization.azurewebsites.net/api/negotiate?key=SMI_8CPajAfaxRYD0sB0PV-VQA_A5-76OHYZbD955tbxAzFuTwklsg==";
-    const authInfo = await axios.get(authenticationFunctionUrl);
-    startSignalRConnection(authInfo, setConnectionStatus);
-
-    setToken(tokenResponse.data.id_token);
-    setIsloading(false);
-  };
-
   const initLogOut = async () => {
     setIsloading(true);
     // const logOutResponse = await axios.get(
@@ -118,6 +76,51 @@ const AuthProvider = (props) => {
     ); // logout
 
     setToken(null);
+    setIsloading(false);
+  };
+
+  const initAuth = async () => {
+    let codeResponse = await WebBrowser.openAuthSessionAsync(
+      `https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY}/oauth2/v2.0/authorize?client_id=${ADB2C_CLIENT}&response_type=code&redirect_uri=${ADB2C_REDIRECT_URI}&response_mode=query&scope=openid`,
+      ADB2C_REDIRECT_URI,
+      { showInRecents: true }
+    ).catch(e => {
+      //initLogOut();
+      console.log("auth: ", e);
+    }); // sign-in & sign-up
+    let code;
+    try {
+      code = getSearchParamFromURL(codeResponse.url, "code");
+    } catch (e) {
+      setTestareValentino(e);
+      //initLogOut();
+      // initAuth();
+    }
+
+    let tokenResponse = await axios
+      .post(
+        `https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY}/oauth2/v2.0/token?grant_type=authorization_code&client_id=${ADB2C_CLIENT}&code=${code}&claim=given_name&claim=family_name`
+      )
+      .catch((e) => {
+        //initLogOut();
+        setTestareValentino1(e);
+      }); // get token
+    let userInfo = '';
+    try {
+      userInfo = base64.decode(tokenResponse.data.profile_info);
+      setUserName(getSearchParamFromDecoded(userInfo, '"name":'));
+    } catch (e) {
+      setTestareValentino2(e);
+      //initLogOut();
+      // initAuth();
+    }
+
+    var authenticationFunctionUrl =
+      "https://csmsgatewayauthorization.azurewebsites.net/api/negotiate?key=SMI_8CPajAfaxRYD0sB0PV-VQA_A5-76OHYZbD955tbxAzFuTwklsg==";
+    const authInfo = await axios.get(authenticationFunctionUrl);
+    startSignalRConnection(authInfo, setConnectionStatus);
+
+    setToken(tokenResponse.data.id_token);
     setIsloading(false);
   };
 
