@@ -48,7 +48,7 @@ const AuthProvider = (props) => {
 
     if (!include) return null;
 
-    const value = decoded.split(param).pop().split(',')[0].slice(1, -1);
+    const value = decoded.split(param).pop().split(",")[0].slice(1, -1);
 
     return value;
   };
@@ -84,8 +84,8 @@ const AuthProvider = (props) => {
       `https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY}/oauth2/v2.0/authorize?client_id=${ADB2C_CLIENT}&response_type=code&redirect_uri=${ADB2C_REDIRECT_URI}&response_mode=query&scope=openid`,
       ADB2C_REDIRECT_URI,
       { showInRecents: true }
-    ).catch(e => {
-      //initLogOut();
+    ).catch((e) => {
+      initLogOut();
       console.log("auth: ", e);
     }); // sign-in & sign-up
     let code;
@@ -93,8 +93,8 @@ const AuthProvider = (props) => {
       code = getSearchParamFromURL(codeResponse.url, "code");
     } catch (e) {
       setTestareValentino(e);
-      //initLogOut();
-      // initAuth();
+      initLogOut();
+      initAuth();
     }
 
     let tokenResponse = await axios
@@ -102,17 +102,17 @@ const AuthProvider = (props) => {
         `https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY}/oauth2/v2.0/token?grant_type=authorization_code&client_id=${ADB2C_CLIENT}&code=${code}&claim=given_name&claim=family_name`
       )
       .catch((e) => {
-        //initLogOut();
+        initLogOut();
         setTestareValentino1(e);
       }); // get token
-    let userInfo = '';
+    let userInfo = "";
     try {
       userInfo = base64.decode(tokenResponse.data.profile_info);
       setUserName(getSearchParamFromDecoded(userInfo, '"name":'));
     } catch (e) {
       setTestareValentino2(e);
-      //initLogOut();
-      // initAuth();
+      initLogOut();
+      initAuth();
     }
 
     var authenticationFunctionUrl =
