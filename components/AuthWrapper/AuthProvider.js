@@ -79,9 +79,9 @@ const AuthProvider = (props) => {
       `https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY}/oauth2/v2.0/authorize?client_id=${ADB2C_CLIENT}&response_type=code&redirect_uri=${ADB2C_REDIRECT_URI}&response_mode=query&scope=openid`,
       ADB2C_REDIRECT_URI,
       { showInRecents: true }
-    ).catch((e) => {
+    ).catch(() => {
       initLogOut();
-      console.log("auth: ", e);
+      initAuth();
     }); // sign-in & sign-up
     let code;
     try {
@@ -95,8 +95,9 @@ const AuthProvider = (props) => {
       .post(
         `https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY}/oauth2/v2.0/token?grant_type=authorization_code&client_id=${ADB2C_CLIENT}&code=${code}&claim=given_name&claim=family_name`
       )
-      .catch((e) => {
+      .catch(() => {
         initLogOut();
+        initAuth();
       }); // get token
     let userInfo = "";
     try {
