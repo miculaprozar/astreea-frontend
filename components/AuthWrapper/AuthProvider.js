@@ -26,6 +26,9 @@ const AuthProvider = (props) => {
   const [isLoading, setIsloading] = useState(false);
   const [userName, setUserName] = useState("");
   const [connectionStatus, setConnectionStatus] = useState(false);
+  const [testareValentino, setTestareValentino] = useState("Nu exista");
+  const [testareValentino2, setTestareValentino2] =
+    useState("Nu exista a doua");
 
   const getSearchParamFromURL = (url, param) => {
     const include = url.includes(param);
@@ -60,7 +63,8 @@ const AuthProvider = (props) => {
     try {
       code = getSearchParamFromURL(codeResponse.url, "code");
     } catch (e) {
-      initAuth();
+      setTestareValentino(e);
+      // initAuth();
     }
 
     let tokenResponse = await axios.post(
@@ -72,7 +76,8 @@ const AuthProvider = (props) => {
       let name = JSON.parse(userInfo).name;
       setUserName(name);
     } catch (e) {
-      initAuth();
+      setTestareValentino2(e);
+      // initAuth();
     }
 
     var authenticationFunctionUrl =
@@ -129,6 +134,8 @@ const AuthProvider = (props) => {
       initResetPassword,
       isLoading,
       userName,
+      testareValentino,
+      testareValentino2,
     }),
     [token, isLoading, connectionStatus, userName]
   );

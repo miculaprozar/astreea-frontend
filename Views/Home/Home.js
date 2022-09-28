@@ -1,32 +1,38 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
-import differenceInMinutes from 'date-fns/differenceInMinutes';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { ScrollView, View } from 'react-native';
-import { apiFactory } from '../../api';
-import Button from '../../components/Button/Button';
-import ChargerCard from '../../components/Card/ChargerCard';
-import Label from '../../components/Input/Label';
-import PillButton from '../../components/PillButton/PillButton';
-import SearchInput from '../../components/SearchInput/SearchInput';
-import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavigator';
-import Layout from '../../general_components/Layout';
-import { getUniqueKey } from '../../helpers/checkers';
-import routes from '../../routes';
-import { AuthContext } from '../../components/AuthWrapper/AuthProvider';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
+import differenceInMinutes from "date-fns/differenceInMinutes";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { ScrollView, View } from "react-native";
+import { apiFactory } from "../../api";
+import Button from "../../components/Button/Button";
+import ChargerCard from "../../components/Card/ChargerCard";
+import Label from "../../components/Input/Label";
+import PillButton from "../../components/PillButton/PillButton";
+import SearchInput from "../../components/SearchInput/SearchInput";
+import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
+import Layout from "../../general_components/Layout";
+import { getUniqueKey } from "../../helpers/checkers";
+import routes from "../../routes";
+import { AuthContext } from "../../components/AuthWrapper/AuthProvider";
 
-import { HubConnectionState } from '@microsoft/signalr';
+import { HubConnectionState } from "@microsoft/signalr";
 import {
   hourMinutesRenderer,
   kwhRenderer,
   priceRenderer,
-} from '../../helpers/formatFunctions';
+} from "../../helpers/formatFunctions";
 const Home = (props) => {
   const { navigation, route } = props;
-  const { token, connectionStatus, userName } = useContext(AuthContext);
+  const {
+    token,
+    connectionStatus,
+    userName,
+    testareValentino,
+    testareValentino2,
+  } = useContext(AuthContext);
   const { QRScannerStep, DeviceDetails } = routes;
   const [filterChargers, setFilterChargers] = useState(1);
-  const [searchfield, setSearchfield] = useState('');
+  const [searchfield, setSearchfield] = useState("");
   const [chargerList, setChargerList] = useState(null);
 
   const navigateToAddDevice = () => {
@@ -55,12 +61,12 @@ const Home = (props) => {
     if (connection.state == HubConnectionState.Connected) {
       //connection started
       await connection
-        .invoke('GetConnectedCharges', false, null)
+        .invoke("GetConnectedCharges", false, null)
         .then((chargerList) => {
           setChargerList(chargerList);
         })
         .catch((err) => {
-          console.log('THE ERROR IS', err);
+          console.log("THE ERROR IS", err);
         });
     }
   };
@@ -83,18 +89,18 @@ const Home = (props) => {
         />
       </Layout.Header>
       <Layout.Body>
-        <Label white text='Search' />
+        <Label white text="Search" />
         <SearchInput setSearchfield={setSearchfield} />
-        <Label white text='Chargers' />
-        <View style={{ flexDirection: 'row', marginBottom: 15 }}>
+        <Label white text="Chargers" />
+        <View style={{ flexDirection: "row", marginBottom: 15 }}>
           <PillButton
             isSecondary={filterChargers !== 0}
-            text={'Public'}
+            text={"Public"}
             onPressAction={() => setFilterChargers(0)}
           />
           <PillButton
             isSecondary={filterChargers !== 1}
-            text={'My chargers'}
+            text={"My chargers"}
             marginLeft={15}
             onPressAction={() => setFilterChargers(1)}
           />
@@ -107,7 +113,14 @@ const Home = (props) => {
 
           <View style={{ flex: 2 }}></View>
         </View>
-        <ScrollView>
+        <View style={{ marginBottom: 10 }}>
+          <Text>{JSON.stringify(testareValentino)}</Text>
+        </View>
+
+        <View style={{ marginTop: 10 }}>
+          <Text>{JSON.stringify(testareValentino2)}</Text>
+        </View>
+        {/* <ScrollView>
           {chargerList &&
             chargerList.length > 0 &&
             chargerList
@@ -136,11 +149,11 @@ const Home = (props) => {
                   onClick={() => navigateToDeviceAction(item.chargerId)}
                 />
               ))}
-        </ScrollView>
+        </ScrollView> */}
       </Layout.Body>
       <Layout.Footer>
         <Button
-          text={'Start Pairing'}
+          text={"Start Pairing"}
           marginTop={10}
           onPressAction={navigateToAddDevice}
         />
