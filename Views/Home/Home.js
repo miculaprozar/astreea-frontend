@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import differenceInMinutes from "date-fns/differenceInMinutes";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView, View, Text } from "react-native";
 import { apiFactory } from "../../api";
 import Button from "../../components/Button/Button";
 import ChargerCard from "../../components/Card/ChargerCard";
@@ -29,6 +29,7 @@ const Home = (props) => {
     userName,
     testareValentino,
     testareValentino2,
+    testareValentino1,
   } = useContext(AuthContext);
   const { QRScannerStep, DeviceDetails } = routes;
   const [filterChargers, setFilterChargers] = useState(1);
@@ -110,15 +111,19 @@ const Home = (props) => {
             marginLeft={15}
             onPressAction={() => setFilterChargers(2)}
           /> */}
-
-          <View style={{ flex: 2 }}></View>
         </View>
-        <View style={{ marginBottom: 10 }}>
-          <Text>{JSON.stringify(testareValentino)}</Text>
-        </View>
+        <View>
+          <View style={{ marginTop: 10 }}>
+            <Text>{JSON.stringify(testareValentino1)}</Text>
+          </View>
 
-        <View style={{ marginTop: 10 }}>
-          <Text>{JSON.stringify(testareValentino2)}</Text>
+          <View style={{ marginBottom: 10 }}>
+            <Text>{JSON.stringify(testareValentino)}</Text>
+          </View>
+
+          <View style={{ marginTop: 10 }}>
+            <Text>{JSON.stringify(testareValentino2)}</Text>
+          </View>
         </View>
         {/* <ScrollView>
           {chargerList &&

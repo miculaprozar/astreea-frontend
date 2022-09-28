@@ -26,6 +26,8 @@ const AuthProvider = (props) => {
   const [isLoading, setIsloading] = useState(false);
   const [userName, setUserName] = useState("");
   const [connectionStatus, setConnectionStatus] = useState(false);
+  const [testareValentino1, setTestareValentino1] = useState("Nu exista prima");
+
   const [testareValentino, setTestareValentino] = useState("Nu exista");
   const [testareValentino2, setTestareValentino2] =
     useState("Nu exista a doua");
@@ -64,19 +66,35 @@ const AuthProvider = (props) => {
       code = getSearchParamFromURL(codeResponse.url, "code");
     } catch (e) {
       setTestareValentino(e);
+      console.log(e);
+
       // initAuth();
     }
 
-    let tokenResponse = await axios.post(
-      `https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY}/oauth2/v2.0/token?grant_type=authorization_code&client_id=${ADB2C_CLIENT}&code=${code}&claim=given_name&claim=family_name`
-    ); // get token
+    let tokenResponse = await axios
+      .post(
+        `https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY}/oauth2/v2.0/token?grant_type=authorization_code&client_id=${ADB2C_CLIENT}&code=${code}&claim=given_name&claim=family_name`
+      )
+      .catch((e) => {
+        setTestareValentino1(e);
+        console.log("THE ERROR IS123123123 ", e);
+      }); // get token
     let userInfo = {};
     try {
       userInfo = base64.decode(tokenResponse.data.profile_info);
-      let name = JSON.parse(userInfo).name;
-      setUserName(name);
+      console.log("THE TOKEN RESPONSE:", tokenResponse.data);
+      console.log("The user info is:", userInfo);
+
+      let name = JSON.parse(
+        '{"ver":"1.0","tid":"e37b7e4a-f3fd-47c3-bb4e-4d0fc800a3c3","sub":null,"name":"Valentin","preferred_username":null,"idp":null}'
+      );
+
+      console.log("Name is:", typeof name, name);
+
+      setUserName(name.name);
     } catch (e) {
       setTestareValentino2(e);
+      console.log(e);
       // initAuth();
     }
 
@@ -136,6 +154,7 @@ const AuthProvider = (props) => {
       userName,
       testareValentino,
       testareValentino2,
+      testareValentino1,
     }),
     [token, isLoading, connectionStatus, userName]
   );
