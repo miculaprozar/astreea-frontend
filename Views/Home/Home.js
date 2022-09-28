@@ -1,9 +1,6 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
-import differenceInMinutes from "date-fns/differenceInMinutes";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { ScrollView, View, Text } from "react-native";
-import { apiFactory } from "../../api";
 import Button from "../../components/Button/Button";
 import ChargerCard from "../../components/Card/ChargerCard";
 import Label from "../../components/Input/Label";
@@ -23,14 +20,7 @@ import {
 } from "../../helpers/formatFunctions";
 const Home = (props) => {
   const { navigation, route } = props;
-  const {
-    token,
-    connectionStatus,
-    userName,
-    testareValentino,
-    testareValentino2,
-    testareValentino1,
-  } = useContext(AuthContext);
+  const { token, connectionStatus, userName } = useContext(AuthContext);
   const { QRScannerStep, DeviceDetails } = routes;
   const [filterChargers, setFilterChargers] = useState(1);
   const [searchfield, setSearchfield] = useState("");
@@ -112,20 +102,8 @@ const Home = (props) => {
             onPressAction={() => setFilterChargers(2)}
           /> */}
         </View>
-        <View>
-          <View style={{ marginTop: 10 }}>
-            <Text>{JSON.stringify(testareValentino1)}</Text>
-          </View>
 
-          <View style={{ marginBottom: 10 }}>
-            <Text>{JSON.stringify(testareValentino)}</Text>
-          </View>
-
-          <View style={{ marginTop: 10 }}>
-            <Text>{JSON.stringify(testareValentino2)}</Text>
-          </View>
-        </View>
-        {/* <ScrollView>
+        <ScrollView>
           {chargerList &&
             chargerList.length > 0 &&
             chargerList
@@ -154,7 +132,7 @@ const Home = (props) => {
                   onClick={() => navigateToDeviceAction(item.chargerId)}
                 />
               ))}
-        </ScrollView> */}
+        </ScrollView>
       </Layout.Body>
       <Layout.Footer>
         <Button

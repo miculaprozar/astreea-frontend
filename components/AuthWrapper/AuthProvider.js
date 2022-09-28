@@ -26,11 +26,6 @@ const AuthProvider = (props) => {
   const [isLoading, setIsloading] = useState(false);
   const [userName, setUserName] = useState("");
   const [connectionStatus, setConnectionStatus] = useState(false);
-  const [testareValentino1, setTestareValentino1] = useState("Nu exista prima");
-
-  const [testareValentino, setTestareValentino] = useState("Nu exista");
-  const [testareValentino2, setTestareValentino2] =
-    useState("Nu exista a doua");
 
   const getSearchParamFromURL = (url, param) => {
     const include = url.includes(param);
@@ -92,7 +87,6 @@ const AuthProvider = (props) => {
     try {
       code = getSearchParamFromURL(codeResponse.url, "code");
     } catch (e) {
-      setTestareValentino(e);
       initLogOut();
       initAuth();
     }
@@ -103,14 +97,12 @@ const AuthProvider = (props) => {
       )
       .catch((e) => {
         initLogOut();
-        setTestareValentino1(e);
       }); // get token
     let userInfo = "";
     try {
       userInfo = base64.decode(tokenResponse.data.profile_info);
       setUserName(getSearchParamFromDecoded(userInfo, '"name":'));
     } catch (e) {
-      setTestareValentino2(e);
       initLogOut();
       initAuth();
     }
@@ -155,9 +147,6 @@ const AuthProvider = (props) => {
       initResetPassword,
       isLoading,
       userName,
-      testareValentino,
-      testareValentino2,
-      testareValentino1,
     }),
     [token, isLoading, connectionStatus, userName]
   );
