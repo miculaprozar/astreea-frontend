@@ -11,10 +11,10 @@ export const style = StyleSheet.create({
   layout_container: {
     flex: 1,
     justifyContent: "space-between",
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingLeft: 10,
+    paddingRight: 10,
     paddingTop: 15,
-    paddingBottom: 15,
+    paddingBottom: 0,
     maxHeight: "100%",
     width: "100%",
     maxWidth: 375,

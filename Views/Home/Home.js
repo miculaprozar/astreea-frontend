@@ -3,7 +3,6 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { ScrollView, View, Text } from "react-native";
 import Button from "../../components/Button/Button";
 import ChargerCard from "../../components/Card/ChargerCard";
-import BottomNavbar from "../../components/BottomNavbar/BottomNavbar";
 
 import Label from "../../components/Input/Label";
 import PillButton from "../../components/PillButton/PillButton";
@@ -73,81 +72,46 @@ const Home = (props) => {
 
   return (
     <>
-      <Layout diffuseBG={true}>
-        <Layout.Header>
-          <HeaderNavigator
-            navigation={navigation}
-            hideBack={true}
-            route={route}
-            userName={userName}
-          />
-        </Layout.Header>
-        <Layout.Body>
-          <Label white text="Search" />
+    <Layout diffuseBG={true}>
+      <Layout.Header>
+        <HeaderNavigator
+          navigation={navigation}
+          hideBack={true}
+          route={route}
+          userName={userName}
+        />
+      </Layout.Header>
+      <Layout.Body>
+
+        <ScrollView>
           <SearchInput setSearchfield={setSearchfield} />
-          <Label white text="Chargers" />
-          <View style={{ flexDirection: "row", marginBottom: 15 }}>
-            <PillButton
-              isSecondary={filterChargers !== 0}
-              text={"Public"}
-              onPressAction={() => setFilterChargers(0)}
-            />
-            <PillButton
-              isSecondary={filterChargers !== 1}
-              text={"My chargers"}
-              marginLeft={15}
-              onPressAction={() => setFilterChargers(1)}
-            />
-            {/* <PillButton
-            isSecondary={filterChargers !== 2}
-            text={'Private'}
-            marginLeft={15}
-            onPressAction={() => setFilterChargers(2)}
-          /> */}
-          </View>
+          {chargerList &&
+            chargerList.length > 0 &&
+            chargerList
+              .filter((charger) => {
+                const isSearched = charger.name
+                  .toLowerCase()
+                  .includes(searchfield.toLowerCase());
 
-          <ScrollView>
-            {chargerList &&
-              chargerList.length > 0 &&
-              chargerList
-                .filter((charger) => {
-                  const isSearched = charger.name
-                    .toLowerCase()
-                    .includes(searchfield.toLowerCase());
-
-                  const filterHandler = filterChargersHandler(
-                    charger.isAdmin,
-                    // charger.isPrivate,
-                    undefined,
-                    isSearched
-                  );
-
-                  return filterHandler;
-                })
-                .map((item, index) => (
-                  <ChargerCard
-                    name={item.name}
-                    kwh={kwhRenderer(item.lastChargingSession)}
-                    time={hourMinutesRenderer(item.lastChargingSession)}
-                    price={priceRenderer(item.lastChargingSession)}
-                    key={getUniqueKey(item)}
-                    charger={item}
-                    onClick={() => navigateToDeviceAction(item.chargerId)}
-                  />
-                ))}
-          </ScrollView>
-        </Layout.Body>
-        <Layout.Footer>
-          {/* <Button
-            text={"Start Pairing"}
-            marginTop={10}
-            onPressAction={navigateToAddDevice}
-          /> */}
-        </Layout.Footer>
-      </Layout>
-      <BottomNavbar />
+                return isSearched;
+              })
+              .map((item, index) => (
+                <ChargerCard
+                  name={item.name}
+                  kwh={kwhRenderer(item.lastChargingSession)}
+                  time={hourMinutesRenderer(item.lastChargingSession)}
+                  price={priceRenderer(item.lastChargingSession)}
+                  key={getUniqueKey(item)}
+                  charger={item}
+                  onClick={() => navigateToDeviceAction(item.chargerId)}
+                />
+              ))}
+        </ScrollView>    
+      </Layout.Body>
+    </Layout>
     </>
   );
 };
 
 export default Home;
+

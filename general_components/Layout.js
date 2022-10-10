@@ -1,5 +1,6 @@
 import React from "react";
 import { ImageBackground, View } from "react-native";
+import BottomNavbar from "../components/BottomNavbar/BottomNavbar";
 
 import { style } from "./Layout.style";
 
@@ -47,6 +48,7 @@ const Layout = ({
         ) : (
           innerView
         )}
+        <BottomNavbar />
       </View>
     </AvoidingKeyboardWrapper>
   );

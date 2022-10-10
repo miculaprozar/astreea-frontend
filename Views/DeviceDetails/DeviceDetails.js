@@ -125,24 +125,6 @@ const DeviceDetails = (props) => {
               <HeaderNavigator navigation={navigation} route={route} />
             </Layout.Header>
             <Layout.Body>
-              {!chargerIsCharging(charger) && (
-                <View style={style.table_container}>
-                  {/* <PillButton
-                      text={"Schedule"}
-                      onPressAction={() => navigation.navigate(ScheduleRoute)}
-                    /> */}
-                  <PillButton
-                    text={getFullMonthName(date)}
-                    onPressAction={() => setIsCalendarOpen(true)}
-                    marginLeft={"auto"}
-                  />
-                  <Table
-                    chargerId={chargerId}
-                    startDate={date}
-                    endDate={getEndMonthDate(date)}
-                  />
-                </View>
-              )}
             </Layout.Body>
             <Layout.Footer style={{ flex: 2, backgroundColor: "red" }}>
               {!chargerIsCharging(charger) ? (
