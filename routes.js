@@ -15,6 +15,12 @@ export default routes = {
       ...defaultNavigationOptions,
     },
   },
+  TermsAndConditions: {
+    name: "TermsAndConditions",
+    navigationOptions: {
+      ...defaultNavigationOptions,
+    },
+  },
   SignIn: {
     name: "SignIn",
     navigationOptions: {

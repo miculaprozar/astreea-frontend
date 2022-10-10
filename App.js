@@ -19,6 +19,8 @@ import DeviceDetails from "./Views/DeviceDetails/DeviceDetails";
 import Schedule from "./Views/Schedule/Schedule";
 
 import Home from "./Views/Home/Home";
+import TermsAndConditions from "./Views/TermsAndConditions/TermsAndConditions";
+
 import Permision from "./Views/Permision/Permision";
 import QRScannerStep from "./Views/QRScannerStep/QRScannerStep";
 import SetupDevice from "./Views/SetupDevice/SetupDevice";
@@ -44,7 +46,7 @@ export default function App() {
   return (
     <AuthProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
+        <Stack.Navigator initialRouteName="TermsAndConditions">
           <Stack.Screen
             name={routes.Home.name}
             options={routes.Home.navigationOptions}
@@ -53,6 +55,20 @@ export default function App() {
               fontsLoaded ? (
                 <RouteGuard>
                   <Home {...props} />
+                </RouteGuard>
+              ) : (
+                <Text>Loading...</Text>
+              )
+            }
+          </Stack.Screen>
+          <Stack.Screen
+            name={routes.TermsAndConditions.name}
+            options={routes.TermsAndConditions.navigationOptions}
+          >
+            {(props) =>
+              fontsLoaded ? (
+                <RouteGuard>
+                  <TermsAndConditions {...props} />
                 </RouteGuard>
               ) : (
                 <Text>Loading...</Text>
