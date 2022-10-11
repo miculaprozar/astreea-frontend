@@ -77,18 +77,18 @@ const AuthProvider = (props) => {
   const initAuth = async () => {
     let codeResponse = await WebBrowser.openAuthSessionAsync(
       `https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY}/oauth2/v2.0/authorize?client_id=${ADB2C_CLIENT}&response_type=code&redirect_uri=${ADB2C_REDIRECT_URI}&response_mode=query&scope=openid`,
-      ADB2C_REDIRECT_URI,
-      { showInRecents: true }
+      ADB2C_REDIRECT_URI
+      // { showInRecents: true }
     ).catch(() => {
-      initLogOut();
-      initAuth();
+      // initLogOut();
+      // initAuth();
     }); // sign-in & sign-up
     let code;
     try {
       code = getSearchParamFromURL(codeResponse.url, "code");
     } catch (e) {
-      initLogOut();
-      initAuth();
+      // initLogOut();
+      // initAuth();
     }
 
     let tokenResponse = await axios
@@ -96,16 +96,16 @@ const AuthProvider = (props) => {
         `https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY}/oauth2/v2.0/token?grant_type=authorization_code&client_id=${ADB2C_CLIENT}&code=${code}&claim=given_name&claim=family_name`
       )
       .catch(() => {
-        initLogOut();
-        initAuth();
+        // initLogOut();
+        // initAuth();
       }); // get token
     let userInfo = "";
     try {
       userInfo = base64.decode(tokenResponse.data.profile_info);
       setUserName(getSearchParamFromDecoded(userInfo, '"name":'));
     } catch (e) {
-      initLogOut();
-      initAuth();
+      // initLogOut();
+      // initAuth();
     }
 
     var authenticationFunctionUrl =
