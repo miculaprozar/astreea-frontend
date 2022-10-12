@@ -31,9 +31,9 @@ const Home = (props) => {
     navigation.navigate(QRScannerStep.name);
   };
 
-  const navigateToDeviceAction = (chargerId) => {
+  const navigateToDeviceAction = (SerialNumberCon) => {
     navigation.navigate(DeviceDetails.name, {
-      chargerId: chargerId,
+      SerialNumberCon: SerialNumberCon,
     });
   };
 
@@ -101,9 +101,9 @@ const Home = (props) => {
                   kwh={kwhRenderer(item.lastChargingSession)}
                   time={hourMinutesRenderer(item.lastChargingSession)}
                   price={priceRenderer(item.lastChargingSession)}
-                  key={getUniqueKey(item)}
+                  key={item.serialNumber}
                   charger={item}
-                  onClick={() => navigateToDeviceAction(item.chargerId)}
+                  onClick={() => navigateToDeviceAction(item.serialNumber)}
                 />
               ))}
         </ScrollView>    

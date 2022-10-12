@@ -33,7 +33,7 @@ const DeviceDetails = (props) => {
   const { navigation, route } = props;
   const {
     route: {
-      params: { chargerId },
+      params: { SerialNumberCon },
     },
   } = props;
 
@@ -56,7 +56,7 @@ const DeviceDetails = (props) => {
   const getChargerDetails = async () => {
     if (connection.state == HubConnectionState.Connected) {
       await connection
-        .invoke("GetChargerDetails", chargerId)
+        .invoke("GetChargerDetails", SerialNumberCon)
         .then((charger) => {
           setCharger(charger);
         })
@@ -73,13 +73,13 @@ const DeviceDetails = (props) => {
       setTriggerRefresh(true);
       if (charger && chargerIsCharging(charger)) {
         if (connection.state == HubConnectionState.Connected) {
-          await connection.invoke("StopCharging", chargerId, cert).then(() => {
+          await connection.invoke("StopCharging", SerialNumberCon, cert).then(() => {
             console.log("StopCharging performed");
           });
         }
       } else {
         if (connection.state == HubConnectionState.Connected) {
-          await connection.invoke("StartCharging", chargerId, cert).then(() => {
+          await connection.invoke("StartCharging", SerialNumberCon, cert).then(() => {
             console.log("StartCharging performed");
           });
         }
@@ -146,7 +146,7 @@ const DeviceDetails = (props) => {
                     isSecondary={true}
                     onPressAction={() =>
                       navigation.navigate(chargerSettingsRoute, {
-                        chargerId: chargerId,
+                        SerialNumberCon: SerialNumberCon,
                       })
                     }
                   />
@@ -160,7 +160,7 @@ const DeviceDetails = (props) => {
 
                     // onPressAction={() =>
                     //   navigation.navigate(chargerSettingsRoute, {
-                    //     chargerId: chargerId,
+                    //     SerialNumberCon: SerialNumberCon,
                     //   })
                     // }
                   />

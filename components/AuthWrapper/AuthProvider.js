@@ -75,43 +75,50 @@ const AuthProvider = (props) => {
   };
 
   const initAuth = async () => {
+    console.log(`https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY}/oauth2/v2.0/authorize?client_id=${ADB2C_CLIENT}&response_type=code&redirect_uri=${ADB2C_REDIRECT_URI}&response_mode=query&scope=openid`);
     let codeResponse = await WebBrowser.openAuthSessionAsync(
       `https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY}/oauth2/v2.0/authorize?client_id=${ADB2C_CLIENT}&response_type=code&redirect_uri=${ADB2C_REDIRECT_URI}&response_mode=query&scope=openid`,
-      ADB2C_REDIRECT_URI,
-      { showInRecents: true }
-    ).catch(() => {
-      initLogOut();
-      initAuth();
+      ADB2C_REDIRECT_URI
+    ).catch((e) => {
+      console.log("ERR4:"+ e);
     }); // sign-in & sign-up
     let code;
     try {
+      console.log("CR:"+ JSON.stringify(codeResponse));
+      console.log("CR:"+codeResponse.url);
       code = getSearchParamFromURL(codeResponse.url, "code");
     } catch (e) {
-      initLogOut();
-      initAuth();
+      console.log("ERR3:"+ e);
     }
 
     let tokenResponse = await axios
       .post(
         `https://${ADB2C_TENANT}.b2clogin.com/${ADB2C_TENANT}.onmicrosoft.com/${ADB2C_POLICY}/oauth2/v2.0/token?grant_type=authorization_code&client_id=${ADB2C_CLIENT}&code=${code}&claim=given_name&claim=family_name`
       )
-      .catch(() => {
-        initLogOut();
-        initAuth();
+      .catch((e) => {
+        console.log("ERR1:"+ e);
       }); // get token
     let userInfo = "";
     try {
+      console.log("TR:"+tokenResponse);
       userInfo = base64.decode(tokenResponse.data.profile_info);
+      console.log("UserInfo:"+ userInfo);
       setUserName(getSearchParamFromDecoded(userInfo, '"name":'));
     } catch (e) {
-      initLogOut();
-      initAuth();
+      console.log("ERR2:"+ e);
     }
 
     var authenticationFunctionUrl =
       "https://csmsgatewayauthorization.azurewebsites.net/api/negotiate?key=SMI_8CPajAfaxRYD0sB0PV-VQA_A5-76OHYZbD955tbxAzFuTwklsg==";
     const authInfo = await axios.get(authenticationFunctionUrl);
-    startSignalRConnection(authInfo, setConnectionStatus);
+    
+    console.log("tokendata:"+ JSON.stringify(tokenResponse.data));
+    //startSignalRConnection(authInfo.accessToken, setConnectionStatus);
+    //console.log("Token:" + tokenResponse.data.id_token);
+    console.log("authInfo:" + JSON.stringify(authInfo));
+    var tid = getSearchParamFromDecoded(userInfo, '"tid":');
+    console.log("tid:"+ tid);
+    startSignalRConnection(authInfo.data.url, authInfo.data.accessToken, tid, setConnectionStatus);
 
     setToken(tokenResponse.data.id_token);
     setIsloading(false);

@@ -27,7 +27,7 @@ const TotalChargeCard = ({ charger, date = null }) => {
       await connection
         .invoke(
           "GetChargingStats",
-          charger.chargerId,
+          charger.SerialNumberCon,
           0,
           1,
           requestStartDate,

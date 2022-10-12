@@ -15,7 +15,7 @@ import validationSchema from "./validationSchema";
 
 const ChargerSettings = ({ navigation, route }) => {
   const {
-    params: { chargerId },
+    params: { SerialNumberCon },
   } = route;
 
   const connection = global.connection;
@@ -48,7 +48,7 @@ const ChargerSettings = ({ navigation, route }) => {
   const getChargerInfo = async () => {
     if (connection.state == HubConnectionState.Connected) {
       await connection
-        .invoke("GetChargerDetails", chargerId)
+        .invoke("GetChargerDetails", SerialNumberCon)
         .then((charger) => {
           setCharger(charger);
           setInputValues(charger);
@@ -62,7 +62,7 @@ const ChargerSettings = ({ navigation, route }) => {
   const updateChargerData = async (data) => {
     const chargerDetails = {
       name: data.name,
-      chargerId: chargerId,
+      SerialNumberCon: SerialNumberCon,
       address: data.address,
       price: Number(data.price),
       currency: data.currency,

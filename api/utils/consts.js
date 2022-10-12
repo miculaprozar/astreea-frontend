@@ -7,4 +7,4 @@ export const ADB2C_REDIRECT_URI = "exp://localhost:8081";
 export const ADB2C_POLICY_EDIT_PROFILE = "B2C_1_astreeacharger_edit_profile";
 export const ADB2C_POLICY_PASSWORD_RESET =
   "B2C_1_astreeacharger_reset_password";
-export const GATEWAY_URL = "http://192.168.0.102:8099/csmsgateway";
+export const GATEWAY_URL = "http://192.168.2.123:8099/csmsgateway";

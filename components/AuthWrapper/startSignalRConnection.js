@@ -7,12 +7,12 @@ import {
 import axios from 'axios';
 import { GATEWAY_URL } from '../../api/utils/consts';
 
-const startSignalRConnection = (authInfo, setConnectionStatus) => {
+const startSignalRConnection = (gatewayUrl, accessToken, tid, setConnectionStatus) => {
   global.connection = null;
   const connection = new HubConnectionBuilder()
     .configureLogging(LogLevel.Critical)
-    .withUrl(GATEWAY_URL, {
-      accessTokenFactory: () => authInfo.accessToken,
+    .withUrl(gatewayUrl + "&tid=" + tid, {
+      accessTokenFactory: () => accessToken,
       skipNegotiation: true,
       transport: HttpTransportType.WebSockets,
     })

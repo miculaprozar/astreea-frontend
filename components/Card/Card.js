@@ -29,7 +29,7 @@ const Card = ({
   const { DeviceDetails } = routes;
   const navigateToDeviceAction = () => {
     navigation.navigate(DeviceDetails.name, {
-      chargerId: id,
+      SerialNumberCon: id,
       isCharging,
       name,
       hourMinutes,

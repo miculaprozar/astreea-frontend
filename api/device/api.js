@@ -50,14 +50,14 @@ export default () => ({
     );
     return data;
   },
-  chargerHistory: async (chargerId, page, perPage, token, dates) => {
+  chargerHistory: async (SerialNumberCon, page, perPage, token, dates) => {
     let datesFilterQueryParams = "";
     if (dates) {
       datesFilterQueryParams = `&startDate=${dates.splitStartDate}&endDate=${dates.splitEndDate}`;
     }
     const { data } = await sendGetRequest(
       api_url +
-        `ast/api/v1/charging/${chargerId}?page=${page}&perPage=${perPage}${datesFilterQueryParams}`,
+        `ast/api/v1/charging/${SerialNumberCon}?page=${page}&perPage=${perPage}${datesFilterQueryParams}`,
       token
     );
 

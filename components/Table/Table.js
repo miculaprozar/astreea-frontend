@@ -5,7 +5,7 @@ import { Row, Rows, Table } from "react-native-table-component";
 import PillButton from "../PillButton/PillButton";
 import { style } from "./Table.style";
 
-const TableComponent = ({ chargerId, startDate, endDate }) => {
+const TableComponent = ({ SerialNumberCon, startDate, endDate }) => {
   const [tableData, setTableData] = useState([]);
   const [tableDimension, setTableDimension] = React.useState(null);
   const [tableItems, setTableItems] = useState(1);
@@ -37,7 +37,7 @@ const TableComponent = ({ chargerId, startDate, endDate }) => {
         await connection
           .invoke(
             "GetChargingStats",
-            chargerId,
+            SerialNumberCon,
             page - 1,
             tableItems,
             requestStartDate,

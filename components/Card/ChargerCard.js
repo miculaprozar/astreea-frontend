@@ -22,9 +22,17 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
 
   const connection = global.connection;
 
-  connection.on('ChargerDetailsChanged', (changedCharger) => {
-    if (changedCharger.chargerId === charger.chargerId) {
-      setChargerState(changedCharger);
+  connection.on('ChargerStateChanged', (chargerStateChange) => {
+    if (chargerState.SerialNumberCon === chargerStateChange.SerialNumberCon) {
+      chargerState.state = changedCharger.State;
+      setChargerState(chargerState);
+    }
+  });
+  
+  connection.on('ChargingChanged', (chargingChange) => {
+    if (chargerState.SerialNumberCon === chargingChange.SerialNumberCon) {
+      chargerState.LastChargingSession = chargingChange;
+      setChargerState(chargerState);
     }
   });
 

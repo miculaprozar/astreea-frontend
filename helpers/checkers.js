@@ -16,5 +16,5 @@ export const hasLastCharge = (charger) => {
 export const getUniqueKey = (charger) => {
   return hasLastCharge(charger)
     ? "charger_last" + charger.lastChargingSession.chargingSessionId
-    : "charger" + charger.chargerId;
+    : "SerialNumberCon" + charger.SerialNumberCon;
 };
