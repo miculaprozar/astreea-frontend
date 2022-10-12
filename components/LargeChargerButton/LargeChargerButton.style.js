@@ -4,11 +4,16 @@ export const button = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 8,
+    paddingVertical: 12,
     borderRadius: 35,
     borderWidth: 1,
-    width: 80,
-    borderColor: "#949597",
-    backgroundColor: "rgba(255,255,255,0.22)",
+    width: 120,
+    borderColor: "#FFFFFF",
+    backgroundColor: "transparent",
+  },
+  text: {
+    fontSize: 13,
+    color: "#FFFFFF",
+    fontFamily: "Inter_600SemiBold",
   },
 });

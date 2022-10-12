@@ -23,9 +23,9 @@ const BottomNavbar = () => {
         <View style={{ alignItems: "center" }}>
           <Image
             style={style.images}
-            source={require("../../assets/connectedDevices.png")}
+            source={require("../../assets/settingWhite.png")}
           />
-          <Text style={style.textImage}>Connected Devices</Text>
+          <Text style={style.textImage}>Settings</Text>
         </View>
         <View style={{ alignItems: "center" }}>
           <Image

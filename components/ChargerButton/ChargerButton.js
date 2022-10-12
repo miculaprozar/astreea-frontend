@@ -27,15 +27,26 @@ const ChargerButton = ({
       <Pressable
         style={{
           ...button.container,
-          ...(!isSecondary &&
-            !isSchedule && { backgroundColor: "rgba(0,186,255,0.11)" }),
-          ...(isCharging && { backgroundColor: "rgba(238,0,5,0.30)" }),
-          ...(isDisabled && { backgroundColor: "rgba(200,200,200, 0.2)" }),
+          ...(isCharging
+            ? { backgroundColor: "#FFFFFF", borderColor: "#FFFFFF" }
+            : !(isSchedule || isSecondary) && {
+                backgroundColor: "#44CD54",
+                borderColor: "#44CD54",
+              }),
+          ...((isSchedule || isSecondary) &&
+            isCharging && {
+              borderColor: "#FFFFFF",
+              backgroundColor: "#44CD54",
+            }),
         }}
         onPress={onPressAction}
       >
         <View style={{ flexDirection: "row" }}>
-          <Icon isSecondary={isSecondary} isSchedule={isSchedule} />
+          <Icon
+            isSecondary={isSecondary}
+            isSchedule={isSchedule}
+            isCharging={isCharging}
+          />
         </View>
       </Pressable>
     </View>

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 
 import { useFocusEffect } from "@react-navigation/native";
 import DetailsBackground from "../../assets/chargingScreen.jpg";
@@ -26,6 +26,9 @@ import {
   kwhRenderer,
   priceRenderer,
 } from "../../helpers/formatFunctions";
+import { chargeDate, chargeLastUsed } from "../../helpers/formatFunctions";
+import LargeChargerButton from "../../components/LargeChargerButton/LargeChargerButton";
+import ChargerSettingsCard from "../../components/ChargerSettingsCard/ChargerSettingsCard";
 
 import { HubConnectionState } from "@microsoft/signalr";
 
@@ -68,6 +71,8 @@ const DeviceDetails = (props) => {
 
   const StartStopCharging = async () => {
     changeLoader(true);
+
+    console.log("THE CHARGER ID:", chargerId);
 
     try {
       setTriggerRefresh(true);
@@ -117,7 +122,7 @@ const DeviceDetails = (props) => {
 
   return (
     <>
-      <Loader isLoading={isLoading} />
+      {/* <Loader isLoading={isLoading} /> */}
       {!triggerRefresh && charger && (
         <>
           <Layout customBackgroundUrl={DetailsBackground}>
@@ -125,22 +130,57 @@ const DeviceDetails = (props) => {
               <HeaderNavigator navigation={navigation} route={route} />
             </Layout.Header>
             <Layout.Body>
+              <View style={{ marginTop: "auto" }}>
+                <Text style={style.title}>{charger.name}</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={style.description}>
+                    {chargeLastUsed(charger) + ": "}
+                  </Text>
+                  <Text
+                    style={{
+                      ...style.description,
+                      textDecorationLine: "underline",
+                    }}
+                  >
+                    {chargeDate(charger)}
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  marginTop: 40,
+                  marginBottom: 40,
+                }}
+              >
+                <LargeChargerButton
+                  marginRight={20}
+                  isCharging={chargerIsCharging(charger)}
+                  onPressAction={() =>
+                    charger.state !== "Occupied" && StartStopCharging()
+                  }
+                />
+                <LargeChargerButton
+                  isSchedule={true}
+                  onPressAction={() => navigation.navigate(ScheduleRoute)}
+                />
+              </View>
             </Layout.Body>
             <Layout.Footer style={{ flex: 2, backgroundColor: "red" }}>
-              {!chargerIsCharging(charger) ? (
+              {/* {!chargerIsCharging(charger) ? (
                 <TotalChargeCard charger={charger} date={date} />
-              ) : (
-                <ChargerCard
-                  kwh={kwhRenderer(charger.lastChargingSession)}
-                  time={hourMinutesRenderer(charger.lastChargingSession)}
-                  price={priceRenderer(charger.lastChargingSession)}
-                  key={getUniqueKey(charger)}
-                  charger={charger}
-                  isDetails
-                ></ChargerCard>
-              )}
+              ) : ( */}
+              <ChargerCard
+                // kwh={kwhRenderer(charger.lastChargingSession)}
+                // time={hourMinutesRenderer(charger.lastChargingSession)}
+                // price={priceRenderer(charger.lastChargingSession)}
+                // key={getUniqueKey(charger)}
+                charger={charger}
+                isDetails
+              ></ChargerCard>
+              {/* // )} */}
               <View style={style.tittleButtonWrapper}>
-                <View style={{ flex: 1 }}>
+                {/* <View style={{ flex: 1 }}>
                   <ChargerButton
                     marginRight={5}
                     isSecondary={true}
@@ -157,12 +197,6 @@ const DeviceDetails = (props) => {
                     marginLeft={2.5}
                     marginRight={2.5}
                     onPressAction={() => navigation.navigate(ScheduleRoute)}
-
-                    // onPressAction={() =>
-                    //   navigation.navigate(chargerSettingsRoute, {
-                    //     chargerId: chargerId,
-                    //   })
-                    // }
                   />
                 </View>
                 <View style={{ flex: 1 }}>
@@ -174,8 +208,9 @@ const DeviceDetails = (props) => {
                       charger.state !== "Occupied" && StartStopCharging()
                     }
                   />
-                </View>
+                </View> */}
               </View>
+              <ChargerSettingsCard />
               <Calendar
                 isOpen={isCalendarOpen}
                 selected={date}

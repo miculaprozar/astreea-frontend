@@ -21,6 +21,8 @@ import Schedule from "./Views/Schedule/Schedule";
 import Home from "./Views/Home/Home";
 import TermsAndConditions from "./Views/TermsAndConditions/TermsAndConditions";
 
+import StartPairing from "./Views/StartPairing/StartPairing";
+
 import Permision from "./Views/Permision/Permision";
 import QRScannerStep from "./Views/QRScannerStep/QRScannerStep";
 import SetupDevice from "./Views/SetupDevice/SetupDevice";
@@ -162,6 +164,18 @@ export default function App() {
           >
             {(props) =>
               fontsLoaded ? <Permision {...props} /> : <Text>Loading...</Text>
+            }
+          </Stack.Screen>
+          <Stack.Screen
+            name={routes.StartPairing.name}
+            options={routes.StartPairing.navigationOptions}
+          >
+            {(props) =>
+              fontsLoaded ? (
+                <StartPairing {...props} />
+              ) : (
+                <Text>Loading...</Text>
+              )
             }
           </Stack.Screen>
         </Stack.Navigator>

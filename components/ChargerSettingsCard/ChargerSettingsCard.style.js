@@ -1,0 +1,41 @@
+import { StyleSheet } from "react-native";
+
+export const card = StyleSheet.create({
+  wrapper: {
+    height: 165,
+    backgroundColor: "rgba(255,255,255,0.30)",
+    borderRadius: 15,
+    padding: 18,
+    marginBottom: 15,
+  },
+  input: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 2,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "#393B3B",
+    backgroundColor: "#393B3B",
+    borderColor: "#393B3B",
+    fontSize: 10,
+    color: "#959595",
+    fontFamily: "Inter_400Regular",
+  },
+  label: {
+    color: "#FFFFFF",
+    fontFamily: "Inter_400Regular",
+    fontSize: 10,
+    marginBottom: 5,
+  },
+  buttonWrapper: {
+    marginTop: 10,
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  buttonText: {
+    color: "#FFFFFF",
+    fontFamily: "Inter_400Regular",
+    fontSize: 10,
+  },
+});

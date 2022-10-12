@@ -25,32 +25,34 @@ const Layout = ({
   );
 
   return (
-    <AvoidingKeyboardWrapper scrollView={scrollView}>
-      <View
-        style={{
-          ...style.device_container,
-          ...(diffuseBG && { backgroundColor: "#949597" }),
-          ...customLayoutStyle,
-        }}
-      >
-        {customBackgroundUrl ? (
-          <ImageBackground
-            source={customBackgroundUrl}
-            style={{
-              width: "100%",
-              height: "100%",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            {innerView}
-          </ImageBackground>
-        ) : (
-          innerView
-        )}
-        <BottomNavbar />
-      </View>
-    </AvoidingKeyboardWrapper>
+    <>
+      <AvoidingKeyboardWrapper scrollView={scrollView}>
+        <View
+          style={{
+            ...style.device_container,
+            ...(diffuseBG && { backgroundColor: "#949597" }),
+            ...customLayoutStyle,
+          }}
+        >
+          {customBackgroundUrl ? (
+            <ImageBackground
+              source={customBackgroundUrl}
+              style={{
+                width: "100%",
+                height: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {innerView}
+            </ImageBackground>
+          ) : (
+            innerView
+          )}
+        </View>
+      </AvoidingKeyboardWrapper>
+      <BottomNavbar />
+    </>
   );
 };
 

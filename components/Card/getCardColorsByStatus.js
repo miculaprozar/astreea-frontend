@@ -1,7 +1,8 @@
 export const getBGColorByStatus = (statusId) => {
   switch (statusId) {
     case "Charging":
-      return "#FFFFFF";
+      // return "#FFFFFF";
+      return "#44CD54";
     case "OutOfOrder":
       return "#FFFFFF";
     case "Occupied":
@@ -17,13 +18,16 @@ export const getTextColorByStatus = (statusId, isDetails) => {
   if (isDetails) return "#FFFFFF";
   switch (statusId) {
     case "Charging":
-      return "#44CD54";
+      // return "#44CD54";
+      return "#FFFFFF";
+
     case "OutOfOrder":
       return "#FF6400";
     case "Occupied": //4
       return "#54565A";
     case "Available":
-      return "#54565A";
+      // return "#54565A";
+      return "#44CD54";
     default:
       return "#54565A";
   }
@@ -34,13 +38,16 @@ const getHeaderTextByStatus = (statusId, isDetails) => {
 
   switch (statusId) {
     case "Charging":
-      return ["#44CD54"];
+      // return ["#44CD54"];
+      return ["#FFFFFF"];
     case "OutOfOrder":
       return ["#FF6400"];
     case "Occupied":
       return ["#54565A"];
     case "Available":
-      return ["#54565A"];
+      // return ["#54565A"];
+      return ["#44CD54"];
+
     default:
       return ["#B1AAA0", "#44CD54"];
   }
@@ -54,13 +61,17 @@ export const headerTextColor = (charger, isDetails) =>
 const getCircleColorByStatus = (statusId) => {
   switch (statusId) {
     case "Charging":
-      return ["#44CD54"];
+      // return ["#44CD54"];
+      return ["#FFFFFF"];
+
     case "OutOfOrder":
       return ["#FF6400"];
     case "Occupied":
       return ["#54565A"];
     case "Available":
-      return ["#54565A"];
+      return ["#44CD54"];
+
+    // return ["#54565A"];
     default:
       return ["#54565A", "#44CD54"];
   }
@@ -74,13 +85,17 @@ export const circleColor = (charger, number) =>
 export const getLightingImageByStatus = (statusName) => {
   switch (statusName) {
     case "Charging":
-      return require("../../assets/greenLighting.png");
+      // return require("../../assets/greenLighting.png");
+      return require("../../assets/whiteLighting.png");
+
     case "OutOfOrder":
       return require("../../assets/orangeLighting.png");
     case "Occupied":
       return require("../../assets/greyLighting.png");
     case "Available":
-      return require("../../assets/greyLighting.png");
+      // return require("../../assets/greyLighting.png");
+      return require("../../assets/greenLighting.png");
+
     default:
       return require("../../assets/greenLighting.png");
   }

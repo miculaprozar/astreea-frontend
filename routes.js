@@ -33,6 +33,12 @@ export default routes = {
       ...defaultNavigationOptions,
     },
   },
+  StartPairing: {
+    name: "StartPairing",
+    navigationOptions: {
+      ...defaultNavigationOptions,
+    },
+  },
   ForgotPassword: {
     name: "ForgotPassword",
     navigationOptions: {

@@ -72,46 +72,44 @@ const Home = (props) => {
 
   return (
     <>
-    <Layout diffuseBG={true}>
-      <Layout.Header>
-        <HeaderNavigator
-          navigation={navigation}
-          hideBack={true}
-          route={route}
-          userName={userName}
-        />
-      </Layout.Header>
-      <Layout.Body>
+      <Layout diffuseBG={true}>
+        <Layout.Header>
+          <HeaderNavigator
+            navigation={navigation}
+            hideBack={true}
+            route={route}
+            userName={userName}
+          />
+        </Layout.Header>
+        <Layout.Body>
+          <ScrollView>
+            <SearchInput setSearchfield={setSearchfield} />
+            {chargerList &&
+              chargerList.length > 0 &&
+              chargerList
+                .filter((charger) => {
+                  const isSearched = charger.name
+                    .toLowerCase()
+                    .includes(searchfield.toLowerCase());
 
-        <ScrollView>
-          <SearchInput setSearchfield={setSearchfield} />
-          {chargerList &&
-            chargerList.length > 0 &&
-            chargerList
-              .filter((charger) => {
-                const isSearched = charger.name
-                  .toLowerCase()
-                  .includes(searchfield.toLowerCase());
-
-                return isSearched;
-              })
-              .map((item, index) => (
-                <ChargerCard
-                  name={item.name}
-                  kwh={kwhRenderer(item.lastChargingSession)}
-                  time={hourMinutesRenderer(item.lastChargingSession)}
-                  price={priceRenderer(item.lastChargingSession)}
-                  key={getUniqueKey(item)}
-                  charger={item}
-                  onClick={() => navigateToDeviceAction(item.chargerId)}
-                />
-              ))}
-        </ScrollView>    
-      </Layout.Body>
-    </Layout>
+                  return isSearched;
+                })
+                .map((item, index) => (
+                  <ChargerCard
+                    name={item.name}
+                    // kwh={kwhRenderer(item.lastChargingSession)}
+                    // time={hourMinutesRenderer(item.lastChargingSession)}
+                    // price={priceRenderer(item.lastChargingSession)}
+                    // key={getUniqueKey(item)}
+                    charger={item}
+                    onClick={() => navigateToDeviceAction(item.chargerId)}
+                  />
+                ))}
+          </ScrollView>
+        </Layout.Body>
+      </Layout>
     </>
   );
 };
 
 export default Home;
-

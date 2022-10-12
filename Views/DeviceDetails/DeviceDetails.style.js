@@ -17,9 +17,14 @@ export const style = StyleSheet.create({
     justifyContent: "space-between",
   },
   title: {
-    color: "#393B3B",
-    fontSize: 25,
-    fontFamily: "Inter_700Bold",
+    color: "#FFFFFF",
+    fontSize: 28,
+    fontFamily: "Inter_600SemiBold",
+  },
+  description: {
+    fontSize: 10,
+    color: "#FFFFFF",
+    fontFamily: "Inter_400Regular",
   },
   tittleButtonWrapper: {
     flexDirection: "row",

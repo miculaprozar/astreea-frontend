@@ -46,12 +46,25 @@ const AccountSettings = ({ navigation, route, userName }) => {
         </Pressable>
       )}
 
-      {(route?.name !== "Home" || userName === "") && (
-        <Image
-          style={style.titleWhite}
-          source={require("../../assets/titleWhite.png")}
-        />
+      {(route?.name === "DeviceDetails" || userName === "") && (
+        <Text
+          style={{
+            color: "#FFFFFF",
+            fontFamily: "Inter_400Regular",
+            fontSize: 12,
+          }}
+        >
+          Charger Details
+        </Text>
       )}
+
+      {(route?.name !== "Home" || userName === "") &&
+        route?.name !== "DeviceDetails" && (
+          <Image
+            style={style.titleWhite}
+            source={require("../../assets/titleWhite.png")}
+          />
+        )}
     </>
   );
 };
