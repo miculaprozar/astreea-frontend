@@ -31,7 +31,7 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
 
   const {
     ChargerSettings: { name: chargerSettingsRoute },
-    Schedule: { name: ScheduleRoute },
+    ScheduleV2: { name: ScheduleRoute },
   } = routes;
 
   connection.on("ChargerDetailsChanged", (changedCharger) => {

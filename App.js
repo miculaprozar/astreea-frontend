@@ -17,6 +17,7 @@ import ChargerSettings from "./Views/ChargerSettings/ChargerSettings";
 import ConnectDevice from "./Views/ConnectDevice/ConnectDevice";
 import DeviceDetails from "./Views/DeviceDetails/DeviceDetails";
 import Schedule from "./Views/Schedule/Schedule";
+import ScheduleV2 from "./Views/ScheduleV2/ScheduleV2";
 
 import Home from "./Views/Home/Home";
 import TermsAndConditions from "./Views/TermsAndConditions/TermsAndConditions";
@@ -144,6 +145,14 @@ export default function App() {
           >
             {(props) =>
               fontsLoaded ? <Schedule {...props} /> : <Text>Loading...</Text>
+            }
+          </Stack.Screen>
+          <Stack.Screen
+            name={routes.ScheduleV2.name}
+            options={routes.ScheduleV2.navigationOptions}
+          >
+            {(props) =>
+              fontsLoaded ? <ScheduleV2 {...props} /> : <Text>Loading...</Text>
             }
           </Stack.Screen>
           <Stack.Screen

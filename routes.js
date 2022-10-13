@@ -99,6 +99,12 @@ export default routes = {
       ...defaultNavigationOptions,
     },
   },
+  ScheduleV2: {
+    name: "ScheduleV2",
+    navigationOptions: {
+      ...defaultNavigationOptions,
+    },
+  },
   ChargerSettings: {
     name: "ChargerSettings",
     navigationOptions: {
