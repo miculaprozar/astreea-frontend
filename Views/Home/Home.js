@@ -31,9 +31,9 @@ const Home = (props) => {
     navigation.navigate(QRScannerStep.name);
   };
 
-  const navigateToDeviceAction = (chargerId) => {
+  const navigateToDeviceAction = (serialNumberCon) => {
     navigation.navigate(DeviceDetails.name, {
-      chargerId: chargerId,
+      serialNumberCon: serialNumberCon,
     });
   };
 
@@ -94,17 +94,18 @@ const Home = (props) => {
 
                   return isSearched;
                 })
-                .map((item, index) => (
+                .map((item, index) => {
+                  return (
                   <ChargerCard
                     name={item.name}
-                    // kwh={kwhRenderer(item.lastChargingSession)}
-                    // time={hourMinutesRenderer(item.lastChargingSession)}
-                    // price={priceRenderer(item.lastChargingSession)}
-                    // key={getUniqueKey(item)}
+                    kwh={kwhRenderer(item.lastChargingSession)}
+                    time={hourMinutesRenderer(item.lastChargingSession)}
+                    price={priceRenderer(item.lastChargingSession)}
+                    key={item.serialNumberCon}
                     charger={item}
-                    onClick={() => navigateToDeviceAction(item.chargerId)}
+                    onClick={() => navigateToDeviceAction(item.serialNumberCon)}
                   />
-                ))}
+                )})}
           </ScrollView>
         </Layout.Body>
       </Layout>

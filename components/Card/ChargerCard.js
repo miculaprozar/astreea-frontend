@@ -34,9 +34,19 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
     Schedule: { name: ScheduleRoute },
   } = routes;
 
-  connection.on("ChargerDetailsChanged", (changedCharger) => {
-    if (changedCharger.chargerId === charger.chargerId) {
-      setChargerState(changedCharger);
+  connection.on('ChargerStateChanged', (chargerStateChange) => {
+    if (chargerState.serialNumberCon === chargerStateChange.serialNumberCon) {
+      var newState = chargerState;
+      newState.state = changedCharger.State;
+      setChargerState(newState);
+    }
+  });
+
+  connection.on('ChargingChanged', (chargingChange) => {
+    if (chargerState.serialNumberCon === chargingChange.serialNumberCon) {
+      var newState = chargerState;
+      newState.LastChargingSession = chargingChange;
+      setChargerState(newState);
     }
   });
 
@@ -52,7 +62,7 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
       if (charger && chargerIsCharging(charger)) {
         if (connection.state == HubConnectionState.Connected) {
           await connection
-            .invoke("StopCharging", charger.chargerId, cert)
+            .invoke("StopCharging", charger.serialNumberCon, cert)
             .then((e) => {
               console.log("StopCharging performed", e);
             });
@@ -60,7 +70,7 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
       } else {
         if (connection.state == HubConnectionState.Connected) {
           await connection
-            .invoke("StartCharging", charger.chargerId, cert)
+            .invoke("StartCharging", charger.serialNumberCon, cert)
             .then((e) => {
               console.log("StartCharging performed", e);
             });
@@ -269,7 +279,7 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
                 isSecondary={true}
                 onPressAction={() =>
                   navigation.navigate(chargerSettingsRoute, {
-                    chargerId: charger.chargerId,
+                    chargerId: charger.ChargingSessionId,
                   })
                 }
               />

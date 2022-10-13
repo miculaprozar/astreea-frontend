@@ -36,7 +36,7 @@ const DeviceDetails = (props) => {
   const { navigation, route } = props;
   const {
     route: {
-      params: { chargerId },
+      params: { serialNumberCon },
     },
   } = props;
 
@@ -59,7 +59,7 @@ const DeviceDetails = (props) => {
   const getChargerDetails = async () => {
     if (connection.state == HubConnectionState.Connected) {
       await connection
-        .invoke("GetChargerDetails", chargerId)
+        .invoke("GetChargerDetails", serialNumberCon)
         .then((charger) => {
           setCharger(charger);
         })
@@ -72,19 +72,19 @@ const DeviceDetails = (props) => {
   const StartStopCharging = async () => {
     changeLoader(true);
 
-    console.log("THE CHARGER ID:", chargerId);
+    console.log("THE CHARGER ID:", serialNumberCon);
 
     try {
       setTriggerRefresh(true);
       if (charger && chargerIsCharging(charger)) {
         if (connection.state == HubConnectionState.Connected) {
-          await connection.invoke("StopCharging", chargerId, cert).then(() => {
+          await connection.invoke("StopCharging", serialNumberCon, cert).then(() => {
             console.log("StopCharging performed");
           });
         }
       } else {
         if (connection.state == HubConnectionState.Connected) {
-          await connection.invoke("StartCharging", chargerId, cert).then(() => {
+          await connection.invoke("StartCharging", serialNumberCon, cert).then(() => {
             console.log("StartCharging performed");
           });
         }

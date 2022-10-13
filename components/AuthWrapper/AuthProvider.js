@@ -48,18 +48,6 @@ const AuthProvider = (props) => {
     return value;
   };
 
-  // const startSignalRConnection = (authInfo) => {
-  //   const connectionSignalR = new HubConnectionBuilder()
-  //     .configureLogging(LogLevel.Critical)
-  //     .withUrl(GATEWAY_URL, {
-  //       accessTokenFactory: () => authInfo.accessToken,
-  //       skipNegotiation: true,
-  //       transport: HttpTransportType.WebSockets,
-  //     })
-  //     .build();
-  //   setConnection(connectionSignalR);
-  // };
-
   const initLogOut = async () => {
     setIsloading(true);
     // const logOutResponse = await axios.get(
@@ -111,7 +99,9 @@ const AuthProvider = (props) => {
     var authenticationFunctionUrl =
       "https://csmsgatewayauthorization.azurewebsites.net/api/negotiate?key=SMI_8CPajAfaxRYD0sB0PV-VQA_A5-76OHYZbD955tbxAzFuTwklsg==";
     const authInfo = await axios.get(authenticationFunctionUrl);
-    startSignalRConnection(authInfo, setConnectionStatus);
+
+    var tid = getSearchParamFromDecoded(userInfo, '"tid":');
+    startSignalRConnection(authInfo.data.url, authInfo.data.accessToken, tid, userName, setConnectionStatus);
 
     setToken(tokenResponse.data.id_token);
     setIsloading(false);
