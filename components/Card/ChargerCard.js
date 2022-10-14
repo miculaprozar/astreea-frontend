@@ -36,18 +36,21 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
 
   connection.on('ChargerStateChanged', (chargerStateChange) => {
     if (chargerState.serialNumberCon === chargerStateChange.serialNumberCon) {
-      var newState = chargerState;
-      newState.state = changedCharger.State;
-      setChargerState(newState);
+      console.log("New state:" + chargerStateChange.state);
+      setChargerState(prevState => ({                   
+            ...prevState,   
+            state:  chargerStateChange.state     
+        }
+      ));
     }
   });
 
   connection.on('ChargingChanged', (chargingChange) => {
-    if (chargerState.serialNumberCon === chargingChange.serialNumberCon) {
-      var newState = chargerState;
-      newState.LastChargingSession = chargingChange;
-      setChargerState(newState);
-    }
+    // if (chargerState.serialNumberCon === chargingChange.serialNumberCon) {
+    //   var newState = chargerState;
+    //   newState.LastChargingSession = chargingChange;
+    //   setChargerState(newState);
+    // }
   });
 
   useEffect(() => {
@@ -59,10 +62,10 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
 
     try {
       // setTriggerRefresh(true);
-      if (charger && chargerIsCharging(charger)) {
+      if (chargerState && chargerIsCharging(chargerState)) {
         if (connection.state == HubConnectionState.Connected) {
           await connection
-            .invoke("StopCharging", charger.serialNumberCon, cert)
+            .invoke("StopCharging", chargerState.serialNumberCon, cert)
             .then((e) => {
               console.log("StopCharging performed", e);
             });
@@ -70,7 +73,7 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
       } else {
         if (connection.state == HubConnectionState.Connected) {
           await connection
-            .invoke("StartCharging", charger.serialNumberCon, cert)
+            .invoke("StartCharging", chargerState.serialNumberCon, cert)
             .then((e) => {
               console.log("StartCharging performed", e);
             });
@@ -85,8 +88,8 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
     }
   };
 
-  const chargerIsCharging = (charger) =>
-    charger.state === "Charging" ? true : false;
+  const chargerIsCharging = (chargerState) =>
+    chargerState.state === "Charging" ? true : false;
 
   return (
     <>
@@ -194,7 +197,7 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
                   style={{
                     ...charging.smallText,
                     ...(isDetails && { color: "white" }),
-                    ...(charger.state === "Charging" && { color: "white" }),
+                    ...(chargerState.state === "Charging" && { color: "white" }),
                   }}
                 >
                   Energy Delivered
@@ -216,7 +219,7 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
                   style={{
                     ...charging.smallText,
                     ...(isDetails && { color: "white" }),
-                    ...(charger.state === "Charging" && { color: "white" }),
+                    ...(chargerState.state === "Charging" && { color: "white" }),
                   }}
                 >
                   Charge Duration
@@ -224,7 +227,7 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
                 <Text
                   style={{
                     ...charging.chargingValuesText,
-                    color: getTextColorByStatus(charger.state, isDetails),
+                    color: getTextColorByStatus(chargerState.state, isDetails),
                   }}
                 >
                   {chargerState.lastChargingSession
@@ -237,7 +240,7 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
                   style={{
                     ...charging.smallText,
                     ...(isDetails && { color: "white" }),
-                    ...(charger.state === "Charging" && { color: "white" }),
+                    ...(chargerState.state === "Charging" && { color: "white" }),
                   }}
                 >
                   Amount Paid
@@ -268,24 +271,24 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
               }}
             >
               <ChargerButton
-                isCharging={chargerIsCharging(charger)}
-                isDisabled={charger.state === "Occupied" ? true : false}
+                isCharging={chargerIsCharging(chargerState)}
+                isDisabled={chargerState.state === "Occupied" ? true : false}
                 onPressAction={() =>
-                  charger.state !== "Occupied" && StartStopCharging()
+                  chargerState.state !== "Occupied" && StartStopCharging()
                 }
               />
               <ChargerButton
-                isCharging={chargerIsCharging(charger)}
+                isCharging={chargerIsCharging(chargerState)}
                 isSecondary={true}
                 onPressAction={() =>
                   navigation.navigate(chargerSettingsRoute, {
-                    chargerId: charger.ChargingSessionId,
+                    chargerId: chargerState.ChargingSessionId,
                   })
                 }
               />
 
               <ChargerButton
-                isCharging={chargerIsCharging(charger)}
+                isCharging={chargerIsCharging(chargerState)}
                 isSchedule={true}
                 onPressAction={() => navigation.navigate(ScheduleRoute)}
               />
