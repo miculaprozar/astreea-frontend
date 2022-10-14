@@ -12,13 +12,17 @@ const Icon = ({ isSecondary, isSchedule, isCharging }) => {
       case "Power":
         return require("../../assets/powerWhite.png");
       case "Schedule":
-        return require("../../assets/scheduleWhite.png");
+        return isCharging
+          ? require("../../assets/scheduleWhite.png")
+          : require("../../assets/scheduleBlack.png");
+
       default:
         return isCharging
           ? require("../../assets/settingWhite.png")
           : require("../../assets/settingGrey.png");
     }
   };
+
   return (
     <>
       {isSecondary || isSchedule ? (
