@@ -8,7 +8,6 @@ import { style } from "./BottomNavbar.style";
 const BottomNavbar = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  console.log(route.name);
 
   return (
     <>
