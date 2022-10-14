@@ -38,6 +38,10 @@ const ChargerButton = ({
               borderColor: "#FFFFFF",
               backgroundColor: "#44CD54",
             }),
+          ...(isDisabled && {
+            backgroundColor: "#696969",
+            borderColor: "#696969",
+          }),
         }}
         onPress={onPressAction}
       >
