@@ -10,6 +10,7 @@ const LargeChargerButton = ({
   onPressAction,
   isCharging,
   isSchedule = false,
+  isSave = false,
 }) => {
   return (
     <View
@@ -20,40 +21,61 @@ const LargeChargerButton = ({
         marginRight: marginRight,
       }}
     >
-      <Pressable
-        style={{
-          ...button.container,
-          ...(!isCharging &&
-            !isSchedule && {
-              backgroundColor: "#44CD54",
-              borderColor: "#44CD54",
-            }),
-          ...(isCharging &&
-            !isSchedule && {
-              backgroundColor: "#FFFFFF",
-              borderColor: "#FFFFFF",
-            }),
-        }}
-        onPress={onPressAction}
-      >
-        <View style={{ flexDirection: "row" }}>
-          {isSchedule ? (
-            <Image
-              source={require("../../assets/scheduleWhite.png")}
-              style={{ width: 17, height: 17, resizeMode: "contain" }}
-            />
-          ) : (
+      {isSave ? (
+        <Pressable
+          style={{
+            ...button.container,
+            backgroundColor: "black",
+            borderColor: "black",
+          }}
+          onPress={onPressAction}
+        >
+          <View style={{ flexDirection: "row" }}>
             <Text
               style={{
                 ...button.text,
-                ...(isCharging && { color: "#44CD54" }),
               }}
             >
-              {!isCharging ? "START" : "STOP"}
+              {"SAVE"}
             </Text>
-          )}
-        </View>
-      </Pressable>
+          </View>
+        </Pressable>
+      ) : (
+        <Pressable
+          style={{
+            ...button.container,
+            ...(!isCharging &&
+              !isSchedule && {
+                backgroundColor: "#44CD54",
+                borderColor: "#44CD54",
+              }),
+            ...(isCharging &&
+              !isSchedule && {
+                backgroundColor: "#FFFFFF",
+                borderColor: "#FFFFFF",
+              }),
+          }}
+          onPress={onPressAction}
+        >
+          <View style={{ flexDirection: "row" }}>
+            {isSchedule ? (
+              <Image
+                source={require("../../assets/scheduleWhite.png")}
+                style={{ width: 17, height: 17, resizeMode: "contain" }}
+              />
+            ) : (
+              <Text
+                style={{
+                  ...button.text,
+                  ...(isCharging && { color: "#44CD54" }),
+                }}
+              >
+                {!isCharging ? "START" : "STOP"}
+              </Text>
+            )}
+          </View>
+        </Pressable>
+      )}
     </View>
   );
 };

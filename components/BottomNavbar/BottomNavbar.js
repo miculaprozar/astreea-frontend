@@ -1,39 +1,53 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Image, Pressable, Text, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+
 import { style } from "./BottomNavbar.style";
 
 const BottomNavbar = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={style.wrapper}>
       <View style={style.container}>
-        <View style={{ alignItems: "center" }}>
+        <Pressable
+          onPress={() => navigation.navigate("StartPairing")}
+          style={{ alignItems: "center" }}
+        >
           <Image
             style={style.addChargerimage}
             source={require("../../assets/addCharger.png")}
           />
           <Text style={style.textImage}>Add Charger</Text>
-        </View>
-        <View style={{ alignItems: "center" }}>
+        </Pressable>
+
+        <Pressable
+          onPress={() => navigation.navigate("Home")}
+          style={{ alignItems: "center" }}
+        >
           <Image
             style={style.images}
             source={require("../../assets/Home.png")}
           />
           <Text style={style.textImage}>Home</Text>
-        </View>
-        <View style={{ alignItems: "center" }}>
+        </Pressable>
+        <Pressable
+          onPress={() => navigation.navigate("Home")}
+          style={{ alignItems: "center" }}
+        >
           <Image
             style={style.images}
             source={require("../../assets/settingWhite.png")}
           />
           <Text style={style.textImage}>Settings</Text>
-        </View>
-        <View style={{ alignItems: "center" }}>
+        </Pressable>
+        <Pressable style={{ alignItems: "center" }}>
           <Image
             style={style.images}
             source={require("../../assets/help.png")}
           />
           <Text style={style.textImage}>Help</Text>
-        </View>
+        </Pressable>
       </View>
     </View>
   );

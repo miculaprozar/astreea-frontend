@@ -1,0 +1,79 @@
+import { StyleSheet } from "react-native";
+
+export const style = StyleSheet.create({
+  inputLeft: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 14,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: "#797979",
+    backgroundColor: "#797979",
+    height: 60,
+
+    fontSize: 20,
+    borderTopLeftRadius: 5,
+    borderBottomLeftRadius: 5,
+
+    color: "#FFFFFF",
+    fontFamily: "Inter_600SemiBold",
+  },
+  inputCenter: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 14,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    height: 60,
+    borderColor: "#797979",
+    backgroundColor: "#797979",
+    fontSize: 20,
+    color: "#FFFFFF",
+    fontFamily: "Inter_600SemiBold",
+
+    width: 25,
+  },
+  inputRight: {
+    borderTopRightRadius: 5,
+    borderBottomRightRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 14,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    height: 60,
+
+    backgroundColor: "#797979",
+    borderColor: "#797979",
+    fontSize: 20,
+    color: "#FFFFFF",
+    fontFamily: "Inter_600SemiBold",
+  },
+  fullInput: {
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+
+    borderWidth: 1,
+    height: 60,
+
+    backgroundColor: "#797979",
+    borderColor: "#797979",
+    fontSize: 20,
+    color: "#FFFFFF",
+    fontFamily: "Inter_600SemiBold",
+  },
+  label: {
+    fontSize: 12,
+    color: "#FFFFFF",
+    fontFamily: "Inter_600SemiBold",
+    marginBottom: 5,
+  },
+  switchLabel: {
+    marginTop: 5,
+    fontSize: 10,
+    color: "#FFFFFF",
+    fontFamily: "Inter_400Regular",
+    marginBottom: 5,
+  },
+});
