@@ -11,26 +11,26 @@ export const style = StyleSheet.create({
   layout_container: {
     flex: 1,
     justifyContent: "space-between",
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingLeft: 16,
+    paddingRight: 16,
     paddingTop: 15,
     paddingBottom: 0,
     maxHeight: "100%",
     width: "100%",
-    maxWidth: 375,
   },
   body: {
     flex: 1,
-    paddingBottom: 15,
+    paddingBottom: 0,
     marginLeft: "auto",
     marginRight: "auto",
     width: "100%",
   },
   header: {
-    paddingBottom: 15,
+    paddingBottom: 0,
     marginLeft: "auto",
     marginRight: "auto",
     width: "100%",
+    
   },
   footer: {
     paddingBottom: 15,

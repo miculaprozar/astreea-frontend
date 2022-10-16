@@ -2,7 +2,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { ScrollView, View, Text } from "react-native";
 import Button from "../../components/Button/Button";
-import ChargerCard from "../../components/Card/ChargerCard";
+import HomeChargerCard from "../../components/ChargerCardV2/HomeChargerCard";
 
 import Label from "../../components/Input/Label";
 import PillButton from "../../components/PillButton/PillButton";
@@ -96,11 +96,7 @@ const Home = (props) => {
                 })
                 .map((item, index) => {
                   return (
-                  <ChargerCard
-                    name={item.name}
-                    kwh={kwhRenderer(item.lastChargingSession)}
-                    time={hourMinutesRenderer(item.lastChargingSession)}
-                    price={priceRenderer(item.lastChargingSession)}
+                  <HomeChargerCard
                     key={item.serialNumberCon}
                     charger={item}
                     onClick={() => navigateToDeviceAction(item.serialNumberCon)}

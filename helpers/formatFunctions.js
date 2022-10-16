@@ -80,7 +80,15 @@ export const chargeDate = (charge) => {
     chargeText = format(new Date(lastChargingSession.endDate), "MM LLLL  p");
   }
 
-  state === "Charging" && (chargeText = "Your charger running normal");
+  state === "Charging" && (chargeText = "Your charger is running normal");
 
   return chargeText;
 };
+
+
+export const formatDuration = (secs) => {
+  var date = new Date(1970, 0, 1); // Epoch
+  date.setSeconds(secs);
+  return date.getHours() + "h " +
+  date.getMinutes() + "m";
+}

@@ -17,7 +17,7 @@ const Loader = ({ isLoading }) => {
           <View style={styles.centerWrapper}>
             <Image
               source={require("../../assets/loader.png")}
-              style={{ width: 100, height: 300, resizeMode: "contain" }}
+              style={{ height: 144, resizeMode: "contain" }}
             />
           </View>
         </View>

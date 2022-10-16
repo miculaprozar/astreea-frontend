@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
+import * as Haptics from 'expo-haptics';
 
 import { style } from "./BottomNavbar.style";
 
@@ -15,7 +16,10 @@ const BottomNavbar = () => {
         <View style={style.wrapper}>
           <View style={style.container}>
             <Pressable
-              onPress={() => navigation.navigate("StartPairing")}
+              onPress={() => {                
+                Haptics.selectionAsync();
+                navigation.navigate("StartPairing");
+              }}
               style={{ alignItems: "center" }}
             >
               <Image
@@ -26,7 +30,10 @@ const BottomNavbar = () => {
             </Pressable>
 
             <Pressable
-              onPress={() => navigation.navigate("Home")}
+              onPress={() => {                 
+                Haptics.selectionAsync();
+                navigation.navigate("Home");
+              }}
               style={{ alignItems: "center" }}
             >
               <Image
@@ -36,16 +43,22 @@ const BottomNavbar = () => {
               <Text style={style.textImage}>Home</Text>
             </Pressable>
             <Pressable
-              onPress={() => navigation.navigate("Home")}
+              onPress={() => {
+                Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+              }}
               style={{ alignItems: "center" }}
             >
               <Image
                 style={style.images}
-                source={require("../../assets/settingWhite.png")}
+                source={require("../../assets/location.png")}
               />
-              <Text style={style.textImage}>Settings</Text>
+              <Text style={style.textImage}>Find Charger</Text>
             </Pressable>
-            <Pressable style={{ alignItems: "center" }}>
+            <Pressable 
+              onPress={() => {
+                Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+              }}
+              style={{ alignItems: "center" }}>
               <Image
                 style={style.images}
                 source={require("../../assets/help.png")}

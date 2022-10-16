@@ -39,6 +39,7 @@ const QRScannerStep = (props) => {
       setError("QR code doesn't contain the right data!");
       console.log('Data missing ConnectQR:102');
     }
+    
     if (
       data.CertSerialNumber &&
       data.ChargerSerialNumber &&

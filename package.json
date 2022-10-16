@@ -47,7 +47,9 @@
     "react-native-use-websocket": "^0.2.6",
     "react-native-web": "0.17.7",
     "react-native-wifi-reborn": "^4.6.0",
-    "yup": "^0.32.11"
+    "util": "^0.12.4",
+    "yup": "^0.32.11",
+    "expo-haptics": "~11.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

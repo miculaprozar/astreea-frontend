@@ -7,7 +7,7 @@ export const button = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 35,
     borderWidth: 1,
-    width: 80,
+    width: 77,
     borderColor: "#949597",
     backgroundColor: "rgba(255,255,255,0.22)",
   },

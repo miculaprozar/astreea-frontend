@@ -17,7 +17,7 @@ const Layout = ({
     <View
       style={{
         ...style.layout_container,
-        ...(diffuseBG && { backgroundColor: "#949597" }),
+        ...(diffuseBG && { backgroundColor: "#737678" }),
       }}
     >
       {children}
@@ -30,7 +30,7 @@ const Layout = ({
         <View
           style={{
             ...style.device_container,
-            ...(diffuseBG && { backgroundColor: "#949597" }),
+            ...(diffuseBG && { backgroundColor: "#737678" }),
             ...customLayoutStyle,
           }}
         >
