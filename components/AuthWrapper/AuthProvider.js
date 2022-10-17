@@ -3,6 +3,7 @@ import * as WebBrowser from "expo-web-browser";
 import startSignalRConnection from "./startSignalRConnection";
 import axios from "axios";
 import base64 from "react-native-base64";
+import jwt_decode from "jwt-decode";
 import {
   ADB2C_TENANT,
   ADB2C_POLICY,
@@ -88,8 +89,10 @@ const AuthProvider = (props) => {
         // initAuth();
       }); // get token
     let userInfo = "";
+    let letTokenInfo 
     try {
       userInfo = base64.decode(tokenResponse.data.profile_info);
+      tokenInfo = jwt_decode(tokenResponse.data.id_token);
       setUserName(getSearchParamFromDecoded(userInfo, '"name":'));
     } catch (e) {
       // initLogOut();
@@ -100,8 +103,8 @@ const AuthProvider = (props) => {
       "https://csmsgatewayauthorization.azurewebsites.net/api/negotiate?key=SMI_8CPajAfaxRYD0sB0PV-VQA_A5-76OHYZbD955tbxAzFuTwklsg==";
     const authInfo = await axios.get(authenticationFunctionUrl);
 
-    var tid = getSearchParamFromDecoded(userInfo, '"tid":');
-    startSignalRConnection(authInfo.data.url, authInfo.data.accessToken, tid, userName, setConnectionStatus);
+    var oid = tokenInfo.oid;
+    startSignalRConnection(authInfo.data.url, authInfo.data.accessToken, oid, userName, setConnectionStatus);
 
     setToken(tokenResponse.data.id_token);
     setIsloading(false);
