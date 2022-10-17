@@ -8,49 +8,52 @@ import axios from 'axios';
 import { GATEWAY_URL } from '../../api/utils/consts';
 
 const startSignalRConnection = (gatewayUrl, accessToken, tid, userName, setConnectionStatus) => {
-  global.connection = null;
-  const connection = new HubConnectionBuilder()
-    .configureLogging(LogLevel.Critical)
-    .withUrl(gatewayUrl + "&tid=" + tid + "&userName=" + userName, {
-      accessTokenFactory: () => accessToken,
-      skipNegotiation: true,
-      transport: HttpTransportType.WebSockets,
-    })
-    .build();
+  if(!global.isConnected){
+    global.isConnected = true;
+    const connection = new HubConnectionBuilder()
+      .configureLogging(LogLevel.Critical)
+      .withUrl(gatewayUrl + "&tid=" + tid + "&userName=" + userName, {
+        accessTokenFactory: () => accessToken,
+        skipNegotiation: true,
+        transport: HttpTransportType.WebSockets,
+      })
+      .build();
 
-  var certSerialNumber = 'CERTSN143212FEWFWIUTHRIH8757678JOIJOOIH987';
-  var certUrl = `https://csmsdevstorage.blob.core.windows.net/clientcertificates/${certSerialNumber}`;
+    var certSerialNumber = 'CERTSN143212FEWFWIUTHRIH8757678JOIJOOIH987';
+    var certUrl = `https://csmsdevstorage.blob.core.windows.net/clientcertificates/${certSerialNumber}`;
 
-  axios.get(certUrl).then((response) => {
-    global.cert = response.data;
-  });
+    axios.get(certUrl).then((response) => {
+      global.cert = response.data;
+    });
 
-  async function start() {
-    try {
-      if (connection.state != HubConnectionState.Connected) {
-        console.log('Connection is not started');
+    async function start() {
+      try {
+        if (connection.state != HubConnectionState.Connected) {
+          console.log('Connection is not started');
+          setConnectionStatus(false);
+
+          global.connection = connection;
+          await connection.start();
+          console.log('SignalR Connected.');
+          setConnectionStatus(true);
+        }
+
+        // await appCon ected();
+      } catch (err) {
+        console.log('GatewayConnection error:', err);
         setConnectionStatus(false);
 
-        global.connection = connection;
-        await connection.start();
-        console.log('SignalR Connected.');
-        setConnectionStatus(true);
+        setTimeout(start, 5000);
       }
-
-      // await appConected();
-    } catch (err) {
-      console.log('GatewayConnection error:', err);
-      setConnectionStatus(false);
-
-      setTimeout(start, 5000);
     }
+
+    connection.onclose(async () => {
+      await start();
+    });
+
+    start();
   }
 
-  connection.onclose(async () => {
-    await start();
-  });
-
-  start();
 };
 
 export default startSignalRConnection;
