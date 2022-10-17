@@ -18,6 +18,7 @@ import HeaderBackButton from '../../general_components/HeaderBackButton';
 import SnackBar from '../../general_components/SnackBar';
 
 const ConnectDevice = (props) => {
+  console.log("Connect props:" + JSON.stringify(props));
   const { navigation, route } = props;
   const { QRScannerStep, SetupDevice } = routes;
   const [deviceHotspotName, setDeviceHotspotName] = useState(
@@ -34,6 +35,19 @@ const ConnectDevice = (props) => {
   const [logType, setLogType] = useState('error');
 
   React.useLayoutEffect(() => {
+
+    const granted = PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Location permission is required for WiFi connections',
+          message:
+            'This app needs location permission as this is required  ' +
+            'to scan for wifi networks.',
+          buttonNegative: 'DENY',
+          buttonPositive: 'ALLOW',
+        },
+    );
+
     navigation.setOptions({
       headerLeft: () => (
         <HeaderBackButton
@@ -56,70 +70,8 @@ const ConnectDevice = (props) => {
   };
 
   const connectToWifi = async () => {
-    WifiManager.getCurrentWifiSSID().then(
-      async (ssid) => {
-        console.log('Your current connected wifi SSID is ' + ssid);
-        if (ssid === deviceHotspotName) {
-          setWaitingForData(true);
-          const connectionStatus = await apiFactory()
-            .data.device()
-            .checkConnection();
-          setLogText(logTime() + connectionStatus);
-          if (connectionStatus === 'Connection OK.') {
-            const wifiNetworks = await apiFactory()
-              .data.device()
-              .availableWifiNetowrks();
-            setWaitingForData(false);
-            if (wifiNetworks.wifiNames.length > 0) {
-              navigation.navigate(SetupDevice.name, { wifiNetworks });
-            } else {
-              // TODO: Notifcation for error and why
-            }
-          }
-        } else {
-          console.log('Not Device SSID!');
-          WifiManager.connectToProtectedSSID(
-            deviceHotspotName,
-            deviceHotspotPass,
-            false
-          ).then(
-            async () => {
-              console.log('Connected successfully!');
-              try {
-                setWaitingForData(true);
-                const connectionStatus = await apiFactory()
-                  .data.device()
-                  .checkConnection();
-                setLogText(logTime() + connectionStatus);
-                if (connectionStatus === 'Connection OK.') {
-                  const wifiNetworks = await apiFactory()
-                    .data.device()
-                    .availableWifiNetowrks();
-                  setWaitingForData(false);
-                  if (wifiNetworks.wifiNames.length > 0) {
-                    navigation.navigate(SetupDevice.name, { wifiNetworks });
-                  } else {
-                    // TODO: Notifcation for error and why
-                  }
-                }
-              } catch (e) {
-                setWaitingForData(false);
-                setLogText(logTime() + e);
-                // TODO: Notifcation for error and why
-              }
-            },
-            () => {
-              setWaitingForData(false);
-              console.log('Connection failed!');
-            }
-          );
-        }
-      },
-      () => {
-        setLogType('info');
-        setError('Please start your device WiFi!');
-      }
-    );
+    console.log(WifiManager);
+    WifiManager.getCurrentWifiSSID().then( (t) => { console.log(t)});
   };
 
   const checkAndNavigateToSetup = async () => {

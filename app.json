@@ -38,6 +38,9 @@
       "eas": {
         "projectId": "d827e86d-b778-487a-975d-dbaf9a247266"
       }
-    }
+    },
+    "plugins": [
+      "react-native-wifi-reborn"
+    ]
   }
 }

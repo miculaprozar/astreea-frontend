@@ -9,10 +9,10 @@ import Layout from "../../general_components/Layout";
 
 const TermsAndConditions = (props) => {
   const { navigation, route } = props;
-  const { Home, StartPairing } = routes;
+  const { Home, QRScannerStep } = routes;
 
   const navigateToHome = () => {
-    navigation.navigate(StartPairing.name);
+    navigation.navigate(QRScannerStep.name);
   };
 
   return (

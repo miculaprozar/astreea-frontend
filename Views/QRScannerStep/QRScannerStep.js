@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, Button, Pressable } from 'react-native';
-import Button2 from '../../components/Button/Button';
+import { Text, Image, View, StyleSheet, Pressable } from 'react-native';
+import Button from "../../components/Button/Button";
 import HeaderNavigator from '../../general_components/HeaderNavigator/HeaderNavigator';
 import Layout from '../../general_components/Layout';
 import { BarCodeScanner } from 'expo-barcode-scanner';
@@ -31,38 +31,41 @@ const QRScannerStep = (props) => {
   const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
     try {
-      console.log(JSON.parse(data));
-      data = JSON.parse(data);
+      console.log("QR Text:" + data);
+      var qrText = data.split(" ");      
+      var readData = {
+        ChargerSerialNumberCon: qrText[0] + "_" + qrText[1],
+        CertThumbprint: qrText[2]
+      }
+      
+      console.log("ChargerSerialNumberCon:" + readData.ChargerSerialNumberCon);
+      console.log("CertThumbprint:" + readData.CertThumbprint);
     } catch (error) {
       setScanned(false);
       setLogType('error');
-      setError("QR code doesn't contain the right data!");
-      console.log('Data missing ConnectQR:102');
+      setError("QR code format incorrect");
+      console.log('Data missing ConnectQR:102:1: ' + data + " error:" + error);
     }
     
     if (
-      data.CertSerialNumber &&
-      data.ChargerSerialNumber &&
-      data.ConnectorId &&
-      data.SSID
+      readData.CertThumbprint &&
+      readData.ChargerSerialNumberCon
     ) {
       setQrModalVisible(false);
-      var certUrl = `https://csmsdevstorage.blob.core.windows.net/clientcertificates/${data.CertSerialNumber}`;
 
-      const certData = await axios.get(certUrl);
-
-      global.cert = certData;
+      global.cert = readData.CertThumbprint;
       const connection = global.connection;
 
       if (connection.state == HubConnectionState.Connected) {
         await connection
-          .invoke('TryConnectCharger', data.ConnectorId, 'certificate')
+          .invoke('TryConnectCharger', readData.ChargerSerialNumberCon, readData.CertThumbprint)
           .then((chargerInfo) => {
             if (!chargerInfo.chargerEnrolled) {
+              console.log("Device enrollment info:" + JSON.stringify(chargerInfo))
               navigation.navigate('ConnectDevice', {
                 qrData: {
-                  wifiName: chargerInfo.aPUsername,
-                  wifiPass: chargerInfo.aPPassWord,
+                  wifiName: chargerInfo.apUserName,
+                  wifiPass: chargerInfo.apPassword,
                 },
               });
             } else {
@@ -77,8 +80,8 @@ const QRScannerStep = (props) => {
       setTimeout(() => {
         setScanned(false);
         setLogType('error');
-        setError("QR code doesn't contain the right data!");
-        console.log('Data missing ConnectQR:102');
+        setError("QR code format incorrect");
+        console.log('Data missing ConnectQR:102:2: ' + data + " error:" + error);
       }, 1000);
     }
   };
@@ -88,50 +91,36 @@ const QRScannerStep = (props) => {
   }, []);
 
   return (
-    <Layout
-      customBackgroundUrl={QRViewBackground}
-      customLayoutStyle={{
-        backgroundColor: 'transparent',
-        paddingLeft: 0,
-        paddingRight: 0,
-        paddingTop: 0,
-        paddingBottom: 0,
-      }}
-    >
+    <Layout customBackgroundUrl={QRViewBackground}>
       <Layout.Header>
-        <HeaderNavigator
-          navigation={navigation}
-          hideAccountSettings={true}
-          navProps={route.params}
-          route={route}
-        />
+        <View style={style.footerContainer}>
+          <View style={{ flex: 1 }}>
+            <Text style={style.leftTextFooter}>Build for a lifetime.</Text>
+          </View>
+
+          <View style={{ flex: 1, alignItems: "flex-end" }}>
+            <Image
+              style={style.titleWhite}
+              source={require("../../assets/titleWhite.png")}
+            />
+          </View>
+        </View>
       </Layout.Header>
       <Layout.Body>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'flex-start',
-          }}
-        >
-          <Text style={style.title}>The only electric charger you need</Text>
-        </View>
-
-        <Text style={style.description}>
-          Look for the QR code on the charger and scan it to connect it to your
-          charger.
-        </Text>
+        <Text style={style.title}>The only electric charger you need</Text>
       </Layout.Body>
       <Layout.Footer>
-        <Button2
-          text={'Open Scanner'}
-          marginTop={40}
+        <Button
+          isSecondary={true}
+          text={"START PAIRING"}
+          marginBottom={60}
+          // onPressAction={() => navigateToHome()}
           onPressAction={() => {
             if (hasPermission) {
               setQrModalVisible(true);
             } else {
-              setLogType('error');
-              setError('Please grant camera permission!');
+              setLogType("error");
+              setError("Please grant camera permission!");
             }
           }}
         />
@@ -142,7 +131,7 @@ const QRScannerStep = (props) => {
           <BarCodeScanner
             onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
             barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
-            style={{ width: 300, height: '100%' }}
+            style={{ width: 300, height: "100%" }}
           />
           {error && (
             <SnackBar
@@ -150,7 +139,7 @@ const QRScannerStep = (props) => {
               logSnackbar={error}
               setLogSnackbar={setError}
               logType={logType}
-              customStyle={{ position: 'absolute', bottom: 0, left: 0 }}
+              customStyle={{ position: "absolute", bottom: 0, left: 0 }}
             />
           )}
         </QRModal>
