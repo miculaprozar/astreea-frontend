@@ -8,7 +8,7 @@ import {
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
-import { Text, TextInput } from "react-native";
+import { Text, TextInput, StatusBar } from "react-native";
 import { AuthProvider } from "./components/AuthWrapper/AuthProvider";
 import { RouteGuard } from "./components/AuthWrapper/RouteGuarding";
 import routes from "./routes";
@@ -46,8 +46,13 @@ export default function App() {
   });
 
   return (
-      <NavigationContainer>
+    <>
+    <StatusBar
+        animated={false}
+        backgroundColor="#737678"
+        translucent={true} />
         <AuthProvider>
+        <NavigationContainer>
         <Stack.Navigator initialRouteName="TermsAndConditions">
           <Stack.Screen
             name={routes.Home.name}
@@ -187,8 +192,8 @@ export default function App() {
             }
           </Stack.Screen>
         </Stack.Navigator>
+        </NavigationContainer>
         </AuthProvider>
-      </NavigationContainer>
-    
+        </>
   );
 }

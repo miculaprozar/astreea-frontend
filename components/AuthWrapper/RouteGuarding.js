@@ -5,7 +5,6 @@ import { AuthContext } from './AuthProvider';
 
 export const RouteGuard = (props) => {
   const { token, connectionStatus } = useContext(AuthContext);
-  console.log(connectionStatus);
 
   return (
     <>
