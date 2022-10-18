@@ -89,7 +89,7 @@ const AuthProvider = (props) => {
         // initAuth();
       }); // get token
     let userInfo = "";
-    let letTokenInfo 
+    let tokenInfo;
     try {
       userInfo = base64.decode(tokenResponse.data.profile_info);
       tokenInfo = jwt_decode(tokenResponse.data.id_token);
@@ -98,7 +98,6 @@ const AuthProvider = (props) => {
       // initLogOut();
       // initAuth();
     }
-
     var authenticationFunctionUrl =
       "https://csmsgatewayauthorization.azurewebsites.net/api/negotiate?key=SMI_8CPajAfaxRYD0sB0PV-VQA_A5-76OHYZbD955tbxAzFuTwklsg==";
     const authInfo = await axios.get(authenticationFunctionUrl);
