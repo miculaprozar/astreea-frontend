@@ -21,7 +21,8 @@ export const style = StyleSheet.create({
   //   },
   scheduleTableCard: {
     height: "60%",
-    backgroundColor: "#797979",
+    backgroundColor: "#898A8C",
+    // backgroundColor: "#797979",
     borderRadius: 10,
     padding: 15,
   },

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Text, View, TouchableWithoutFeedback, ScrollView } from "react-native";
+import { Text, View, TouchableWithoutFeedback, ScrollView, Image } from "react-native";
 import { style } from "./ChargingHistoryTable.style";
-
+let deleteIcon = require('../../assets/delete.png');
 const ChargingHistoryTable = () => {
   return (
     <View>
@@ -14,7 +14,7 @@ const ChargingHistoryTable = () => {
               alignItems: "center",
               borderRightWidth: 1,
               borderColor: "#FFFFFF",
-              height: 25,
+              height: 25
             }}
           >
             <Text style={style.headerText}>Start</Text>
@@ -158,7 +158,8 @@ const ChargingHistoryTable = () => {
             }}
           >
             <View style={{}}>
-              <Text>5</Text>
+              <Image source={require("../../assets/delete.png")}
+              style={{ width: 18, height: 18, resizeMode: "contain", marginTop: 2 }}></Image>
             </View>
           </View>
         </View>
