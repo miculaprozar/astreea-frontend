@@ -18,7 +18,6 @@ import ConnectDevice from "./Views/ConnectDevice/ConnectDevice";
 import DeviceDetails from "./Views/DeviceDetails/DeviceDetails";
 import Schedule from "./Views/Schedule/Schedule";
 import ScheduleV2 from "./Views/ScheduleV2/ScheduleV2";
-
 import Home from "./Views/Home/Home";
 import TermsAndConditions from "./Views/TermsAndConditions/TermsAndConditions";
 
@@ -47,11 +46,9 @@ export default function App() {
   });
 
   return (
-    <AuthProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="TermsAndConditions" screenOptions={{
-    headerShown: false,
-  }}>
+        <AuthProvider>
+        <Stack.Navigator initialRouteName="TermsAndConditions">
           <Stack.Screen
             name={routes.Home.name}
             options={routes.Home.navigationOptions}
@@ -190,7 +187,8 @@ export default function App() {
             }
           </Stack.Screen>
         </Stack.Navigator>
+        </AuthProvider>
       </NavigationContainer>
-    </AuthProvider>
+    
   );
 }
