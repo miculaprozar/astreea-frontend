@@ -11,6 +11,7 @@ const LargeChargerButton = ({
   isCharging,
   isSchedule = false,
   isSave = false,
+  isDisabled = false,
 }) => {
   return (
     <View
@@ -54,6 +55,10 @@ const LargeChargerButton = ({
                 backgroundColor: "#FFFFFF",
                 borderColor: "#FFFFFF",
               }),
+            ...(isDisabled && {
+              backgroundColor: "#696969",
+              borderColor: "#696969",
+            }),
           }}
           onPress={onPressAction}
         >

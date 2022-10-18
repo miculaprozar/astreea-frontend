@@ -42,7 +42,7 @@ const DeviceDetails = (props) => {
 
   const {
     ChargerSettings: { name: chargerSettingsRoute },
-    Schedule: { name: ScheduleRoute },
+    ScheduleV2: { name: ScheduleRoute },
   } = routes;
 
   const connection = global.connection;
@@ -68,6 +68,8 @@ const DeviceDetails = (props) => {
         });
     }
   };
+
+  console.log("THE CHARGER DETAILS :", charger);
 
   const StartStopCharging = async () => {
     changeLoader(true);
@@ -158,6 +160,7 @@ const DeviceDetails = (props) => {
                 <LargeChargerButton
                   marginRight={20}
                   isCharging={chargerIsCharging(charger)}
+                  isDisabled={charger.state === "Occupied" ? true : false}
                   onPressAction={() =>
                     charger.state !== "Occupied" && StartStopCharging()
                   }
