@@ -40,13 +40,14 @@ const HomeChargerCard = ({ charger, onClick }) => {
   const {
     ChargerSettings: { name: chargerSettingsRoute },
     ScheduleV2: { name: ScheduleRoute },
+    DeviceDetails: { name: DeviceDetailsRoute },
   } = routes;
 
   useEffect(() => {
     setChargerState(charger);
-    if (charger.serialNumberCon == "SNBTA1_2") {
-      console.log(util.inspect(charger, false, null, true));
-    }
+    // if (charger.serialNumberCon == "SNBTA1_2") {
+    //   console.log(util.inspect(charger, false, null, true));
+    // }
 
     if (!global["ChargerStateChanged=" + chargerState.serialNumberCon]) {
       console.log(
@@ -100,7 +101,6 @@ const HomeChargerCard = ({ charger, onClick }) => {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
       try {
-        // setTriggerRefresh(true);
         if (chargerState && chargerIsCharging(chargerState)) {
           if (connection.state == HubConnectionState.Connected) {
             await connection
@@ -118,10 +118,6 @@ const HomeChargerCard = ({ charger, onClick }) => {
               });
           }
         }
-
-        // getChargerDetails();
-        // setTriggerRefresh(false);
-        // changeLoader(false);
       } catch (e) {
         console.log("ERROR IN START STOP CHARGING", e.response.data);
       }
@@ -334,8 +330,11 @@ const HomeChargerCard = ({ charger, onClick }) => {
                 isCharging={chargerIsCharging(chargerState)}
                 isSecondary={true}
                 onPressAction={() =>
-                  navigation.navigate(chargerSettingsRoute, {
-                    chargerId: chargerState.ChargingSessionId,
+                  //   navigation.navigate(chargerSettingsRoute, {
+                  //     chargerId: chargerState.serialNumberCon,
+                  //   })
+                  navigation.navigate(DeviceDetailsRoute, {
+                    serialNumberCon: chargerState.serialNumberCon,
                   })
                 }
               />

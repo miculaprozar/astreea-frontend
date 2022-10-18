@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { View, Text } from "react-native";
 
 import { useFocusEffect } from "@react-navigation/native";
-import DetailsBackground from "../../assets/chargingScreen.jpg";
+import DetailsBackground from "../../assets/chargingScreenGreen.jpg";
 import ChargerButton from "../../components/ChargerButton/ChargerButton";
 import PillButton from "../../components/PillButton/PillButton";
 import Table from "../../components/Table/Table";
@@ -29,6 +29,7 @@ import {
 import { chargeDate, chargeLastUsed } from "../../helpers/formatFunctions";
 import LargeChargerButton from "../../components/LargeChargerButton/LargeChargerButton";
 import ChargerSettingsCard from "../../components/ChargerSettingsCard/ChargerSettingsCard";
+import * as Haptics from "expo-haptics";
 
 import { HubConnectionState } from "@microsoft/signalr";
 
@@ -48,13 +49,13 @@ const DeviceDetails = (props) => {
   const connection = global.connection;
   const cert = global.cert;
 
+  var commandTimeoutId = -1;
+
   const [charger, setCharger] = useState(null);
 
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [date, setDate] = useState(getStartMonthDate(new Date()));
-
-  const [triggerRefresh, setTriggerRefresh] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [startStopOngoing, setStartStopOngoing] = useState(false);
 
   const getChargerDetails = async () => {
     if (connection.state == HubConnectionState.Connected) {
@@ -68,45 +69,55 @@ const DeviceDetails = (props) => {
         });
     }
   };
-
-  /* console.log("THE CHARGER DETAILS :", charger); */
+  connection.on("ChargerStateChanged=" + serialNumberCon, (newState) => {
+    // console.log("New state:" + newState);
+    setCharger((prevState) => ({
+      ...prevState,
+      state: newState,
+    }));
+  });
 
   const StartStopCharging = async () => {
-    changeLoader(true);
+    if (startStopOngoing == false) {
+      setStartStopOngoing(true);
 
-    try {
-      setTriggerRefresh(true);
-      if (charger && chargerIsCharging(charger)) {
-        if (connection.state == HubConnectionState.Connected) {
-          await connection
-            .invoke("StopCharging", serialNumberCon, cert)
-            .then(() => {
-              console.log("StopCharging performed");
-            });
+      commandTimeoutId = setTimeout(() => {
+        setStartStopOngoing(false);
+      }, 2000);
+
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+      try {
+        if (charger && chargerIsCharging(charger)) {
+          if (connection.state == HubConnectionState.Connected) {
+            await connection
+              .invoke("StopCharging", serialNumberCon, cert)
+              .then((e) => {
+                console.log("StopCharging performed", e);
+              });
+          }
+        } else {
+          if (connection.state == HubConnectionState.Connected) {
+            await connection
+              .invoke("StartCharging", serialNumberCon, cert)
+              .then((e) => {
+                console.log("StartCharging performed", e);
+              });
+          }
         }
-      } else {
-        if (connection.state == HubConnectionState.Connected) {
-          await connection
-            .invoke("StartCharging", serialNumberCon, cert)
-            .then(() => {
-              console.log("StartCharging performed");
-            });
-        }
+      } catch (e) {
+        console.log("ERROR IN START STOP CHARGING", e.response.data);
       }
-
-      getChargerDetails();
-      setTriggerRefresh(false);
-      changeLoader(false);
-    } catch (e) {
-      console.log("ERROR IN START STOP CHARGING", e.response.data);
+    } else {
+      console.log(
+        "Cannot perform Start/Stop operation while another operation is already in progress."
+      );
     }
   };
 
   useFocusEffect(
     useCallback(() => {
-      setIsLoading(true);
       getChargerDetails();
-      setIsLoading(false);
     }, [connection])
   );
 
@@ -115,19 +126,12 @@ const DeviceDetails = (props) => {
     setIsCalendarOpen(!isCalendarOpen);
   };
 
-  const changeLoader = (boolean) => {
-    if (!boolean) {
-      setIsLoading(false);
-    } else setIsLoading(true);
-  };
-
   const chargerIsCharging = (charger) =>
     charger.state === "Charging" ? true : false;
 
   return (
     <>
-      {/* <Loader isLoading={isLoading} /> */}
-      {!triggerRefresh && charger && (
+      {charger && (
         <>
           <Layout customBackgroundUrl={DetailsBackground}>
             <Layout.Header>
@@ -160,63 +164,36 @@ const DeviceDetails = (props) => {
                 <LargeChargerButton
                   marginRight={20}
                   isCharging={chargerIsCharging(charger)}
-                  isDisabled={charger.state === "Occupied" ? true : false}
+                  isDisabled={
+                    charger.state === "Occupied" || startStopOngoing
+                      ? true
+                      : false
+                  }
                   onPressAction={() =>
-                    charger.state !== "Occupied" && StartStopCharging()
+                    charger.state !== "Occupied" &&
+                    !startStopOngoing &&
+                    StartStopCharging()
                   }
                 />
                 <LargeChargerButton
                   isSchedule={true}
-                  onPressAction={() => navigation.navigate(ScheduleRoute, {
-                    chargerId: charger.chargerId,
-                  })}
+                  onPressAction={() =>
+                    navigation.navigate(ScheduleRoute, {
+                      chargerId: charger.chargerId,
+                    })
+                  }
                 />
               </View>
             </Layout.Body>
             <Layout.Footer style={{ flex: 2, backgroundColor: "red" }}>
-              {/* {!chargerIsCharging(charger) ? (
-                <TotalChargeCard charger={charger} date={date} />
-              ) : ( */}
               <ChargerCard
-                // kwh={kwhRenderer(charger.lastChargingSession)}
-                // time={hourMinutesRenderer(charger.lastChargingSession)}
-                // price={priceRenderer(charger.lastChargingSession)}
-                // key={getUniqueKey(charger)}
+                setStartStopOngoing={setStartStopOngoing}
+                startStopOngoing={startStopOngoing}
                 charger={charger}
                 isDetails
-              ></ChargerCard>
-              {/* // )} */}
-              <View style={style.tittleButtonWrapper}>
-                {/* <View style={{ flex: 1 }}>
-                  <ChargerButton
-                    marginRight={5}
-                    isSecondary={true}
-                    onPressAction={() =>
-                      navigation.navigate(chargerSettingsRoute, {
-                        chargerId: chargerId,
-                      })
-                    }
-                  />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <ChargerButton
-                    isSchedule={true}
-                    marginLeft={2.5}
-                    marginRight={2.5}
-                    onPressAction={() => navigation.navigate(ScheduleRoute)}
-                  />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <ChargerButton
-                    marginLeft={5}
-                    isCharging={chargerIsCharging(charger)}
-                    isDisabled={charger.state === "Occupied" ? true : false}
-                    onPressAction={() =>
-                      charger.state !== "Occupied" && StartStopCharging()
-                    }
-                  />
-                </View> */}
-              </View>
+                commandTimeoutId={commandTimeoutId}
+              />
+              <View style={style.tittleButtonWrapper}></View>
               <ChargerSettingsCard />
               <Calendar
                 isOpen={isCalendarOpen}

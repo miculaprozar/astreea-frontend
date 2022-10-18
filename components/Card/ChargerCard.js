@@ -25,10 +25,15 @@ import routes from "../../routes";
 import { useNavigation } from "@react-navigation/native";
 import { HubConnectionState } from "@microsoft/signalr";
 
-const ChargerCard = ({ charger, onClick, isDetails = false }) => {
+const ChargerCard = ({
+  charger,
+  onClick,
+  isDetails = false,
+  startStopOngoing,
+  setStartStopOngoing,
+  commandTimeoutId,
+}) => {
   const [chargerState, setChargerState] = useState(charger);
-
-  const navigation = useNavigation();
 
   const connection = global.connection;
   const cert = global.cert;
@@ -38,61 +43,49 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
     ScheduleV2: { name: ScheduleRoute },
   } = routes;
 
-  connection.on("ChargerStateChanged", (chargerStateChange) => {
-    if (chargerState.serialNumberCon === chargerStateChange.serialNumberCon) {
-      console.log("New state:" + chargerStateChange.state);
-      setChargerState((prevState) => ({
-        ...prevState,
-        state: chargerStateChange.state,
-      }));
-    }
-  });
-
-  connection.on("ChargingChanged", (chargingChange) => {
-    // if (chargerState.serialNumberCon === chargingChange.serialNumberCon) {
-    //   var newState = chargerState;
-    //   newState.LastChargingSession = chargingChange;
-    //   setChargerState(newState);
-    // }
-  });
-
   useEffect(() => {
     setChargerState(charger);
-  }, [charger]);
 
-  const StartStopCharging = async () => {
-    // changeLoader(true);
+    if (!global["ChargerStateChanged=" + chargerState.serialNumberCon]) {
+      console.log(
+        "Subscribed to:" + "ChargerStateChanged=" + chargerState.serialNumberCon
+      );
 
-    try {
-      // setTriggerRefresh(true);
-      if (chargerState && chargerIsCharging(chargerState)) {
-        if (connection.state == HubConnectionState.Connected) {
-          await connection
-            .invoke("StopCharging", chargerState.serialNumberCon, cert)
-            .then((e) => {
-              console.log("StopCharging performed", e);
-            });
+      global["ChargerStateChanged=" + chargerState.serialNumberCon] = true;
+      connection.on(
+        "ChargerStateChanged=" + chargerState.serialNumberCon,
+        (newState) => {
+          //console.log("New state:" + newState);
+          setChargerState((prevState) => ({
+            ...prevState,
+            state: newState,
+          }));
+
+          if (newState !== "Preparing") {
+            clearTimeout(commandTimeoutId);
+            setStartStopOngoing(false);
+          }
         }
-      } else {
-        if (connection.state == HubConnectionState.Connected) {
-          await connection
-            .invoke("StartCharging", chargerState.serialNumberCon, cert)
-            .then((e) => {
-              console.log("StartCharging performed", e);
-            });
-        }
-      }
-
-      // getChargerDetails();
-      // setTriggerRefresh(false);
-      // changeLoader(false);
-    } catch (e) {
-      console.log("ERROR IN START STOP CHARGING", e.response.data);
+      );
     }
-  };
 
-  const chargerIsCharging = (chargerState) =>
-    chargerState.state === "Charging" ? true : false;
+    if (!global["ChargingChanged=" + chargerState.serialNumberCon]) {
+      //console.log("Subscribed to:" + 'ChargingChanged=' + chargerState.serialNumberCon);
+
+      global["ChargingChanged=" + chargerState.serialNumberCon] = true;
+      connection.on(
+        "ChargingChanged=" + chargerState.serialNumberCon,
+        (chargingChange) => {
+          //console.log("New charging event:");
+          //console.log(util.inspect(chargingChange, false, null, true));
+          setChargerState((prevState) => ({
+            ...prevState,
+            lastChargingSession: chargingChange,
+          }));
+        }
+      );
+    }
+  }, [charger]);
 
   return (
     <>
@@ -272,50 +265,6 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
               </View>
             </View>
           </Pressable>
-
-          {/* </TouchableWithoutFeedback> */}
-
-          {!isDetails && (
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginTop: 20,
-              }}
-            >
-              <ChargerButton
-                isCharging={chargerIsCharging(chargerState)}
-                isDisabled={chargerState.state === "Occupied" ? true : false}
-                onPressAction={() =>
-                  chargerState.state !== "Occupied" && StartStopCharging()
-                }
-              />
-              <ChargerButton
-                isCharging={chargerIsCharging(chargerState)}
-                isSecondary={true}
-                onPressAction={() =>
-                  navigation.navigate(chargerSettingsRoute, {
-                    chargerId: chargerState.ChargingSessionId,
-                  })
-                }
-              />
-
-              <ChargerButton
-                isCharging={chargerIsCharging(chargerState)}
-                isSchedule={true}
-                onPressAction={() => navigation.navigate(ScheduleRoute)}
-              />
-            </View>
-          )}
-          {/* {chargerState.isAdmin && chargerState.state === "OutOfOrder" ? (
-            <Pressable
-              style={charging.pairButtonWrapper}
-              onPress={() => console.log("Pressed")}
-            >
-              <Text style={charging.pairButtonText}>PAIR AGAIN</Text>
-            </Pressable>
-          ) : null} */}
         </View>
       </TouchableWithoutFeedback>
     </>

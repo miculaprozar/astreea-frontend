@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
-import * as Haptics from 'expo-haptics';
+import * as Haptics from "expo-haptics";
 
 import { style } from "./BottomNavbar.style";
 
@@ -16,9 +16,9 @@ const BottomNavbar = () => {
         <View style={style.wrapper}>
           <View style={style.container}>
             <Pressable
-              onPress={() => {                
+              onPress={() => {
                 Haptics.selectionAsync();
-                navigation.navigate("StartPairing");
+                navigation.navigate("QRScannerStep");
               }}
               style={{ alignItems: "center" }}
             >
@@ -30,7 +30,7 @@ const BottomNavbar = () => {
             </Pressable>
 
             <Pressable
-              onPress={() => {                 
+              onPress={() => {
                 Haptics.selectionAsync();
                 navigation.navigate("Home");
               }}
@@ -44,7 +44,9 @@ const BottomNavbar = () => {
             </Pressable>
             <Pressable
               onPress={() => {
-                Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+                Haptics.notificationAsync(
+                  Haptics.NotificationFeedbackType.Warning
+                );
               }}
               style={{ alignItems: "center" }}
             >
@@ -54,11 +56,14 @@ const BottomNavbar = () => {
               />
               <Text style={style.textImage}>Find Charger</Text>
             </Pressable>
-            <Pressable 
+            <Pressable
               onPress={() => {
-                Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+                Haptics.notificationAsync(
+                  Haptics.NotificationFeedbackType.Warning
+                );
               }}
-              style={{ alignItems: "center" }}>
+              style={{ alignItems: "center" }}
+            >
               <Image
                 style={style.images}
                 source={require("../../assets/help.png")}

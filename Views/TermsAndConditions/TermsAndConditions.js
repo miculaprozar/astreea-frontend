@@ -11,7 +11,7 @@ const TermsAndConditions = (props) => {
   const { navigation, route } = props;
   const { Home, QRScannerStep } = routes;
 
-  const navigateToHome = () => {
+  const navigateToQrScanner = () => {
     navigation.navigate(QRScannerStep.name);
   };
 
@@ -40,7 +40,7 @@ const TermsAndConditions = (props) => {
           isSecondary={true}
           marginTop={15}
           marginBottom={30}
-          onPressAction={navigateToHome}
+          onPressAction={navigateToQrScanner}
         />
       </Layout.Footer>
       <View style={style.footerContainer}>
