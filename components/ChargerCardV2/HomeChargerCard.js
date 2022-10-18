@@ -342,7 +342,9 @@ const HomeChargerCard = ({ charger, onClick }) => {
               <ChargerButton
                 isCharging={chargerIsCharging(chargerState)}
                 isSchedule={true}
-                onPressAction={() => navigation.navigate(ScheduleRoute)}
+                onPressAction={() => navigation.navigate(ScheduleRoute, {
+                    chargerId: charger.chargerId,
+                  })}
               />
             </View>
           }

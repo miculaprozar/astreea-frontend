@@ -69,7 +69,7 @@ const DeviceDetails = (props) => {
     }
   };
 
-  console.log("THE CHARGER DETAILS :", charger);
+  /* console.log("THE CHARGER DETAILS :", charger); */
 
   const StartStopCharging = async () => {
     changeLoader(true);
@@ -167,7 +167,9 @@ const DeviceDetails = (props) => {
                 />
                 <LargeChargerButton
                   isSchedule={true}
-                  onPressAction={() => navigation.navigate(ScheduleRoute)}
+                  onPressAction={() => navigation.navigate(ScheduleRoute, {
+                    chargerId: charger.chargerId,
+                  })}
                 />
               </View>
             </Layout.Body>

@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useCallback, useState, useContext } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { Text, View, TouchableWithoutFeedback, ScrollView } from "react-native";
 import DetailsBackground from "../../assets/chargingScreen.jpg";
 import Layout from "../../general_components/Layout";
@@ -6,8 +7,36 @@ import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavi
 import { style } from "./Schedule.style";
 import ScheduleInput from "../../components/ScheduleInput/ScheduleInput";
 import ChargingHistoryTable from "../../components/ChargingHistoryTable/CharginghistoryTable";
+import { HubConnectionState } from "@microsoft/signalr";
+
 const ScheduleV2 = (props) => {
   const { navigation, route } = props;
+  const {
+    route: {
+      params: { chargerId },
+    },
+  } = props;
+  const [chargerProfiles, setChargerProfiles] = useState(null);
+  const connection = global.connection;
+
+  const getChargerProfileList = async () => {
+    if (connection.state == HubConnectionState.Connected) {
+      await connection
+        .invoke("GetChargingProfileList", chargerId)
+        .then((profiles) => {
+          setChargerProfiles(profiles);
+        })
+        .catch((err) => {
+          console.log("THE ERROR IS", err);
+        });
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      getChargerProfileList();
+    }, [connection])
+  );
 
   return (
     <Layout diffuseBG={true}>
@@ -16,7 +45,7 @@ const ScheduleV2 = (props) => {
       </Layout.Header>
       <Layout.Body>
         <ScheduleInput />
-        <ChargingHistoryTable />
+        <ChargingHistoryTable chargerProfiles={chargerProfiles} />
       </Layout.Body>
       <Layout.Footer></Layout.Footer>
     </Layout>

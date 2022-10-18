@@ -2,11 +2,41 @@ import React, { useEffect, useState, useContext } from "react";
 import { Text, View, TouchableWithoutFeedback, ScrollView, Image } from "react-native";
 import { style } from "./ChargingHistoryTable.style";
 let deleteIcon = require('../../assets/delete.png');
-const ChargingHistoryTable = () => {
+const ChargingHistoryTable = (props) => {
+  const {chargerProfiles} = props;
+
+  const getStart = (date, startPeriod, type) => {
+    let newDate = new Date(date);
+    newDate.setSeconds(newDate.getSeconds() + startPeriod);
+    let hours = new Date(newDate).getUTCHours();
+    let minutes = new Date(newDate).getUTCMinutes();
+    return type === "hours" ? hours : minutes;
+  }
+
+  const getStop = (date, duration, startPeriod, type) => {
+    let newDate = new Date(date);
+    newDate.setSeconds(newDate.getSeconds() + duration+startPeriod);
+    let hours = new Date(newDate).getUTCHours();
+    let minutes = new Date(newDate).getUTCMinutes();
+    return type === "hours" ? hours : minutes;
+  }
+
+  const getChargingTime = (date, duration, startPeriod, type) => {
+    let startDate = new Date(date);
+    let endDate = startDate.setSeconds(startDate.getSeconds() + duration+startPeriod);
+    var diffMs = (startDate - endDate);
+    var diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
+    var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
+    return type === "hours" ? diffHrs : diffMins;
+  }
+
   return (
     <View>
-      <Text style={style.title}>History</Text>
-      <View style={style.scheduleTableCard}>
+      {
+        chargerProfiles ? <Text style={style.title}>History</Text> : null
+      }
+      {
+        chargerProfiles ? <View style={style.scheduleTableCard}>
         <View style={{ flexDirection: "row", marginBottom: 5 }}>
           <View
             style={{
@@ -89,7 +119,8 @@ const ChargingHistoryTable = () => {
             ></View>
           </View>
         </View>
-        <View style={{ flexDirection: "row", marginBottom: 5 }}>
+        <>{ 
+          chargerProfiles.map((profile,index) => <View key={"profile_"+index} style={{ flexDirection: "row", marginBottom: 5 }}>
           <View
             style={{
               flex: 1,
@@ -98,10 +129,10 @@ const ChargingHistoryTable = () => {
             }}
           >
             <View style={style.lefDoubleWrapper}>
-              <Text style={style.tableTextData}>11</Text>
+              <Text style={style.tableTextData}>{getStart(profile.chargingSchedule.startSchedule, profile.chargingSchedule.chargingSchedulePeriod[0].startPeriod, "hours")}</Text>
             </View>
             <View style={style.rightDoubleWrapper}>
-              <Text style={style.tableTextData}>11</Text>
+              <Text style={style.tableTextData}>{getStart(profile.chargingSchedule.startSchedule, profile.chargingSchedule.chargingSchedulePeriod[0].startPeriod, "minutes")}</Text>
             </View>
           </View>
           <View
@@ -112,10 +143,10 @@ const ChargingHistoryTable = () => {
             }}
           >
             <View style={style.lefDoubleWrapper}>
-              <Text style={style.tableTextData}>22</Text>
+              <Text style={style.tableTextData}>{getStop(profile.chargingSchedule.startSchedule, profile.chargingSchedule.duration, profile.chargingSchedule.chargingSchedulePeriod[0].startPeriod, "hours")}</Text>
             </View>
             <View style={style.rightDoubleWrapper}>
-              <Text style={style.tableTextData}>22</Text>
+              <Text style={style.tableTextData}>{getStop(profile.chargingSchedule.startSchedule, profile.chargingSchedule.duration, profile.chargingSchedule.chargingSchedulePeriod[0].startPeriod, "minutes")}</Text>
             </View>
           </View>
           <View
@@ -126,7 +157,7 @@ const ChargingHistoryTable = () => {
             }}
           >
             <View style={style.entireWrapper}>
-              <Text style={style.tableTextData}>33</Text>
+              <Text style={style.tableTextData}>{profile.chargingSchedule.chargingSchedulePeriod[0].limit}</Text>
             </View>
           </View>
           <View
@@ -139,7 +170,7 @@ const ChargingHistoryTable = () => {
             <View
               style={{ ...style.lefDoubleWrapper, backgroundColor: "#484848" }}
             >
-              <Text style={style.tableTextData}>22</Text>
+              <Text style={style.tableTextData}>{getChargingTime(profile.chargingSchedule.startSchedule, profile.chargingSchedule.duration, profile.chargingSchedule.chargingSchedulePeriod[0].startPeriod, "hours")}</Text>
             </View>
             <View
               style={{
@@ -147,7 +178,7 @@ const ChargingHistoryTable = () => {
                 backgroundColor: "#484848",
               }}
             >
-              <Text style={style.tableTextData}>22</Text>
+              <Text style={style.tableTextData}>{getChargingTime(profile.chargingSchedule.startSchedule, profile.chargingSchedule.duration, profile.chargingSchedule.chargingSchedulePeriod[0].startPeriod, "minutes")}</Text>
             </View>
           </View>
 
@@ -162,8 +193,11 @@ const ChargingHistoryTable = () => {
               style={{ width: 18, height: 18, resizeMode: "contain", marginTop: 2 }}></Image>
             </View>
           </View>
-        </View>
-      </View>
+        </View>)
+        }</>
+      </View> : null
+      }
+      
     </View>
   );
 };
