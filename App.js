@@ -49,7 +49,9 @@ export default function App() {
   return (
     <AuthProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="TermsAndConditions">
+        <Stack.Navigator initialRouteName="TermsAndConditions" screenOptions={{
+    headerShown: false,
+  }}>
           <Stack.Screen
             name={routes.Home.name}
             options={routes.Home.navigationOptions}

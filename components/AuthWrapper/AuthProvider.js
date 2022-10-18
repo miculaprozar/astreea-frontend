@@ -102,7 +102,7 @@ const AuthProvider = (props) => {
       "https://csmsgatewayauthorization.azurewebsites.net/api/negotiate?key=SMI_8CPajAfaxRYD0sB0PV-VQA_A5-76OHYZbD955tbxAzFuTwklsg==";
     const authInfo = await axios.get(authenticationFunctionUrl);
 
-    var oid = tokenInfo.oid;
+    var oid = tokenInfo ? tokenInfo.oid : null;
     startSignalRConnection(authInfo.data.url, authInfo.data.accessToken, oid, userName, setConnectionStatus);
 
     setToken(tokenResponse.data.id_token);

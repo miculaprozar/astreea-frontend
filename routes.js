@@ -1,5 +1,6 @@
 const defaultNavigationOptions = {
   headerShown: false,
+  headerMode: 'none'
   //   title: "",
   //   headerStyle: {
   //     backgroundColor: "#F2F6F7",
