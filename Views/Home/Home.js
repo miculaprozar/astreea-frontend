@@ -96,12 +96,15 @@ const Home = (props) => {
                 })
                 .map((item, index) => {
                   return (
-                  <HomeChargerCard
-                    key={item.serialNumberCon}
-                    charger={item}
-                    onClick={() => navigateToDeviceAction(item.serialNumberCon)}
-                  />
-                )})}
+                    <HomeChargerCard
+                      key={item.serialNumberCon}
+                      charger={item}
+                      onClick={() =>
+                        navigateToDeviceAction(item.serialNumberCon)
+                      }
+                    />
+                  );
+                })}
           </ScrollView>
         </Layout.Body>
       </Layout>

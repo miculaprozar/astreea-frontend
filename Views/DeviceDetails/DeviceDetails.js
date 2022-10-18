@@ -72,21 +72,23 @@ const DeviceDetails = (props) => {
   const StartStopCharging = async () => {
     changeLoader(true);
 
-    console.log("THE CHARGER ID:", serialNumberCon);
-
     try {
       setTriggerRefresh(true);
       if (charger && chargerIsCharging(charger)) {
         if (connection.state == HubConnectionState.Connected) {
-          await connection.invoke("StopCharging", serialNumberCon, cert).then(() => {
-            console.log("StopCharging performed");
-          });
+          await connection
+            .invoke("StopCharging", serialNumberCon, cert)
+            .then(() => {
+              console.log("StopCharging performed");
+            });
         }
       } else {
         if (connection.state == HubConnectionState.Connected) {
-          await connection.invoke("StartCharging", serialNumberCon, cert).then(() => {
-            console.log("StartCharging performed");
-          });
+          await connection
+            .invoke("StartCharging", serialNumberCon, cert)
+            .then(() => {
+              console.log("StartCharging performed");
+            });
         }
       }
 

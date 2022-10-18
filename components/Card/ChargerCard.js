@@ -7,7 +7,11 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { chargeDate, chargeLastUsed } from "../../helpers/formatFunctions";
+import {
+  chargeDate,
+  chargeLastUsed,
+  formatDuration,
+} from "../../helpers/formatFunctions";
 import { charging } from "./CardStyle";
 import {
   circleColor,
@@ -34,18 +38,17 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
     ScheduleV2: { name: ScheduleRoute },
   } = routes;
 
-  connection.on('ChargerStateChanged', (chargerStateChange) => {
+  connection.on("ChargerStateChanged", (chargerStateChange) => {
     if (chargerState.serialNumberCon === chargerStateChange.serialNumberCon) {
       console.log("New state:" + chargerStateChange.state);
-      setChargerState(prevState => ({                   
-            ...prevState,   
-            state:  chargerStateChange.state     
-        }
-      ));
+      setChargerState((prevState) => ({
+        ...prevState,
+        state: chargerStateChange.state,
+      }));
     }
   });
 
-  connection.on('ChargingChanged', (chargingChange) => {
+  connection.on("ChargingChanged", (chargingChange) => {
     // if (chargerState.serialNumberCon === chargingChange.serialNumberCon) {
     //   var newState = chargerState;
     //   newState.LastChargingSession = chargingChange;
@@ -197,7 +200,9 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
                   style={{
                     ...charging.smallText,
                     ...(isDetails && { color: "white" }),
-                    ...(chargerState.state === "Charging" && { color: "white" }),
+                    ...(chargerState.state === "Charging" && {
+                      color: "white",
+                    }),
                   }}
                 >
                   Energy Delivered
@@ -210,8 +215,10 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
                   }}
                 >
                   {chargerState.lastChargingSession
-                    ? chargerState.lastChargingSession.chargedKWh + "kWh"
-                    : "-- kWh"}
+                    ? (
+                        chargerState.lastChargingSession.charged / 10000
+                      ).toFixed(2) + "kWh"
+                    : "--"}
                 </Text>
               </View>
               <View style={{ marginTop: "auto" }}>
@@ -219,7 +226,9 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
                   style={{
                     ...charging.smallText,
                     ...(isDetails && { color: "white" }),
-                    ...(chargerState.state === "Charging" && { color: "white" }),
+                    ...(chargerState.state === "Charging" && {
+                      color: "white",
+                    }),
                   }}
                 >
                   Charge Duration
@@ -231,7 +240,9 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
                   }}
                 >
                   {chargerState.lastChargingSession
-                    ? chargerState.lastChargingSession.chargedTimeInSec
+                    ? formatDuration(
+                        chargerState.lastChargingSession.chargedTimeInSec
+                      )
                     : "--"}
                 </Text>
               </View>
@@ -240,10 +251,12 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
                   style={{
                     ...charging.smallText,
                     ...(isDetails && { color: "white" }),
-                    ...(chargerState.state === "Charging" && { color: "white" }),
+                    ...(chargerState.state === "Charging" && {
+                      color: "white",
+                    }),
                   }}
                 >
-                  Amount Paid
+                  Cost
                 </Text>
                 <Text
                   style={{
@@ -252,7 +265,8 @@ const ChargerCard = ({ charger, onClick, isDetails = false }) => {
                   }}
                 >
                   {chargerState.lastChargingSession
-                    ? chargerState.lastChargingSession.chargedCost
+                    ? "€" +
+                      chargerState.lastChargingSession.chargedCost.toFixed(2)
                     : "--"}
                 </Text>
               </View>
