@@ -6,7 +6,7 @@ export const card = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.30)",
     borderRadius: 15,
     padding: 18,
-    marginBottom: 15,
+    marginBottom: 5,
   },
   input: {
     alignItems: "center",
@@ -37,5 +37,12 @@ export const card = StyleSheet.create({
     color: "#FFFFFF",
     fontFamily: "Inter_400Regular",
     fontSize: 10,
+  },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    fontFamily: "Inter_400Regular",
+    marginBottom: 5,
+    marginTop: 5,
   },
 });

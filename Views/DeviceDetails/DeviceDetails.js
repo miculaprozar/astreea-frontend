@@ -30,6 +30,7 @@ import { chargeDate, chargeLastUsed } from "../../helpers/formatFunctions";
 import LargeChargerButton from "../../components/LargeChargerButton/LargeChargerButton";
 import ChargerSettingsCard from "../../components/ChargerSettingsCard/ChargerSettingsCard";
 import * as Haptics from "expo-haptics";
+import { useForm, Controller } from "react-hook-form";
 
 import { HubConnectionState } from "@microsoft/signalr";
 
@@ -76,6 +77,8 @@ const DeviceDetails = (props) => {
       state: newState,
     }));
   });
+
+  console.log("THE CHARGER:", charger.state);
 
   const StartStopCharging = async () => {
     if (startStopOngoing == false) {
@@ -133,7 +136,7 @@ const DeviceDetails = (props) => {
     <>
       {charger && (
         <>
-          <Layout customBackgroundUrl={DetailsBackground}>
+          <Layout customBackgroundUrl={DetailsBackground} scrollView={true}>
             <Layout.Header>
               <HeaderNavigator navigation={navigation} route={route} />
             </Layout.Header>
@@ -194,7 +197,11 @@ const DeviceDetails = (props) => {
                 commandTimeoutId={commandTimeoutId}
               />
               <View style={style.tittleButtonWrapper}></View>
-              <ChargerSettingsCard />
+              {charger.state !== "Charging" &&
+                charger.state !== "Suspended" &&
+                charger.state !== "Authorized" && (
+                  <ChargerSettingsCard chargerId={charger.chargerId} />
+                )}
               <Calendar
                 isOpen={isCalendarOpen}
                 selected={date}
