@@ -35,7 +35,7 @@ const QRModal = ({
               style={{
                 position: "absolute",
                 top: "19%",
-                left: "8.2%",
+                left: "16.2%",
                 width: 200,
                 height: 200,
               }}
