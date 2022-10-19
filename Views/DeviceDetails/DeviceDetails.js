@@ -78,8 +78,6 @@ const DeviceDetails = (props) => {
     }));
   });
 
-  console.log("THE CHARGER:", charger.state);
-
   const StartStopCharging = async () => {
     if (startStopOngoing == false) {
       setStartStopOngoing(true);
