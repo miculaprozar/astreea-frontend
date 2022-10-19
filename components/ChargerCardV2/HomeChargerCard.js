@@ -44,6 +44,10 @@ const HomeChargerCard = ({ charger, onClick }) => {
   } = routes;
 
   useEffect(() => {
+    console.log("THE CHARGER STATE IS:", chargerState.state);
+  }, [chargerState]);
+
+  useEffect(() => {
     setChargerState(charger);
     // if (charger.serialNumberCon == "SNBTA1_2") {
     //   console.log(util.inspect(charger, false, null, true));
@@ -322,6 +326,10 @@ const HomeChargerCard = ({ charger, onClick }) => {
                     ? true
                     : false
                 }
+                isStop={
+                  chargerState.state === "Authorized" ||
+                  chargerState.state === "Suspended"
+                }
                 onPressAction={() =>
                   chargerState.state !== "Occupied" && StartStopCharging()
                 }
@@ -341,9 +349,11 @@ const HomeChargerCard = ({ charger, onClick }) => {
               <ChargerButton
                 isCharging={chargerIsCharging(chargerState)}
                 isSchedule={true}
-                onPressAction={() => navigation.navigate(ScheduleRoute, {
+                onPressAction={() =>
+                  navigation.navigate(ScheduleRoute, {
                     chargerId: charger.chargerId,
-                  })}
+                  })
+                }
               />
             </View>
           }

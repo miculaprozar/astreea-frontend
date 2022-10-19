@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, Image } from "react-native";
 
-const Icon = ({ isSecondary, isSchedule, isCharging }) => {
+const Icon = ({ isSecondary, isSchedule, isCharging, isStop }) => {
   const iconToRender = isSecondary
     ? "calendar-day"
     : isSchedule
@@ -38,7 +38,7 @@ const Icon = ({ isSecondary, isSchedule, isCharging }) => {
             ...(!isCharging ? { color: "#FFFFFF" } : { color: "#44CD54" }),
           }}
         >
-          {isCharging ? "STOP" : "START"}
+          {isCharging || isStop ? "STOP" : "START"}
         </Text>
       )}
     </>

@@ -14,6 +14,7 @@ const ChargerButton = ({
   isCharging,
   isDisabled,
   isSchedule,
+  isStop,
 }) => {
   return (
     <View
@@ -50,6 +51,7 @@ const ChargerButton = ({
             isSecondary={isSecondary}
             isSchedule={isSchedule}
             isCharging={isCharging}
+            isStop={isStop}
           />
         </View>
       </Pressable>
