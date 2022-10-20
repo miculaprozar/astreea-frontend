@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import util from "util";
 import {
   Image,
   Pressable,
@@ -38,14 +37,9 @@ const HomeChargerCard = ({ charger, onClick }) => {
   const cert = global.cert;
 
   const {
-    ChargerSettings: { name: chargerSettingsRoute },
     ScheduleV2: { name: ScheduleRoute },
     DeviceDetails: { name: DeviceDetailsRoute },
   } = routes;
-
-  useEffect(() => {
-    console.log("THE CHARGER STATE IS:", chargerState.state);
-  }, [chargerState]);
 
   useEffect(() => {
     setChargerState(charger);
@@ -142,8 +136,6 @@ const HomeChargerCard = ({ charger, onClick }) => {
           style={{
             ...charging.wrapper,
             backgroundColor: getBGColorByStatus(chargerState.state),
-            // ...(chargerState.isAdmin &&
-            //   chargerState.state === "OutOfOrder" && { height: 190 }),
           }}
         >
           <Pressable onPress={() => onClick && onClick()} style={{ flex: 1 }}>
@@ -183,7 +175,6 @@ const HomeChargerCard = ({ charger, onClick }) => {
                     <Image
                       style={{
                         ...charging.circle,
-                        marginLeft: 8,
                       }}
                       source={require("../../assets/bullet.gif")}
                     />
@@ -191,7 +182,6 @@ const HomeChargerCard = ({ charger, onClick }) => {
                     <View
                       style={{
                         ...charging.circle,
-                        marginLeft: 10,
                         backgroundColor: circleColor(chargerState, 1),
                       }}
                     />
@@ -308,55 +298,48 @@ const HomeChargerCard = ({ charger, onClick }) => {
             </View>
           </Pressable>
 
-          {/* </TouchableWithoutFeedback> */}
-
-          {
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginTop: 20,
-              }}
-            >
-              <ChargerButton
-                isCharging={chargerIsCharging(chargerState)}
-                isDisabled={
-                  chargerState.state === "Occupied" || startStopOngoing
-                    ? true
-                    : false
-                }
-                isStop={
-                  chargerState.state === "Authorized" ||
-                  chargerState.state === "Suspended"
-                }
-                onPressAction={() =>
-                  chargerState.state !== "Occupied" && StartStopCharging()
-                }
-              />
-              <ChargerButton
-                isCharging={chargerIsCharging(chargerState)}
-                isSecondary={true}
-                onPressAction={() =>
-                  //   navigation.navigate(chargerSettingsRoute, {
-                  //     chargerId: chargerState.serialNumberCon,
-                  //   })
-                  navigation.navigate(DeviceDetailsRoute, {
-                    serialNumberCon: chargerState.serialNumberCon,
-                  })
-                }
-              />
-              <ChargerButton
-                isCharging={chargerIsCharging(chargerState)}
-                isSchedule={true}
-                onPressAction={() =>
-                  navigation.navigate(ScheduleRoute, {
-                    chargerId: charger.chargerId,
-                  })
-                }
-              />
-            </View>
-          }
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginTop: 20,
+            }}
+          >
+            <ChargerButton
+              isCharging={chargerIsCharging(chargerState)}
+              isDisabled={
+                chargerState.state === "Occupied" || startStopOngoing
+                  ? true
+                  : false
+              }
+              isStop={
+                chargerState.state === "Authorized" ||
+                chargerState.state === "Suspended"
+              }
+              onPressAction={() =>
+                chargerState.state !== "Occupied" && StartStopCharging()
+              }
+            />
+            <ChargerButton
+              isCharging={chargerIsCharging(chargerState)}
+              isSecondary={true}
+              onPressAction={() =>
+                navigation.navigate(DeviceDetailsRoute, {
+                  serialNumberCon: chargerState.serialNumberCon,
+                })
+              }
+            />
+            <ChargerButton
+              isCharging={chargerIsCharging(chargerState)}
+              isSchedule={true}
+              onPressAction={() =>
+                navigation.navigate(ScheduleRoute, {
+                  chargerId: charger.chargerId,
+                })
+              }
+            />
+          </View>
         </View>
       </TouchableWithoutFeedback>
     </>

@@ -53,6 +53,7 @@ export const charging = StyleSheet.create({
   circle: {
     backgroundColor: "#44CD54",
     // borderRadius: "50%",
+    marginLeft: 10,
     borderRadius: 50,
     width: 10,
     height: 10,

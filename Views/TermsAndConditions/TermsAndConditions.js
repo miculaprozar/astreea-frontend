@@ -1,15 +1,15 @@
-import React, { useEffect, useState, useContext } from "react";
-import { Image, Pressable, Text, View } from "react-native";
-import { style } from "./TermsAndConditions.style";
+import React from "react";
+import { Image, Text } from "react-native";
 import Button from "../../components/Button/Button";
+import LogoBar from "../../components/LogoBar/LogoBar";
 import routes from "../../routes";
+import { style } from "./TermsAndConditions.style";
 
-import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
 import Layout from "../../general_components/Layout";
 
 const TermsAndConditions = (props) => {
-  const { navigation, route } = props;
-  const { Home, QRScannerStep } = routes;
+  const { navigation } = props;
+  const { QRScannerStep } = routes;
 
   const navigateToQrScanner = () => {
     navigation.navigate(QRScannerStep.name);
@@ -34,7 +34,7 @@ const TermsAndConditions = (props) => {
           and your choices about how information is used, in a format that is
           easy to read and navigate.
         </Text>
-        <Text style={style.privayText}>Read Privacy Notice</Text>
+        <Text style={style.privacyText}>Read Privacy Notice</Text>
         <Button
           text={"Continue"}
           isSecondary={true}
@@ -43,18 +43,7 @@ const TermsAndConditions = (props) => {
           onPressAction={navigateToQrScanner}
         />
       </Layout.Footer>
-      <View style={style.footerContainer}>
-        <View style={{ flex: 1 }}>
-          <Text style={style.leftTextFooter}>Build for a lifetime.</Text>
-        </View>
-
-        <View style={{ flex: 1, alignItems: "flex-end" }}>
-          <Image
-            style={style.titleWhite}
-            source={require("../../assets/titleWhite.png")}
-          />
-        </View>
-      </View>
+      <LogoBar />
     </Layout>
   );
 };

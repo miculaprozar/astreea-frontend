@@ -1,13 +1,8 @@
 import { StyleSheet } from "react-native";
 
 export const style = StyleSheet.create({
-  wrapper: {
-    backgroundColor: "#0E0E0E",
-    // justifyContent: "center",
-    // alignItems: "center",
-    width: "100%",
-  },
   container: {
+    backgroundColor: "#0E0E0E",
     width: "100%",
     maxWidth: 375,
     paddingLeft: 20,

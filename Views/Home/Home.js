@@ -1,35 +1,22 @@
 import { useFocusEffect } from "@react-navigation/native";
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import { ScrollView, View, Text } from "react-native";
-import Button from "../../components/Button/Button";
+import React, { useCallback, useContext, useState } from "react";
+import { ScrollView } from "react-native";
 import HomeChargerCard from "../../components/ChargerCardV2/HomeChargerCard";
 
-import Label from "../../components/Input/Label";
-import PillButton from "../../components/PillButton/PillButton";
+import { AuthContext } from "../../components/AuthWrapper/AuthProvider";
 import SearchInput from "../../components/SearchInput/SearchInput";
 import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
 import Layout from "../../general_components/Layout";
-import { getUniqueKey } from "../../helpers/checkers";
 import routes from "../../routes";
-import { AuthContext } from "../../components/AuthWrapper/AuthProvider";
 
 import { HubConnectionState } from "@microsoft/signalr";
-import {
-  hourMinutesRenderer,
-  kwhRenderer,
-  priceRenderer,
-} from "../../helpers/formatFunctions";
 const Home = (props) => {
   const { navigation, route } = props;
-  const { token, connectionStatus, userName } = useContext(AuthContext);
-  const { QRScannerStep, DeviceDetails } = routes;
+  const { connectionStatus, userName } = useContext(AuthContext);
+  const { DeviceDetails } = routes;
   const [filterChargers, setFilterChargers] = useState(1);
   const [searchfield, setSearchfield] = useState("");
   const [chargerList, setChargerList] = useState(null);
-
-  const navigateToAddDevice = () => {
-    navigation.navigate(QRScannerStep.name);
-  };
 
   const navigateToDeviceAction = (serialNumberCon) => {
     navigation.navigate(DeviceDetails.name, {
@@ -94,7 +81,7 @@ const Home = (props) => {
 
                   return isSearched;
                 })
-                .map((item, index) => {
+                .map((item) => {
                   return (
                     <HomeChargerCard
                       key={item.serialNumberCon}

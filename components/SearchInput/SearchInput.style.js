@@ -1,4 +1,3 @@
-import { invert } from "lodash";
 import { StyleSheet } from "react-native";
 
 export const style = StyleSheet.create({
@@ -14,14 +13,14 @@ export const style = StyleSheet.create({
     fontSize: 14,
     color: "#FFFFFF",
     marginTop: 70,
-    marginBottom: 18
+    marginBottom: 18,
   },
   image: {
     width: 18,
     height: 18,
     position: "absolute",
     right: 15,
-    transform: [{ translateY:  25}],
+    transform: [{ translateY: 25 }],
   },
   wrapper: {
     flexDirection: "row",
