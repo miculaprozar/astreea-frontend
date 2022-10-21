@@ -139,7 +139,7 @@ const DeviceDetails = (props) => {
               <HeaderNavigator navigation={navigation} route={route} />
             </Layout.Header>
             <Layout.Body>
-              <View style={{ marginTop: "auto" }}>
+              <View style={{ marginBottom: "auto" }}>
                 <Text style={style.title}>{charger.name}</Text>
                 <View style={{ flexDirection: "row" }}>
                   <Text style={style.description}>
@@ -154,36 +154,37 @@ const DeviceDetails = (props) => {
                     {chargeDate(charger)}
                   </Text>
                 </View>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  marginTop: 40,
-                  marginBottom: 40,
-                }}
-              >
-                <LargeChargerButton
-                  marginRight={20}
-                  isCharging={chargerIsCharging(charger)}
-                  isDisabled={
-                    charger.state === "Occupied" || startStopOngoing
-                      ? true
-                      : false
-                  }
-                  onPressAction={() =>
-                    charger.state !== "Occupied" &&
-                    !startStopOngoing &&
-                    StartStopCharging()
-                  }
-                />
-                <LargeChargerButton
-                  isSchedule={true}
-                  onPressAction={() =>
-                    navigation.navigate(ScheduleRoute, {
-                      chargerId: charger.chargerId,
-                    })
-                  }
-                />
+                <View
+                  style={{
+                    flexDirection: "row",
+                    marginTop: 40,
+                    marginBottom: 40,
+                  }}
+                >
+                  <LargeChargerButton
+                    marginRight={20}
+                    isCharging={chargerIsCharging(charger)}
+                    isDisabled={
+                      charger.state === "Occupied" || startStopOngoing
+                        ? true
+                        : false
+                    }
+                    onPressAction={() =>
+                      charger.state !== "Occupied" &&
+                      !startStopOngoing &&
+                      StartStopCharging()
+                    }
+                  />
+                  <LargeChargerButton
+                    isSchedule={true}
+                    onPressAction={() =>
+                      navigation.navigate(chargerSettingsRoute, {
+                        chargerId: charger.chargerId,
+                        serialNumberCon: serialNumberCon,
+                      })
+                    }
+                  />
+                </View>
               </View>
             </Layout.Body>
             <Layout.Footer style={{ flex: 2, backgroundColor: "red" }}>
@@ -194,12 +195,11 @@ const DeviceDetails = (props) => {
                 isDetails
                 commandTimeoutId={commandTimeoutId}
               />
-              <View style={style.tittleButtonWrapper}></View>
-              {charger.state !== "Charging" &&
+              {/* {charger.state !== "Charging" &&
                 charger.state !== "Suspended" &&
                 charger.state !== "Authorized" && (
                   <ChargerSettingsCard chargerId={charger.chargerId} />
-                )}
+                )} */}
               <Calendar
                 isOpen={isCalendarOpen}
                 selected={date}

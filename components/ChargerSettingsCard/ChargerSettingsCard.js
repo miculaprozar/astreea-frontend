@@ -1,32 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { yupResolver } from "@hookform/resolvers/yup";
+import React from "react";
 
-import {
-  Image,
-  Pressable,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-  TextInput,
-} from "react-native";
+import { Controller } from "react-hook-form";
+import { Pressable, Text, TextInput, View } from "react-native";
 import { card } from "./ChargerSettingsCard.style";
-import { useForm, Controller } from "react-hook-form";
-import validationSchema from "./validationSchema";
 
-const ChargerSettingsCard = ({ chargerId }) => {
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(validationSchema),
-  });
-
+const ChargerSettingsCard = ({ chargerId, errors, control, handleSubmit }) => {
   const connection = global.connection;
   const cert = global.cert;
 
   const updateChargerData = async (data) => {
+    console.log("THE DATA THAT IS UPDATED", data);
     const chargerDetails = {
       name: data.name,
       chargerId: chargerId,
@@ -67,6 +50,7 @@ const ChargerSettingsCard = ({ chargerId }) => {
                   placeholder={"Request"}
                   style={card.input}
                   onChangeText={onChange}
+                  value={value}
                 />
               );
             }}
@@ -88,6 +72,7 @@ const ChargerSettingsCard = ({ chargerId }) => {
                   textAlign={"center"}
                   style={card.input}
                   onChangeText={onChange}
+                  value={value}
                 />
               );
             }}
@@ -107,9 +92,10 @@ const ChargerSettingsCard = ({ chargerId }) => {
               return (
                 <TextInput
                   placeholderTextColor="rgba(255, 255, 255, 0.9)"
-                  placeholder={"Request"}
+                  placeholder={"Addres"}
                   style={card.input}
                   onChangeText={onChange}
+                  value={value}
                 />
               );
             }}
@@ -131,6 +117,7 @@ const ChargerSettingsCard = ({ chargerId }) => {
                   textAlign={"center"}
                   style={card.input}
                   onChangeText={onChange}
+                  value={Number(value).toFixed(2)}
                 />
               );
             }}

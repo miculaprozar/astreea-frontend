@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { HubConnectionState } from "@microsoft/signalr";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { apiFactory } from "../../api";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
@@ -12,16 +12,23 @@ import Layout from "../../general_components/Layout";
 import SnackBar from "../../general_components/SnackBar";
 import { style } from "./ChargerSettings.style";
 import validationSchema from "./validationSchema";
-
+import ChargerSettingsCard from "../../components/ChargerSettingsCard/ChargerSettingsCard";
+import ChargerSettingsBackground from "../../assets/chargingScreen.jpg";
+import ColorButtons from "../../components/ColorButtons/ColorButtons";
+import ColorPickerModal from "../../components/ColorPickerModal/ColorPickerModal";
 const ChargerSettings = ({ navigation, route }) => {
   const {
-    params: { chargerId },
+    params: { chargerId, serialNumberCon },
   } = route;
+
+  console.log("THE  CHARGER ID AND THE SERIAL NUMBERCON:", serialNumberCon);
 
   const connection = global.connection;
   const cert = global.cert;
 
   const [charger, setCharger] = useState(null);
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   const [error, setError] = useState(false);
   const [succes, setSucces] = useState(false);
@@ -37,6 +44,7 @@ const ChargerSettings = ({ navigation, route }) => {
 
   const setInputValues = (charger) => {
     const { address, name, price, currency } = charger;
+
     setTimeout(() => {
       setValue("name", name);
       setValue("address", address);
@@ -48,7 +56,7 @@ const ChargerSettings = ({ navigation, route }) => {
   const getChargerInfo = async () => {
     if (connection.state == HubConnectionState.Connected) {
       await connection
-        .invoke("GetChargerDetails", chargerId)
+        .invoke("GetChargerDetails", serialNumberCon)
         .then((charger) => {
           setCharger(charger);
           setInputValues(charger);
@@ -59,40 +67,52 @@ const ChargerSettings = ({ navigation, route }) => {
     }
   };
 
-  const updateChargerData = async (data) => {
-    const chargerDetails = {
-      name: data.name,
-      chargerId: chargerId,
-      address: data.address,
-      price: Number(data.price),
-      currency: data.currency,
-    };
-
-    try {
-      await connection
-        .invoke("UpdateChargerDetails", chargerDetails, cert)
-        .then(() => {
-          console.log("UpdateChargerDetails performed");
-        });
-      setSucces(true);
-    } catch (e) {
-      setError(e.response.data.message);
-    }
-  };
-
   useEffect(() => {
     getChargerInfo();
   }, [connection]);
 
-  const onSubmit = (data) => updateChargerData(data);
-
   return (
-    <Layout scrollView={true}>
+    <Layout scrollView={true} customBackgroundUrl={ChargerSettingsBackground}>
       <Layout.Header>
         <HeaderNavigator navigation={navigation} route={route} />
       </Layout.Header>
       <Layout.Body>
-        <Label text={"Name"} white={true} />
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-around",
+            marginBottom: 30,
+          }}
+        >
+          <ColorButtons
+            onPressAction={() => setModalVisible(true)}
+            text={"Charging"}
+            backgroundColor={"green"}
+          />
+          <ColorButtons
+            onPressAction={() => setModalVisible(true)}
+            text={"Suspended"}
+            backgroundColor={"red"}
+          />
+        </View>
+        <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+          <ColorButtons
+            onPressAction={() => setModalVisible(true)}
+            text={"Authorized"}
+            backgroundColor={"grey"}
+          />
+          <ColorButtons
+            onPressAction={() => setModalVisible(true)}
+            text={"Available"}
+            backgroundColor={"blue"}
+          />
+        </View>
+        <ColorPickerModal
+          setModalVisible={setModalVisible}
+          modalVisible={modalVisible}
+          actionCallback={() => setModalVisible(false)}
+        />
+        {/* <Label text={"Name"} white={true} />
         <Input
           label={"Name"}
           marginBottom={12}
@@ -163,17 +183,17 @@ const ChargerSettings = ({ navigation, route }) => {
               value={charger?.wiFiStrength.toString()}
             />
           </>
-        )}
+        )} */}
       </Layout.Body>
       <Layout.Footer>
-        <View style={style.buttonsWrapper}>
+        {/* <View style={style.buttonsWrapper}>
           <View style={{ flex: 2 }}>
             <Button
               text={"Remove"}
               isDanger={true}
-              // onPressAction={() => {
-              //   removeDEMOCharger();
-              // }}
+              onPressAction={() => {
+                removeDEMOCharger();
+              }}
               half={true}
             />
           </View>
@@ -187,7 +207,13 @@ const ChargerSettings = ({ navigation, route }) => {
               onPressAction={handleSubmit(onSubmit)}
             />
           </View>
-        </View>
+        </View> */}
+        <ChargerSettingsCard
+          chargerId={chargerId}
+          control={control}
+          handleSubmit={handleSubmit}
+          errors={errors}
+        />
         {(error || succes) && (
           <SnackBar
             text={error ? error : succes ? "Name changed" : ""}
