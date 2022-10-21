@@ -2,19 +2,13 @@ import { StyleSheet } from "react-native";
 
 export const charging = StyleSheet.create({
   wrapper: {
-    height: 200,
-    backgroundColor: "#4F6363",
+    height: 125,
+    backgroundColor: "rgba(255,255,255,0.30)",
     borderRadius: 15,
     padding: 18,
     marginBottom: 15,
   },
-  upperTextContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    borderBottomWidth: 1,
-    borderColor: "#C1C1C1",
-    paddingBottom: 10,
-  },
+
   lastUsedWrapper: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -22,33 +16,32 @@ export const charging = StyleSheet.create({
     paddingBottom: 10,
   },
   locationText: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#FFFFFF",
     fontFamily: "Inter_400Regular",
   },
   smallText: {
     fontSize: 10,
-    color: "#828282",
+    color: "#FFFFFF",
     fontFamily: "Inter_400Regular",
     marginBottom: 3,
   },
   chargingStatusText: {
-    fontSize: 14,
-    color: "#22EEAB",
+    fontSize: 10,
+    color: "#FFFFFF",
     fontFamily: "Inter_400Regular",
+  },
+  bottomWrapper: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   chargingValuesText: {
     fontSize: 20,
-    color: "#22EEAB",
+    color: "#FFFFFF",
     fontFamily: "Inter_500Medium",
   },
-  image: {
-    width: 14,
-    height: 14,
-    resizeMode: "contain",
-    marginTop: 2,
-    marginRight: 4,
-  },
+
   circle: {
     backgroundColor: "#44CD54",
     // borderRadius: "50%",
@@ -56,20 +49,5 @@ export const charging = StyleSheet.create({
     width: 10,
     height: 10,
     marginTop: 2,
-  },
-  pairButtonWrapper: {
-    backgroundColor: "#FF6400",
-    padding: 5,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "40%",
-    borderRadius: 30,
-    marginLeft: "auto",
-    marginTop: 30,
-  },
-  pairButtonText: {
-    color: "#FFFFFF",
-    fontSize: 10,
-    fontFamily: "Inter_400Regular",
   },
 });

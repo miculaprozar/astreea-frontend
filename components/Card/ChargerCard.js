@@ -90,61 +90,8 @@ const ChargerCard = ({
   return (
     <>
       <TouchableWithoutFeedback>
-        <View
-          style={{
-            ...charging.wrapper,
-            backgroundColor: getBGColorByStatus(chargerState.state),
-            ...(isDetails && {
-              backgroundColor: "rgba(255,255,255,0.30)",
-              height: 125,
-            }),
-            // ...(chargerState.isAdmin &&
-            //   chargerState.state === "OutOfOrder" && { height: 190 }),
-          }}
-        >
+        <View style={charging.wrapper}>
           <Pressable onPress={() => onClick && onClick()} style={{ flex: 1 }}>
-            {!isDetails && (
-              <View
-                style={charging.upperTextContainer}
-                onPress={() => onClick && onClick()}
-                onT
-              >
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <Image
-                    style={charging.image}
-                    source={getLightingImageByStatus(chargerState.state)}
-                  />
-
-                  <Text
-                    style={[
-                      charging.locationText,
-                      {
-                        color: headerTextColor(chargerState, isDetails),
-                      },
-                    ]}
-                  >
-                    {chargerState.name}
-                  </Text>
-                </View>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <Text
-                    style={{
-                      ...charging.chargingStatusText,
-                      color: headerTextColor(chargerState, isDetails),
-                    }}
-                  >
-                    {chargerState.state}
-                  </Text>
-                  <View
-                    style={{
-                      ...charging.circle,
-                      marginLeft: 10,
-                      backgroundColor: circleColor(chargerState, 1),
-                    }}
-                  />
-                </View>
-              </View>
-            )}
             <View style={charging.lastUsedWrapper}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <View
@@ -155,58 +102,20 @@ const ChargerCard = ({
                   }}
                 />
 
-                <Text
-                  style={[
-                    charging.locationText,
-                    {
-                      color: getTextColorByStatus(
-                        chargerState.state,
-                        isDetails
-                      ),
-                    },
-                    { fontSize: 12 },
-                  ]}
-                >
+                <Text style={[charging.locationText]}>
                   {chargeLastUsed(chargerState)}
                 </Text>
               </View>
 
-              <Text
-                style={{
-                  ...charging.chargingStatusText,
-                  color: getTextColorByStatus(chargerState.state, isDetails),
-                  fontSize: 10,
-                }}
-              >
+              <Text style={charging.chargingStatusText}>
                 {chargeDate(chargerState)}
               </Text>
             </View>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
+            <View style={charging.bottomWrapper}>
               <View style={{ marginTop: "auto" }}>
-                <Text
-                  style={{
-                    ...charging.smallText,
-                    ...(isDetails && { color: "white" }),
-                    ...(chargerState.state === "Charging" && {
-                      color: "white",
-                    }),
-                  }}
-                >
-                  Energy Delivered
-                </Text>
+                <Text style={charging.smallText}>Energy Delivered</Text>
 
-                <Text
-                  style={{
-                    ...charging.chargingValuesText,
-                    color: getTextColorByStatus(chargerState.state, isDetails),
-                  }}
-                >
+                <Text style={charging.chargingValuesText}>
                   {chargerState.lastChargingSession
                     ? (
                         chargerState.lastChargingSession.charged / 10000
@@ -215,23 +124,8 @@ const ChargerCard = ({
                 </Text>
               </View>
               <View style={{ marginTop: "auto" }}>
-                <Text
-                  style={{
-                    ...charging.smallText,
-                    ...(isDetails && { color: "white" }),
-                    ...(chargerState.state === "Charging" && {
-                      color: "white",
-                    }),
-                  }}
-                >
-                  Charge Duration
-                </Text>
-                <Text
-                  style={{
-                    ...charging.chargingValuesText,
-                    color: getTextColorByStatus(chargerState.state, isDetails),
-                  }}
-                >
+                <Text style={charging.smallText}>Charge Duration</Text>
+                <Text style={charging.chargingValuesText}>
                   {chargerState.lastChargingSession
                     ? formatDuration(
                         chargerState.lastChargingSession.chargedTimeInSec
@@ -240,23 +134,8 @@ const ChargerCard = ({
                 </Text>
               </View>
               <View style={{ marginTop: "auto" }}>
-                <Text
-                  style={{
-                    ...charging.smallText,
-                    ...(isDetails && { color: "white" }),
-                    ...(chargerState.state === "Charging" && {
-                      color: "white",
-                    }),
-                  }}
-                >
-                  Cost
-                </Text>
-                <Text
-                  style={{
-                    ...charging.chargingValuesText,
-                    color: getTextColorByStatus(chargerState.state, isDetails),
-                  }}
-                >
+                <Text style={charging.smallText}>Cost</Text>
+                <Text style={charging.chargingValuesText}>
                   {chargerState.lastChargingSession
                     ? "€" +
                       chargerState.lastChargingSession.chargedCost.toFixed(2)
