@@ -178,7 +178,7 @@ const DeviceDetails = (props) => {
                   <LargeChargerButton
                     isSchedule={true}
                     onPressAction={() =>
-                      navigation.navigate(chargerSettingsRoute, {
+                      navigation.navigate(ScheduleRoute, {
                         chargerId: charger.chargerId,
                         serialNumberCon: serialNumberCon,
                       })
