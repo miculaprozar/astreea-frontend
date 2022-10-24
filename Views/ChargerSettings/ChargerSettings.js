@@ -3,25 +3,20 @@ import { HubConnectionState } from "@microsoft/signalr";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { View, Text } from "react-native";
-import { apiFactory } from "../../api";
-import Button from "../../components/Button/Button";
-import Input from "../../components/Input/Input";
-import Label from "../../components/Input/Label";
+
+import ChargerSettingsBackground from "../../assets/chargingScreen.jpg";
+import ChargerSettingsCard from "../../components/ChargerSettingsCard/ChargerSettingsCard";
+import ColorButtons from "../../components/ColorButtons/ColorButtons";
+import ColorPickerModal from "../../components/ColorPickerModal/ColorPickerModal";
 import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavigator";
 import Layout from "../../general_components/Layout";
 import SnackBar from "../../general_components/SnackBar";
-import { style } from "./ChargerSettings.style";
 import validationSchema from "./validationSchema";
-import ChargerSettingsCard from "../../components/ChargerSettingsCard/ChargerSettingsCard";
-import ChargerSettingsBackground from "../../assets/chargingScreen.jpg";
-import ColorButtons from "../../components/ColorButtons/ColorButtons";
-import ColorPickerModal from "../../components/ColorPickerModal/ColorPickerModal";
+
 const ChargerSettings = ({ navigation, route }) => {
   const {
     params: { chargerId, serialNumberCon },
   } = route;
-
-  console.log("THE  CHARGER ID AND THE SERIAL NUMBERCON:", serialNumberCon);
 
   const connection = global.connection;
   const cert = global.cert;
@@ -77,6 +72,18 @@ const ChargerSettings = ({ navigation, route }) => {
         <HeaderNavigator navigation={navigation} route={route} />
       </Layout.Header>
       <Layout.Body>
+        <View>
+          <Text
+            style={{
+              marginBottom: 20,
+              color: "#FFFFFF",
+              fontFamily: "Inter_600SemiBold",
+              fontSize: 16,
+            }}
+          >
+            Select the state color to change:
+          </Text>
+        </View>
         <View
           style={{
             flexDirection: "row",
@@ -112,102 +119,8 @@ const ChargerSettings = ({ navigation, route }) => {
           modalVisible={modalVisible}
           actionCallback={() => setModalVisible(false)}
         />
-        {/* <Label text={"Name"} white={true} />
-        <Input
-          label={"Name"}
-          marginBottom={12}
-          validateInput={true}
-          control={control}
-          errors={errors.name?.message}
-          name={"name"}
-          secureTextEntry={false}
-          disabled={!charger?.isAdmin ? true : false}
-          value={charger?.name}
-        />
-        <Label text={"Address"} white={true} />
-        <Input
-          label={"Address"}
-          marginBottom={12}
-          validateInput={true}
-          control={control}
-          errors={errors.address?.message}
-          name={"address"}
-          secureTextEntry={false}
-          disabled={!charger?.isAdmin ? true : false}
-          value={charger?.address}
-        />
-
-        <View style={{ flexDirection: "row" }}>
-          <View style={{ flex: 1, marginRight: 7 }}>
-            <Label text={"Currency"} white={true} />
-            <Input
-              label={"Currency"}
-              marginBottom={12}
-              validateInput={true}
-              control={control}
-              errors={errors.currency?.message}
-              name={"currency"}
-              secureTextEntry={false}
-              disabled={!charger?.isAdmin ? true : false}
-              value={charger?.currency}
-            />
-          </View>
-          <View style={{ flex: 1, marginLeft: 7 }}>
-            <Label text={"Price"} white={true} />
-            <Input
-              label={"Price"}
-              marginBottom={12}
-              validateInput={true}
-              control={control}
-              errors={errors.price?.message}
-              name={"price"}
-              secureTextEntry={false}
-              disabled={!charger?.isAdmin ? true : false}
-              value={charger?.price.toString()}
-            />
-          </View>
-        </View>
-        {charger?.isAdmin && (
-          <>
-            <Label text={"Wifi name"} white={true} />
-            <Input
-              marginBottom={10}
-              disabled={true}
-              value={charger?.wiFiName}
-            />
-            <Label text={"Wifi strength"} white={true} />
-
-            <Input
-              marginBottom={25}
-              disabled={true}
-              value={charger?.wiFiStrength.toString()}
-            />
-          </>
-        )} */}
       </Layout.Body>
       <Layout.Footer>
-        {/* <View style={style.buttonsWrapper}>
-          <View style={{ flex: 2 }}>
-            <Button
-              text={"Remove"}
-              isDanger={true}
-              onPressAction={() => {
-                removeDEMOCharger();
-              }}
-              half={true}
-            />
-          </View>
-          <View style={{ flex: 0.4 }}></View>
-          <View style={{ flex: 2 }}>
-            <Button
-              disabled={!charger?.isAdmin ? true : false}
-              text={"Save settings"}
-              isSecondary={true}
-              half={true}
-              onPressAction={handleSubmit(onSubmit)}
-            />
-          </View>
-        </View> */}
         <ChargerSettingsCard
           chargerId={chargerId}
           control={control}

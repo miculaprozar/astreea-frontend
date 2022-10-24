@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 export const card = StyleSheet.create({
   wrapper: {
-    height: 165,
+    height: 210,
     backgroundColor: "rgba(255,255,255,0.30)",
     borderRadius: 15,
     padding: 18,
@@ -44,5 +44,16 @@ export const card = StyleSheet.create({
     fontFamily: "Inter_400Regular",
     marginBottom: 5,
     marginTop: 5,
+  },
+  swittchWrapper: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  switchText: {
+    color: "#FFFFFF",
+    fontFamily: "Inter_400Regular",
+    fontSize: 12,
   },
 });
