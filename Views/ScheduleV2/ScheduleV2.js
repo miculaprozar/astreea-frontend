@@ -24,12 +24,17 @@ const ScheduleV2 = (props) => {
       await connection
         .invoke("GetChargingProfileList", chargerId)
         .then((profiles) => {
+          console.log(profiles)
           setChargerProfiles(profiles);
         })
         .catch((err) => {
           console.log("THE ERROR IS", err);
         });
     }
+  };
+
+  const deleteScheduleHandler = async (chargingProfileId) => {
+      console.log(chargingProfileId);
   };
 
   useFocusEffect(
@@ -45,7 +50,7 @@ const ScheduleV2 = (props) => {
       </Layout.Header>
       <Layout.Body>
         <ScheduleInput />
-        <ChargingHistoryTable chargerProfiles={chargerProfiles} />
+        <ChargingHistoryTable chargerProfiles={chargerProfiles} deleteScheduleHandler={deleteScheduleHandler} />
       </Layout.Body>
       <Layout.Footer></Layout.Footer>
     </Layout>

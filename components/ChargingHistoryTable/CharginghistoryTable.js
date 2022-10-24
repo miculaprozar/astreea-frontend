@@ -3,7 +3,7 @@ import { Text, View, TouchableWithoutFeedback, ScrollView, Image } from "react-n
 import { style } from "./ChargingHistoryTable.style";
 let deleteIcon = require('../../assets/delete.png');
 const ChargingHistoryTable = (props) => {
-  const {chargerProfiles} = props;
+  const {chargerProfiles, deleteScheduleHandler} = props;
 
   const getStart = (date, startPeriod, type) => {
     let newDate = new Date(date);
@@ -181,7 +181,10 @@ const ChargingHistoryTable = (props) => {
               <Text style={style.tableTextData}>{getChargingTime(profile.chargingSchedule.startSchedule, profile.chargingSchedule.duration, profile.chargingSchedule.chargingSchedulePeriod[0].startPeriod, "minutes")}</Text>
             </View>
           </View>
-
+          <TouchableWithoutFeedback style={{
+              flex: 1,
+              alignItems: "center",
+            }} onPress={() => deleteScheduleHandler(profile.chargingProfileId)}>
           <View
             style={{
               flex: 1,
@@ -193,6 +196,7 @@ const ChargingHistoryTable = (props) => {
               style={{ width: 18, height: 18, resizeMode: "contain", marginTop: 2 }}></Image>
             </View>
           </View>
+          </TouchableWithoutFeedback>
         </View>)
         }</>
       </View> : null
