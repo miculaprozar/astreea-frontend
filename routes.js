@@ -1,6 +1,6 @@
 const defaultNavigationOptions = {
   headerShown: false,
-  headerMode: 'none',
+  headerMode: "none",
   headerVisible: false,
   header: null,
   //   title: "",
@@ -110,6 +110,12 @@ export default routes = {
   },
   ChargerSettings: {
     name: "ChargerSettings",
+    navigationOptions: {
+      ...defaultNavigationOptions,
+    },
+  },
+  ChargingHistory: {
+    name: "ChargingHistory",
     navigationOptions: {
       ...defaultNavigationOptions,
     },

@@ -21,12 +21,18 @@ import {
 } from "@microsoft/signalr";
 import { GATEWAY_URL } from "../../api/utils/consts";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const AuthContext = React.createContext();
 const AuthProvider = (props) => {
   const [token, setToken] = useState(null);
   const [isLoading, setIsloading] = useState(false);
   const [userName, setUserName] = useState("");
   const [connectionStatus, setConnectionStatus] = useState(false);
+
+  useEffect(() => {
+    connectionStatus && props.numberOfChargersChanged();
+  }, [connectionStatus]);
 
   const getSearchParamFromURL = (url, param) => {
     const include = url.includes(param);
@@ -103,7 +109,13 @@ const AuthProvider = (props) => {
     const authInfo = await axios.get(authenticationFunctionUrl);
 
     var oid = tokenInfo ? tokenInfo.oid : null;
-    startSignalRConnection(authInfo.data.url, authInfo.data.accessToken, oid, userName, setConnectionStatus);
+    startSignalRConnection(
+      authInfo.data.url,
+      authInfo.data.accessToken,
+      oid,
+      userName,
+      setConnectionStatus
+    );
 
     setToken(tokenResponse.data.id_token);
     setIsloading(false);

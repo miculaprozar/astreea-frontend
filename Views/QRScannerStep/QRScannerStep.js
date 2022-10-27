@@ -1,6 +1,6 @@
 import { HubConnectionState } from "@microsoft/signalr";
 import { BarCodeScanner } from "expo-barcode-scanner";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import { Text } from "react-native";
 import QRViewBackground from "../../assets/qrBackground.jpg";
 import Button from "../../components/Button/Button";
@@ -9,9 +9,16 @@ import QRModal from "../../components/Modal/QRModal";
 import Layout from "../../general_components/Layout";
 import SnackBar from "../../general_components/SnackBar";
 import { style } from "./QRScannerStep.style";
-
+import { AuthContext } from "../../components/AuthWrapper/AuthProvider";
+import routes from "../../routes";
+import { useFocusEffect } from "@react-navigation/native";
 const QRScannerStep = (props) => {
   const { navigation } = props;
+  const {
+    DeviceDetails: { name: DeviceDetailsRoute },
+    Home: { name: HomeRoute },
+  } = routes;
+  console.log("THE PROPS ARE:", props.numberOfChargers);
 
   const [error, setError] = useState(null);
   const [logType, setLogType] = useState("error");
@@ -19,10 +26,33 @@ const QRScannerStep = (props) => {
   const [scanned, setScanned] = useState(false);
   const [qrModalVisible, setQrModalVisible] = useState(false);
 
+  const { connectionStatus } = useContext(AuthContext);
+
   const requestPermisionCamera = async () => {
     const permision = await BarCodeScanner.requestPermissionsAsync();
     console.log("Camera permision: ", permision.status === "granted");
     setHasPermission(permision.status === "granted");
+  };
+
+  const parentStack = navigation.getParent();
+  console.log("The Parent stack", parentStack);
+
+  const GetChargerSerialNumberConAndRedirect = async () => {
+    const connection = global.connection;
+
+    if (connection.state == HubConnectionState.Connected) {
+      //connection started
+      await connection
+        .invoke("GetConnectedCharges", false, null)
+        .then((chargerList) => {
+          navigation.navigate("DeviceDetails", {
+            serialNumberCon: chargerList[0].serialNumberCon,
+          });
+        })
+        .catch((err) => {
+          console.log("THE ERROR IS", err);
+        });
+    }
   };
 
   const handleBarCodeScanned = async ({ type, data }) => {
@@ -62,14 +92,16 @@ const QRScannerStep = (props) => {
               console.log(
                 "Device enrollment info:" + JSON.stringify(chargerInfo)
               );
-              navigation.navigate("ConnectDevice", {
-                qrData: {
-                  wifiName: chargerInfo.apUserName,
-                  wifiPass: chargerInfo.apPassword,
-                },
-              });
+              // navigation.navigate("ConnectDevice", {
+              //   qrData: {
+              //     wifiName: chargerInfo.apUserName,
+              //     wifiPass: chargerInfo.apPassword,
+              //   },
+              // });
+              ///
             } else {
-              navigation.navigate("Home");
+              props.numberOfChargersChanged();
+              // navigation.pop();
             }
           })
           .catch((err) => {
@@ -87,6 +119,14 @@ const QRScannerStep = (props) => {
       }, 1000);
     }
   };
+
+  useEffect(() => {}, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => setScanned(false);
+    }, [])
+  );
 
   useEffect(() => {
     requestPermisionCamera();

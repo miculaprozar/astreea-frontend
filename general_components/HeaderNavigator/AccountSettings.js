@@ -46,7 +46,7 @@ const AccountSettings = ({ navigation, route, userName }) => {
         </Pressable>
       )}
 
-      {(route?.name === "DeviceDetails" || userName === "") && (
+      {userName === "" && (
         <Text
           style={{
             color: "#FFFFFF",

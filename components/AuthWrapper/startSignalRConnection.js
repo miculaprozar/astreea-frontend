@@ -3,12 +3,18 @@ import {
   HubConnectionBuilder,
   HubConnectionState,
   LogLevel,
-} from '@microsoft/signalr';
-import axios from 'axios';
-import { GATEWAY_URL } from '../../api/utils/consts';
+} from "@microsoft/signalr";
+import axios from "axios";
+import { GATEWAY_URL } from "../../api/utils/consts";
 
-const startSignalRConnection = (gatewayUrl, accessToken, tid, userName, setConnectionStatus) => {
-  if(!global.isConnected){
+const startSignalRConnection = (
+  gatewayUrl,
+  accessToken,
+  tid,
+  userName,
+  setConnectionStatus
+) => {
+  if (!global.isConnected) {
     global.isConnected = true;
     const connection = new HubConnectionBuilder()
       .configureLogging(LogLevel.Critical)
@@ -19,7 +25,7 @@ const startSignalRConnection = (gatewayUrl, accessToken, tid, userName, setConne
       })
       .build();
 
-    var certSerialNumber = 'CERTSN143212FEWFWIUTHRIH8757678JOIJOOIH987';
+    var certSerialNumber = "CERTSN143212FEWFWIUTHRIH8757678JOIJOOIH987";
     var certUrl = `https://csmsdevstorage.blob.core.windows.net/clientcertificates/${certSerialNumber}`;
 
     axios.get(certUrl).then((response) => {
@@ -29,18 +35,18 @@ const startSignalRConnection = (gatewayUrl, accessToken, tid, userName, setConne
     async function start() {
       try {
         if (connection.state != HubConnectionState.Connected) {
-          console.log('Connection is not started');
+          console.log("Connection is not started");
           setConnectionStatus(false);
 
           global.connection = connection;
           await connection.start();
-          console.log('SignalR Connected.');
+          console.log("SignalR Connected.");
           setConnectionStatus(true);
         }
 
         // await appCon ected();
       } catch (err) {
-        console.log('GatewayConnection error:', err);
+        console.log("GatewayConnection error:", err);
         setConnectionStatus(false);
 
         setTimeout(start, 5000);
@@ -53,7 +59,6 @@ const startSignalRConnection = (gatewayUrl, accessToken, tid, userName, setConne
 
     start();
   }
-
 };
 
 export default startSignalRConnection;

@@ -1,8 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useContext } from "react";
 import { View, Text } from "react-native";
 
 import { useFocusEffect } from "@react-navigation/native";
 import DetailsBackground from "../../assets/chargingScreenGreen.jpg";
+import DetailsBackgroundCharging from "../../assets/chargingScreen.jpg";
+
 import ChargerButton from "../../components/ChargerButton/ChargerButton";
 import PillButton from "../../components/PillButton/PillButton";
 import Table from "../../components/Table/Table";
@@ -31,17 +33,21 @@ import LargeChargerButton from "../../components/LargeChargerButton/LargeCharger
 import ChargerSettingsCard from "../../components/ChargerSettingsCard/ChargerSettingsCard";
 import * as Haptics from "expo-haptics";
 import { useForm, Controller } from "react-hook-form";
+import { AuthContext } from "../../components/AuthWrapper/AuthProvider";
 
 import { HubConnectionState } from "@microsoft/signalr";
 
 const DeviceDetails = (props) => {
   const { navigation, route } = props;
+
   const {
     route: {
       params: { serialNumberCon },
     },
   } = props;
 
+  // const serialNumberCon = props.route.params.serialNumberCon;
+  const parentStack = navigation.getParent();
   const {
     ChargerSettings: { name: chargerSettingsRoute },
     ScheduleV2: { name: ScheduleRoute },
@@ -58,6 +64,8 @@ const DeviceDetails = (props) => {
   const [date, setDate] = useState(getStartMonthDate(new Date()));
   const [startStopOngoing, setStartStopOngoing] = useState(false);
 
+  const { connectionStatus } = useContext(AuthContext);
+
   const getChargerDetails = async () => {
     if (connection.state == HubConnectionState.Connected) {
       await connection
@@ -70,13 +78,14 @@ const DeviceDetails = (props) => {
         });
     }
   };
-  connection.on("ChargerStateChanged=" + serialNumberCon, (newState) => {
-    // console.log("New state:" + newState);
-    setCharger((prevState) => ({
-      ...prevState,
-      state: newState,
-    }));
-  });
+
+  connectionStatus &&
+    connection.on("ChargerStateChanged=" + serialNumberCon, (newState) => {
+      setCharger((prevState) => ({
+        ...prevState,
+        state: newState,
+      }));
+    });
 
   const StartStopCharging = async () => {
     if (startStopOngoing == false) {
@@ -118,8 +127,8 @@ const DeviceDetails = (props) => {
 
   useFocusEffect(
     useCallback(() => {
-      getChargerDetails();
-    }, [connection])
+      connectionStatus && getChargerDetails();
+    }, [connectionStatus])
   );
 
   const onSubmitDate = (date) => {
@@ -134,7 +143,14 @@ const DeviceDetails = (props) => {
     <>
       {charger && (
         <>
-          <Layout customBackgroundUrl={DetailsBackground} scrollView={true}>
+          <Layout
+            customBackgroundUrl={
+              chargerIsCharging(charger)
+                ? DetailsBackgroundCharging
+                : DetailsBackground
+            }
+            scrollView={true}
+          >
             <Layout.Header>
               <HeaderNavigator navigation={navigation} route={route} />
             </Layout.Header>

@@ -4,6 +4,7 @@ import Button from "../../components/Button/Button";
 import LogoBar from "../../components/LogoBar/LogoBar";
 import routes from "../../routes";
 import { style } from "./TermsAndConditions.style";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Layout from "../../general_components/Layout";
 
@@ -11,7 +12,16 @@ const TermsAndConditions = (props) => {
   const { navigation } = props;
   const { QRScannerStep } = routes;
 
+  const setTermsAccepted = async () => {
+    try {
+      await AsyncStorage.setItem("termsAndCond", "accepted");
+    } catch (e) {
+      console.log("THE ERROR", e);
+    }
+  };
+
   const navigateToQrScanner = () => {
+    setTermsAccepted();
     navigation.navigate(QRScannerStep.name);
   };
 

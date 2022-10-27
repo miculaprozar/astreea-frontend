@@ -85,10 +85,35 @@ export const chargeDate = (charge) => {
   return chargeText;
 };
 
-
 export const formatDuration = (secs) => {
   var date = new Date(1970, 0, 1); // Epoch
   date.setSeconds(secs);
-  return date.getHours() + "h " +
-  date.getMinutes() + "m";
-}
+  return date.getHours() + "h " + date.getMinutes() + "m";
+};
+
+export const getStart = (date, startPeriod, type) => {
+  let newDate = new Date(date);
+  newDate.setSeconds(newDate.getSeconds() + startPeriod);
+  let hours = new Date(newDate).getUTCHours();
+  let minutes = new Date(newDate).getUTCMinutes();
+  return type === "hours" ? hours : minutes;
+};
+
+export const getStop = (date, duration, startPeriod, type) => {
+  let newDate = new Date(date);
+  newDate.setSeconds(newDate.getSeconds() + duration + startPeriod);
+  let hours = new Date(newDate).getUTCHours();
+  let minutes = new Date(newDate).getUTCMinutes();
+  return type === "hours" ? hours : minutes;
+};
+
+export const getChargingTime = (date, duration, startPeriod, type) => {
+  let startDate = new Date(date);
+  let endDate = startDate.setSeconds(
+    startDate.getSeconds() + duration + startPeriod
+  );
+  var diffMs = startDate - endDate;
+  var diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
+  var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
+  return type === "hours" ? diffHrs : diffMins;
+};

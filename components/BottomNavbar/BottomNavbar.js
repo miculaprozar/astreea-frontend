@@ -1,14 +1,42 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useContext, useCallback, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+
 import { Image, Pressable, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
+import { HubConnectionState } from "@microsoft/signalr";
+import { AuthContext } from "../../components/AuthWrapper/AuthProvider";
 
 import { style } from "./BottomNavbar.style";
 
 const BottomNavbar = () => {
   const navigation = useNavigation();
   const route = useRoute();
+
+  const { connectionStatus } = useContext(AuthContext);
+  const [numberOfChargers, setNumberOfChargers] = useState(null);
+
+  const getChargerListLength = async () => {
+    if (connection.state == HubConnectionState.Connected) {
+      //connection started
+      await connection
+        .invoke("GetConnectedCharges", false, null)
+        .then((chargerList) => {
+          setNumberOfChargers(chargerList.length);
+        })
+        .catch((err) => {
+          console.log("THE ERROR IS", err);
+        });
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      const connection = global.connection;
+      connectionStatus && getChargerListLength(connection);
+    }, [connectionStatus])
+  );
 
   return (
     <>
@@ -27,11 +55,12 @@ const BottomNavbar = () => {
             />
             <Text style={style.textImage}>Add Charger</Text>
           </Pressable>
-
           <Pressable
             onPress={() => {
               Haptics.selectionAsync();
-              navigation.navigate("Home");
+              navigation.navigate(
+                numberOfChargers > 1 ? "Home" : "DeviceDetails"
+              );
             }}
             style={{ alignItems: "center" }}
           >
