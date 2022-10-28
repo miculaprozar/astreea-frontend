@@ -27,6 +27,7 @@ const ColorPickerModal = ({
                 onColorSelected={(color) => alert(`Color selected: ${color}`)}
                 style={{ flex: 1 }}
                 sliderComponent={Slider}
+                hideSliders={true}
               />
             </View>
             <View
@@ -42,6 +43,12 @@ const ColorPickerModal = ({
                 onPress={() => actionCallback()}
               >
                 <Text style={[styles.textStyle]}>Save</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.button, styles.buttonTest]}
+                onPress={() => actionCallback()}
+              >
+                <Text style={[styles.textStyle]}>Test color</Text>
               </Pressable>
               <Pressable
                 style={[styles.button, styles.buttonClose]}
@@ -74,13 +81,14 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 15,
     elevation: 2,
-    marginLeft: 30,
-    marginRight: 30,
   },
   buttonOpen: {
     backgroundColor: "#44CD54",
   },
   buttonClose: {
+    backgroundColor: "red",
+  },
+  buttonTest: {
     backgroundColor: "#97a6ad",
   },
   textStyle: {

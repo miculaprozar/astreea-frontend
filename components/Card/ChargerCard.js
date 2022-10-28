@@ -126,7 +126,8 @@ const ChargerCard = ({
               <View style={{ marginTop: "auto" }}>
                 <Text style={charging.smallText}>Charge Duration</Text>
                 <Text style={charging.chargingValuesText}>
-                  {chargerState.lastChargingSession
+                  {chargerState.lastChargingSession &&
+                  chargerState.lastChargingSession.chargedTimeInSec >= 60
                     ? formatDuration(
                         chargerState.lastChargingSession.chargedTimeInSec
                       )

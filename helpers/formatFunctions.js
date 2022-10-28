@@ -86,9 +86,14 @@ export const chargeDate = (charge) => {
 };
 
 export const formatDuration = (secs) => {
-  var date = new Date(1970, 0, 1); // Epoch
-  date.setSeconds(secs);
-  return date.getHours() + "h " + date.getMinutes() + "m";
+  console.log("THEEEEEEEEEE", secs);
+  const seconds = Number(secs);
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+
+  const hDisplay = h > 0 ? h + "h " : "";
+  const mDisplay = m > 0 ? m + "m " : "";
+  return hDisplay + mDisplay;
 };
 
 export const getStart = (date, startPeriod, type) => {

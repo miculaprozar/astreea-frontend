@@ -9,7 +9,7 @@ const LargeChargerButton = ({
   marginRight,
   onPressAction,
   isCharging,
-  isSchedule = false,
+  icon = null,
   isSave = false,
   isDisabled = false,
 }) => {
@@ -46,12 +46,12 @@ const LargeChargerButton = ({
           style={{
             ...button.container,
             ...(!isCharging &&
-              !isSchedule && {
+              !icon && {
                 backgroundColor: "#44CD54",
                 borderColor: "#44CD54",
               }),
             ...(isCharging &&
-              !isSchedule && {
+              !icon && {
                 backgroundColor: "#FFFFFF",
                 borderColor: "#FFFFFF",
               }),
@@ -63,9 +63,9 @@ const LargeChargerButton = ({
           onPress={onPressAction}
         >
           <View style={{ flexDirection: "row" }}>
-            {isSchedule ? (
+            {icon ? (
               <Image
-                source={require("../../assets/scheduleWhite.png")}
+                source={icon}
                 style={{ width: 17, height: 17, resizeMode: "contain" }}
               />
             ) : (

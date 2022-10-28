@@ -2,11 +2,18 @@ import { StyleSheet } from "react-native";
 
 export const card = StyleSheet.create({
   wrapper: {
-    height: 210,
+    height: 170,
     backgroundColor: "rgba(255,255,255,0.30)",
     borderRadius: 15,
     padding: 18,
     marginBottom: 5,
+  },
+  swtichContainer: {
+    backgroundColor: "rgba(255,255,255,0.30)",
+    borderRadius: 15,
+    padding: 18,
+    marginBottom: "auto",
+    marginTop: "auto",
   },
   input: {
     alignItems: "center",
@@ -49,7 +56,6 @@ export const card = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 10,
   },
   switchText: {
     color: "#FFFFFF",

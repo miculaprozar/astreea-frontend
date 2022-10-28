@@ -25,6 +25,7 @@ const QRScannerStep = (props) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [qrModalVisible, setQrModalVisible] = useState(false);
+  const [hasRedirect, setHasRedirect] = useState(false);
 
   const { connectionStatus } = useContext(AuthContext);
 
@@ -89,6 +90,11 @@ const QRScannerStep = (props) => {
           )
           .then((chargerInfo) => {
             if (!chargerInfo.chargerEnrolled) {
+              setLogType("info");
+              setError(
+                "Charger is not enrolled. For charger enrollment instructions, please click "
+              );
+              setHasRedirect(true);
               console.log(
                 "Device enrollment info:" + JSON.stringify(chargerInfo)
               );
@@ -113,6 +119,7 @@ const QRScannerStep = (props) => {
         setScanned(false);
         setLogType("error");
         setError("QR code format incorrect");
+
         console.log(
           "Data missing ConnectQR:102:2: " + data + " error:" + error
         );
@@ -169,6 +176,8 @@ const QRScannerStep = (props) => {
               logSnackbar={error}
               setLogSnackbar={setError}
               logType={logType}
+              hasRedirect={hasRedirect}
+              setHasRedirect={setHasRedirect}
               customStyle={{ position: "absolute", bottom: 0, left: 0 }}
             />
           )}

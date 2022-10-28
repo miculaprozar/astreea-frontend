@@ -15,15 +15,15 @@ const BottomNavbar = () => {
   const route = useRoute();
 
   const { connectionStatus } = useContext(AuthContext);
-  const [numberOfChargers, setNumberOfChargers] = useState(null);
+  const [chargerList, setChargerList] = useState(null);
 
-  const getChargerListLength = async () => {
+  const getChargerList = async () => {
     if (connection.state == HubConnectionState.Connected) {
       //connection started
       await connection
         .invoke("GetConnectedCharges", false, null)
         .then((chargerList) => {
-          setNumberOfChargers(chargerList.length);
+          setChargerList(chargerList);
         })
         .catch((err) => {
           console.log("THE ERROR IS", err);
@@ -31,16 +31,23 @@ const BottomNavbar = () => {
     }
   };
 
+  const isOnlyOneCharger = (chargerList) => chargerList.length === 1;
+
+  const chargerIdAndSerialNumber = (chargerList, id) =>
+    id ? chargerList[0].chargerId : chargerList[0].serialNumberCon;
+
   useFocusEffect(
     useCallback(() => {
       const connection = global.connection;
-      connectionStatus && getChargerListLength(connection);
+      connectionStatus && getChargerList(connection);
     }, [connectionStatus])
   );
 
   return (
     <>
-      {route.name !== "TermsAndConditions" ? (
+      {route.name !== "TermsAndConditions" &&
+      chargerList &&
+      chargerList.length > 0 ? (
         <View style={style.container}>
           <Pressable
             onPress={() => {
@@ -59,7 +66,7 @@ const BottomNavbar = () => {
             onPress={() => {
               Haptics.selectionAsync();
               navigation.navigate(
-                numberOfChargers > 1 ? "Home" : "DeviceDetails"
+                isOnlyOneCharger(chargerList) ? "DeviceDetails" : "Home"
               );
             }}
             style={{ alignItems: "center" }}
@@ -70,25 +77,47 @@ const BottomNavbar = () => {
             />
             <Text style={style.textImage}>Home</Text>
           </Pressable>
+          {!isOnlyOneCharger(chargerList) ? (
+            <Pressable
+              onPress={() => {
+                Haptics.notificationAsync(
+                  Haptics.NotificationFeedbackType.Warning
+                );
+              }}
+              style={{ alignItems: "center" }}
+            >
+              <Image
+                style={style.images}
+                source={require("../../assets/location.png")}
+              />
+              <Text style={style.textImage}>Find Charger</Text>
+            </Pressable>
+          ) : (
+            <Pressable
+              onPress={() => {
+                Haptics.notificationAsync(
+                  Haptics.NotificationFeedbackType.Warning
+                );
+                navigation.navigate("ChargerSettings", {
+                  chargerId: chargerIdAndSerialNumber(chargerList, 1),
+                  serialNumberCon: chargerIdAndSerialNumber(chargerList),
+                });
+              }}
+              style={{ alignItems: "center" }}
+            >
+              <Image
+                style={style.images}
+                source={require("../../assets/settingWhite.png")}
+              />
+              <Text style={style.textImage}>Settings</Text>
+            </Pressable>
+          )}
           <Pressable
             onPress={() => {
               Haptics.notificationAsync(
                 Haptics.NotificationFeedbackType.Warning
               );
-            }}
-            style={{ alignItems: "center" }}
-          >
-            <Image
-              style={style.images}
-              source={require("../../assets/location.png")}
-            />
-            <Text style={style.textImage}>Find Charger</Text>
-          </Pressable>
-          <Pressable
-            onPress={() => {
-              Haptics.notificationAsync(
-                Haptics.NotificationFeedbackType.Warning
-              );
+              navigation.navigate("Help");
             }}
             style={{ alignItems: "center" }}
           >

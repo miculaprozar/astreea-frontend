@@ -1,15 +1,19 @@
 import { StyleSheet } from "react-native";
 
 export const style = StyleSheet.create({
+  buttonsCard: {
+    backgroundColor: "rgba(255,255,255,0.30)",
+    borderRadius: 15,
+    padding: 18,
+  },
   pillsLabel: {
-    fontSize: 14,
+    marginBottom: 20,
     color: "#FFFFFF",
-    fontFamily: "Inter_400Regular",
-    marginBottom: 12,
+    fontFamily: "Inter_600SemiBold",
+    fontSize: 14,
   },
   buttonsWrapper: {
     flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 40,
+    justifyContent: "space-around",
   },
 });

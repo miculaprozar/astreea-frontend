@@ -39,6 +39,7 @@ const HomeChargerCard = ({ charger, onClick }) => {
   const {
     ScheduleV2: { name: ScheduleRoute },
     DeviceDetails: { name: DeviceDetailsRoute },
+    ChargerSettings: { name: ChargerSettingsRoute },
   } = routes;
 
   useEffect(() => {
@@ -265,7 +266,8 @@ const HomeChargerCard = ({ charger, onClick }) => {
                     color: getTextColorByStatus(chargerState.state, false),
                   }}
                 >
-                  {chargerState.lastChargingSession
+                  {chargerState.lastChargingSession &&
+                  chargerState.lastChargingSession.chargedTimeInSec >= 60
                     ? formatDuration(
                         chargerState.lastChargingSession.chargedTimeInSec
                       )
@@ -325,12 +327,13 @@ const HomeChargerCard = ({ charger, onClick }) => {
               isCharging={chargerIsCharging(chargerState)}
               isSecondary={true}
               onPressAction={() =>
-                navigation.navigate(DeviceDetailsRoute, {
+                navigation.navigate(ChargerSettingsRoute, {
                   serialNumberCon: chargerState.serialNumberCon,
+                  chargerId: chargerState.chargerId,
                 })
               }
             />
-            <ChargerButton
+            {/* <ChargerButton
               isCharging={chargerIsCharging(chargerState)}
               isSchedule={true}
               onPressAction={() =>
@@ -338,7 +341,7 @@ const HomeChargerCard = ({ charger, onClick }) => {
                   chargerId: charger.chargerId,
                 })
               }
-            />
+            /> */}
           </View>
         </View>
       </TouchableWithoutFeedback>

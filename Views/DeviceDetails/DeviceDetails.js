@@ -155,7 +155,7 @@ const DeviceDetails = (props) => {
               <HeaderNavigator navigation={navigation} route={route} />
             </Layout.Header>
             <Layout.Body>
-              <View style={{ marginBottom: "auto" }}>
+              <View style={{ marginBottom: "auto", marginTop: "auto" }}>
                 <Text style={style.title}>{charger.name}</Text>
                 <View style={{ flexDirection: "row" }}>
                   <Text style={style.description}>
@@ -192,7 +192,23 @@ const DeviceDetails = (props) => {
                     }
                   />
                   <LargeChargerButton
-                    isSchedule={true}
+                    icon={require("../../assets/settingWhite.png")}
+                    onPressAction={() =>
+                      navigation.navigate(chargerSettingsRoute, {
+                        chargerId: charger.chargerId,
+                        serialNumberCon: serialNumberCon,
+                      })
+                    }
+                  />
+                </View>
+                {/* <View
+                  style={{
+                    flexDirection: "row",
+                  }}
+                >
+                  <LargeChargerButton
+                    marginRight={20}
+                    icon={require("../../assets/scheduleWhite.png")}
                     onPressAction={() =>
                       navigation.navigate(ScheduleRoute, {
                         chargerId: charger.chargerId,
@@ -200,7 +216,16 @@ const DeviceDetails = (props) => {
                       })
                     }
                   />
-                </View>
+                  <LargeChargerButton
+                    icon={require("../../assets/scheduleWhite.png")}
+                    onPressAction={() =>
+                      navigation.navigate(ScheduleRoute, {
+                        chargerId: charger.chargerId,
+                        serialNumberCon: serialNumberCon,
+                      })
+                    }
+                  />
+                </View> */}
               </View>
             </Layout.Body>
             <Layout.Footer style={{ flex: 2, backgroundColor: "red" }}>

@@ -13,8 +13,15 @@ export const style = StyleSheet.create({
     bottom: 10,
     zIndex: 999,
     elevation: 999,
+    flexDirection: "row",
   },
   text: {
     color: "#FFFFFF",
+  },
+  redirectText: {
+    marginLeft: 5,
+    color: "red",
+    fontFamily: "Inter_400Regular",
+    textDecorationLine: "underline",
   },
 });

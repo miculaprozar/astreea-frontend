@@ -12,11 +12,13 @@ import HeaderNavigator from "../../general_components/HeaderNavigator/HeaderNavi
 import Layout from "../../general_components/Layout";
 import SnackBar from "../../general_components/SnackBar";
 import validationSchema from "./validationSchema";
-
+import { style } from "./ChargerSettings.style";
 const ChargerSettings = ({ navigation, route }) => {
   const {
     params: { chargerId, serialNumberCon },
   } = route;
+
+  console.log("THE CHARGER ID AND SERIAL NUMBER:", chargerId, serialNumberCon);
 
   const connection = global.connection;
   const cert = global.cert;
@@ -40,10 +42,12 @@ const ChargerSettings = ({ navigation, route }) => {
   const setInputValues = (charger) => {
     const { address, name, price, currency } = charger;
 
+    console.log("THE ADDRES<", address, name, price, currency);
+
     setTimeout(() => {
       setValue("name", name);
       setValue("address", address);
-      setValue("price", price.toString());
+      setValue("price", price.toFixed(2).toString());
       setValue("currency", currency);
     });
   };
@@ -73,46 +77,35 @@ const ChargerSettings = ({ navigation, route }) => {
       </Layout.Header>
       <Layout.Body>
         <View>
-          <Text
-            style={{
-              marginBottom: 20,
-              color: "#FFFFFF",
-              fontFamily: "Inter_600SemiBold",
-              fontSize: 16,
-            }}
-          >
+          <Text style={style.pillsLabel}>
             Select the state color to change:
           </Text>
         </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-around",
-            marginBottom: 30,
-          }}
-        >
-          <ColorButtons
-            onPressAction={() => setModalVisible(true)}
-            text={"Charging"}
-            backgroundColor={"green"}
-          />
-          <ColorButtons
-            onPressAction={() => setModalVisible(true)}
-            text={"Suspended"}
-            backgroundColor={"red"}
-          />
-        </View>
-        <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-          <ColorButtons
-            onPressAction={() => setModalVisible(true)}
-            text={"Authorized"}
-            backgroundColor={"grey"}
-          />
-          <ColorButtons
-            onPressAction={() => setModalVisible(true)}
-            text={"Available"}
-            backgroundColor={"blue"}
-          />
+        <View style={style.buttonsCard}>
+          <View style={{ ...style.buttonsWrapper, marginBottom: 20 }}>
+            <ColorButtons
+              onPressAction={() => setModalVisible(true)}
+              text={"Charging"}
+              backgroundColor={"green"}
+            />
+            <ColorButtons
+              onPressAction={() => setModalVisible(true)}
+              text={"Suspended"}
+              backgroundColor={"red"}
+            />
+          </View>
+          <View style={style.buttonsWrapper}>
+            <ColorButtons
+              onPressAction={() => setModalVisible(true)}
+              text={"Authorized"}
+              backgroundColor={"grey"}
+            />
+            <ColorButtons
+              onPressAction={() => setModalVisible(true)}
+              text={"Available"}
+              backgroundColor={"blue"}
+            />
+          </View>
         </View>
         <ColorPickerModal
           setModalVisible={setModalVisible}

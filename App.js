@@ -22,6 +22,7 @@ import Schedule from "./Views/Schedule/Schedule";
 import ScheduleV2 from "./Views/ScheduleV2/ScheduleV2";
 import Home from "./Views/Home/Home";
 import TermsAndConditions from "./Views/TermsAndConditions/TermsAndConditions";
+import Help from "./Views/Help/Help";
 
 import StartPairing from "./Views/StartPairing/StartPairing";
 
@@ -232,6 +233,14 @@ export default function App() {
                   ) : (
                     <Text>Loading...</Text>
                   )
+                }
+              </Stack.Screen>
+              <Stack.Screen
+                name={routes.Help.name}
+                options={routes.Help.navigationOptions}
+              >
+                {(props) =>
+                  fontsLoaded ? <Help {...props} /> : <Text>Loading...</Text>
                 }
               </Stack.Screen>
               <Stack.Screen

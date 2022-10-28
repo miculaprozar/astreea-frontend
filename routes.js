@@ -24,6 +24,12 @@ export default routes = {
       ...defaultNavigationOptions,
     },
   },
+  Help: {
+    name: "Help",
+    navigationOptions: {
+      ...defaultNavigationOptions,
+    },
+  },
   SignIn: {
     name: "SignIn",
     navigationOptions: {
