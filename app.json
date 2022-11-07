@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Astreea",
+    "name": "Astreea Charger",
     "slug": "astreea",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -19,7 +19,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "digitalgarden.astreea.app",
+      "bundleIdentifier": "astreea.charger.app",
       "buildNumber": "1.0.0"
     },
     "android": {
